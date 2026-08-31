@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -45,20 +45,39 @@
     --danger: #ef4444;
 }
 [data-theme="dark"] {
-    --bg: #0b0d14;
-    --card: #161925;
-    --card-2: #1c2030;
-    --text: #eef0f8;
-    --text-dim: #9aa1b8;
-    --text-faint: #5d6478;
-    --border: #262c3d;
-    --border-strong: #313950;
-    --hover: #20263a;
-    --ring: rgba(139, 92, 246, 0.4);
-    --shadow-lg: 0 24px 60px -18px rgba(0, 0, 0, 0.65);
-    --shadow-md: 0 12px 34px -14px rgba(0, 0, 0, 0.55);
-    --shadow-sm: 0 4px 16px -6px rgba(0, 0, 0, 0.5);
-    --toast-bg: rgba(240, 242, 255, 0.96);
+    --bg: #090a0f;
+    --card: #12141c;
+    --card-2: #171a24;
+    --text: #eef0f7;
+    --text-dim: #9ba3b4;
+    --text-faint: #5f6675;
+    --border: #232733;
+    --border-strong: #2d3342;
+    --hover: #1b1e2a;
+    --ring: rgba(139, 92, 246, 0.45);
+    --shadow-lg: 0 24px 60px -18px rgba(0, 0, 0, 0.75);
+    --shadow-md: 0 12px 34px -14px rgba(0, 0, 0, 0.65);
+    --shadow-sm: 0 4px 16px -6px rgba(0, 0, 0, 0.6);
+    --toast-bg: rgba(238, 240, 247, 0.96);
+}
+
+/* Nền tối: giảm nhiễu màu cho giao diện modern sạch hơn */
+[data-theme="dark"] body {
+    background:
+        radial-gradient(900px 500px at 12% -6%, rgba(99, 102, 241, 0.10), transparent 60%),
+        radial-gradient(800px 500px at 96% 4%, rgba(217, 70, 239, 0.07), transparent 60%),
+        radial-gradient(700px 560px at 55% 108%, rgba(139, 92, 246, 0.06), transparent 60%),
+        var(--bg);
+}
+
+/* Bề mặt thẻ: lớp kính mờ mịn cho dark modern */
+[data-theme="dark"] .tool-card,
+[data-theme="dark"] .mixer-panel,
+[data-theme="dark"] .toolbar,
+[data-theme="dark"] .tabbar {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 46%),
+        var(--card);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -70,6 +89,7 @@ body {
     color: var(--text);
     padding: 0 20px 90px;
     transition: background 0.4s, color 0.4s;
+    isolation: isolate;
     background:
         radial-gradient(1000px 520px at 12% -6%, rgba(99, 102, 241, 0.16), transparent 60%),
         radial-gradient(900px 520px at 96% 4%, rgba(217, 70, 239, 0.13), transparent 60%),
@@ -375,7 +395,7 @@ input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--accent-1
     box-shadow: var(--shadow-lg), 0 0 0 4px var(--ring);
 }
 .mixer-panel.dragover::after {
-    content: 'Thả file .aco để thêm màu';
+    content: attr(data-drop-label);
     position: absolute; inset: 8px; border-radius: calc(var(--radius) - 6px);
     border: 2px dashed var(--accent-1);
     background: color-mix(in srgb, var(--accent-1) 8%, transparent);
@@ -514,6 +534,272 @@ input[type="color"]:hover { transform: translateY(-2px); }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) {
     #splash .s-spinner { animation: none; }
+}
+
+/* ============ RANDOM COLOR ============ */
+.hue-picker { display: flex; flex-wrap: wrap; gap: 12px; }
+.hue-btn {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: 3px solid var(--border); cursor: pointer; position: relative;
+    display: grid; place-items: center; transition: all 0.18s;
+    box-shadow: var(--shadow-sm);
+}
+.hue-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.hue-btn.active {
+    border-color: var(--accent-1);
+    box-shadow: 0 0 0 3px var(--ring), var(--shadow-md);
+    transform: scale(1.08);
+}
+.hue-btn span {
+    position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);
+    font-size: 0.68rem; color: var(--text-dim); font-weight: 600; white-space: nowrap;
+}
+.hue-btn.active span { color: var(--accent-1); font-weight: 700; }
+
+.rand-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 14px;
+}
+.rand-card {
+    background: var(--card-2); border: 1px solid var(--border); border-radius: 16px;
+    overflow: hidden; cursor: pointer; position: relative; transition: all 0.2s;
+    box-shadow: var(--shadow-sm);
+}
+.rand-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--accent-1); }
+.rand-card .pv { height: 88px; position: relative; }
+.rand-card .mem {
+    position: absolute; top: 8px; left: 8px;
+    min-width: 24px; height: 24px; padding: 0 7px;
+    border-radius: 999px; background: rgba(255,255,255,0.94); border: 1px solid rgba(0,0,0,0.1);
+    color: #333; font-size: 0.72rem; font-weight: 800;
+    display: grid; place-items: center; line-height: 1;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.14);
+}
+[data-theme="dark"] .rand-card .mem { background: rgba(0,0,0,0.5); color: #fff; border-color: rgba(255,255,255,0.2); }
+.rand-card .info { padding: 10px 11px 12px; text-align: center; }
+.rand-card .hex { font-family: 'Consolas', ui-monospace, monospace; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.3px; }
+.rand-card .rgb { font-size: 0.68rem; color: var(--text-faint); margin-top: 3px; font-family: 'Consolas', ui-monospace, monospace; }
+
+/* ============ TOOLS ============ */
+.tools-wrap { display: grid; grid-template-columns: 1fr; gap: 18px; }
+@media (min-width: 900px) { .tools-wrap { grid-template-columns: 1fr 1fr; } }
+.tool-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow-sm);
+}
+.tool-card h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 14px; }
+
+.mini-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 8px; margin-top: 12px; }
+.mini-swatch {
+    border-radius: 11px; overflow: hidden; cursor: pointer; border: 1px solid var(--border);
+    background: var(--card-2); transition: transform 0.15s, box-shadow 0.15s;
+}
+.mini-swatch:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.mini-swatch .pv { height: 46px; }
+.mini-swatch .tx { padding: 4px 6px; font-family: 'Consolas', ui-monospace, monospace; font-size: 0.63rem; text-align: center; font-weight: 700; }
+
+/* Gradient */
+.grad-stops { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; min-height: 44px; }
+.grad-stop {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--card-2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 4px 6px 4px 4px;
+}
+.grad-stop input[type="color"] { width: 34px; height: 34px; padding: 0; border: none; background: none; box-shadow: none; }
+.grad-stop .gs-hex { font-family: 'Consolas', ui-monospace, monospace; font-size: 0.68rem; font-weight: 700; }
+.grad-stop .rm { width: 22px; height: 22px; border-radius: 7px; border: none; background: var(--hover); color: var(--text-dim); cursor: pointer; font-size: 0.7rem; }
+.grad-stop .rm:hover { background: var(--danger); color: #fff; }
+.grad-preview { height: 120px; border-radius: 14px; border: 1px solid var(--border); margin-top: 12px; }
+
+/* Contrast */
+.contrast-demo {
+    display: grid; place-items: center; height: 110px; border-radius: 14px;
+    margin-top: 12px; border: 1px solid var(--border);
+}
+.contrast-demo span { font-size: 3.2rem; font-weight: 800; }
+.contrast-result { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.cr-row { display: flex; align-items: center; gap: 10px; font-size: 0.86rem; }
+.cr-ratio { font-family: 'Consolas', ui-monospace, monospace; font-weight: 800; font-size: 1.15rem; }
+.cr-badge { padding: 3px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; color: #fff; }
+.cr-badge.pass { background: #22c55e; }
+.cr-badge.fail { background: #ef4444; }
+.cr-badge.aa { background: #f59e0b; }
+
+/* Image canvas */
+.image-canvas {
+    max-width: 100%; max-height: 300px; display: none; margin-top: 12px;
+    border-radius: 12px; border: 1px solid var(--border); cursor: crosshair;
+    background: repeating-conic-gradient(#e3e6ee 0 25%, #f6f7fb 0 50%) 0 0/20px 20px;
+}
+[data-theme="dark"] .image-canvas { background: repeating-conic-gradient(#2a2f3f 0 25%, #20242f 0 50%) 0 0/20px 20px; }
+
+/* Nút chi tiết trên thẻ màu */
+.swatch .detail-btn {
+    position: absolute; bottom: 9px; right: 9px; width: 24px; height: 24px;
+    border-radius: 7px; border: none; cursor: pointer; font-size: 0.74rem;
+    display: grid; place-items: center; z-index: 3;
+    opacity: 0; transition: all 0.15s;
+    background: rgba(255,255,255,0.92); box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.swatch:hover .detail-btn { opacity: 1; }
+@media (max-width: 640px) {
+    .swatch .detail-btn { opacity: 0.9; }
+}
+
+/* Trạng thái kéo thả / trùng lặp / tương tự */
+.swatch.dragging { opacity: 0.4; }
+.swatch.drag-over { border: 2px dashed var(--accent-1); }
+.swatch.dup { outline: 2px solid #f59e0b; outline-offset: 2px; }
+.swatch.similar { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+
+/* Diff (so sánh) */
+.diff-group { margin-bottom: 16px; }
+.diff-group h4 { font-size: 0.86rem; font-weight: 800; margin-bottom: 8px; color: var(--text-dim); }
+.diff-row {
+    display: flex; align-items: center; gap: 10px; padding: 7px 9px;
+    border-radius: 10px; background: var(--card-2); border: 1px solid var(--border); margin-bottom: 6px;
+}
+.diff-row .pv { width: 34px; height: 34px; border-radius: 8px; flex-shrink: 0; border: 1px solid var(--border); }
+.diff-row .tx { font-family: 'Consolas', ui-monospace, monospace; font-size: 0.8rem; font-weight: 700; }
+
+/* Detail panel */
+.detail-head { display: flex; gap: 16px; align-items: center; margin-bottom: 18px; }
+.detail-swatch { width: 96px; height: 96px; border-radius: 16px; border: 1px solid var(--border); flex-shrink: 0; box-shadow: var(--shadow-sm); }
+.detail-swatch-inner { width: 100%; height: 100%; border-radius: 16px; }
+.detail-names { flex: 1; min-width: 0; }
+.detail-names .dn-hex { font-family: 'Consolas', ui-monospace, monospace; font-size: 1.35rem; font-weight: 800; }
+.detail-names .dn-name { font-size: 0.9rem; color: var(--text-dim); margin-top: 3px; }
+.detail-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px; border-radius: 10px; background: var(--card-2);
+    border: 1px solid var(--border); margin-bottom: 7px; cursor: pointer; transition: background 0.15s;
+}
+.detail-row:hover { background: var(--hover); }
+.detail-row .k { font-size: 0.8rem; font-weight: 700; color: var(--text-dim); }
+.detail-row .v { font-family: 'Consolas', ui-monospace, monospace; font-size: 0.86rem; font-weight: 600; }
+
+/* ============ POLISH — GIAO DIỆN CAO CẤP ============ */
+/* Tiêu đề thương hiệu: gradient chuyển động */
+.brand h1 {
+    background-size: 220% auto;
+    animation: gradientShift 7s ease infinite;
+}
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Thẻ công cụ: viền gradient phía trên + kính mờ */
+.tool-card { position: relative; overflow: hidden; }
+.tool-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--grad); opacity: 0.85; z-index: 1;
+}
+.tool-card h3 { position: relative; }
+
+/* Nút primary: hiệu ứng quét sáng khi hover */
+.tool-btn.primary { position: relative; overflow: hidden; }
+.tool-btn.primary::after {
+    content: ''; position: absolute; top: 0; left: -130%; width: 55%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.32), transparent);
+    transform: skewX(-20deg); transition: left 0.6s ease;
+}
+.tool-btn.primary:hover::after { left: 135%; }
+
+/* Thanh tab: bóng đổ mềm hơn */
+.tabbar { box-shadow: 0 10px 34px -14px rgba(31, 34, 60, 0.18); }
+
+/* ============ ANIMATION SỐNG ĐỘNG ============ */
+
+/* --- Nền aurora chuyển động (nhẹ, phía sau nội dung) --- */
+body::before {
+    content: ''; position: fixed; inset: -20%;
+    z-index: -1; pointer-events: none;
+    background:
+        radial-gradient(38% 38% at 18% 24%, rgba(99, 102, 241, 0.20), transparent 60%),
+        radial-gradient(34% 34% at 82% 18%, rgba(217, 70, 239, 0.16), transparent 60%),
+        radial-gradient(40% 40% at 50% 88%, rgba(139, 92, 246, 0.14), transparent 60%);
+    filter: blur(50px);
+    animation: auroraDrift 22s ease-in-out infinite alternate;
+}
+[data-theme="dark"] body::before {
+    background:
+        radial-gradient(38% 38% at 18% 24%, rgba(99, 102, 241, 0.16), transparent 60%),
+        radial-gradient(34% 34% at 82% 18%, rgba(217, 70, 239, 0.12), transparent 60%),
+        radial-gradient(40% 40% at 50% 88%, rgba(139, 92, 246, 0.10), transparent 60%);
+}
+@keyframes auroraDrift {
+    0%   { transform: translate3d(-4%, -3%, 0) scale(1) rotate(0deg); }
+    50%  { transform: translate3d(4%, 3%, 0) scale(1.08) rotate(4deg); }
+    100% { transform: translate3d(-3%, 4%, 0) scale(1.04) rotate(-3deg); }
+}
+
+/* --- Tab active: phát sáng nhịp nhàng --- */
+.tab.active { animation: tabGlow 2.6s ease-in-out infinite; }
+@keyframes tabGlow {
+    0%, 100% { box-shadow: 0 8px 22px -6px rgba(124, 90, 246, 0.55), inset 0 1px 0 rgba(255,255,255,0.3); }
+    50%      { box-shadow: 0 8px 30px -4px rgba(124, 90, 246, 0.85), inset 0 1px 0 rgba(255,255,255,0.45); }
+}
+
+/* --- Logo lơ lửng --- */
+.logo { animation: logoFloat 4s ease-in-out infinite; }
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-5px); }
+}
+
+/* --- Thẻ công cụ: nâng + viền gradient phát sáng khi hover --- */
+.tool-card { transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s, border-color 0.3s; }
+.tool-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-2);
+    box-shadow: var(--shadow-md), 0 0 0 1px var(--ring);
+}
+.tool-card::before { background-size: 220% auto; animation: gradientShift 6s linear infinite; }
+
+/* --- Nút (mọi nút): quét sáng khi hover --- */
+.tool-btn { position: relative; overflow: hidden; }
+.tool-btn::after {
+    content: ''; position: absolute; top: 0; left: -130%; width: 50%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.18), transparent);
+    transform: skewX(-20deg); transition: left 0.55s ease;
+    pointer-events: none;
+}
+.tool-btn:hover::after { left: 135%; }
+
+/* --- Drop zone: viền gradient chạy quanh --- */
+#drop-zone { position: relative; }
+#drop-zone::after {
+    content: ''; position: absolute; inset: -2px; border-radius: 26px;
+    padding: 2px; pointer-events: none;
+    background: linear-gradient(120deg, var(--accent-1), var(--accent-3), var(--accent-2), var(--accent-1));
+    background-size: 300% 300%;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    opacity: 0; transition: opacity 0.3s;
+    animation: gradientShift 5s linear infinite;
+}
+#drop-zone:hover::after { opacity: 1; }
+
+/* --- Cuộn trang: hiện dần (reveal) --- */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); }
+.reveal.in { opacity: 1; transform: none; }
+.reveal:nth-child(2) { transition-delay: 0.06s; }
+.reveal:nth-child(3) { transition-delay: 0.12s; }
+.reveal:nth-child(4) { transition-delay: 0.18s; }
+.reveal:nth-child(5) { transition-delay: 0.24s; }
+.reveal:nth-child(6) { transition-delay: 0.30s; }
+
+/* --- Stat pill: đếm nhịp nhẹ khi xuất hiện --- */
+.stat-pill .dot { animation: dotPulse 2s ease-in-out infinite; }
+@keyframes dotPulse {
+    0%, 100% { box-shadow: 0 0 0 3px var(--ring); }
+    50%      { box-shadow: 0 0 0 6px transparent; }
+}
+
+/* Tôn trọng người dùng tắt chuyển động */
+@media (prefers-reduced-motion: reduce) {
+    body::before, .tab.active, .logo, .brand h1, .stat-pill .dot, .drop-icon, .tool-card::before { animation: none !important; }
+    .reveal { opacity: 1; transform: none; transition: none; }
 }
 
 /* ============ RESPONSIVE — MOBILE ============ */
@@ -668,32 +954,35 @@ input[type="color"]:hover { transform: translateY(-2px); }
             </div>
             <div>
                 <h1>ACO Color Viewer</h1>
-                <p>Xem · Sao chép · Xuất bảng màu Photoshop (.aco)</p>
+                <p data-i18n="tagline">Xem · Sao chép · Xuất bảng màu Photoshop (.aco)</p>
             </div>
         </div>
         <div class="header-actions">
-            <button class="theme-btn" id="install-btn" title="Cài đặt ứng dụng" style="display:none;">📲</button>
-            <button class="theme-btn" id="theme-btn" title="Đổi giao diện sáng/tối">🌙</button>
+            <button class="theme-btn" id="install-btn" title="Cài đặt ứng dụng" data-i18n-title="install" style="display:none;">📲</button>
+            <button class="theme-btn" id="lang-btn" title="Language / Ngôn ngữ" data-i18n-title="lang">EN</button>
+            <button class="theme-btn" id="theme-btn" title="Đổi giao diện sáng/tối" data-i18n-title="theme">🌙</button>
         </div>
     </header>
 
     <div class="tabbar">
-        <button class="tab active" data-tab="viewer">📁 Xem ACO</button>
-        <button class="tab" data-tab="mixer">🎨 Trộn màu</button>
+        <button class="tab active" data-tab="viewer" data-i18n="tab.viewer">📁 Xem ACO</button>
+        <button class="tab" data-tab="mixer" data-i18n="tab.mixer">🎨 Trộn màu</button>
+        <button class="tab" data-tab="random" data-i18n="tab.random">🎲 Random màu</button>
+        <button class="tab" data-tab="tools" data-i18n="tab.tools">🛠 Công cụ</button>
     </div>
 
     <section id="viewer-section" class="tab-section active">
     <div id="drop-zone">
         <div class="drop-icon">🎨</div>
-        <div class="main">Kéo thả file <b>.aco</b> vào đây</div>
-        <div class="sub">hoặc click để chọn file từ máy tính</div>
-        <div class="hint">Hỗ trợ ACO v1 &amp; v2 · RGB / HSB / CMYK / Lab / Grayscale</div>
+        <div class="main" data-i18n-html="drop.main">Kéo thả file <b>.aco</b> vào đây</div>
+        <div class="sub" data-i18n="drop.sub">hoặc click để chọn file từ máy tính</div>
+        <div class="hint" data-i18n="drop.hint">Hỗ trợ ACO v1 &amp; v2 · RGB / HSB / CMYK / Lab / Grayscale</div>
         <input type="file" id="file-input" accept=".aco" style="display:none">
     </div>
 
     <div id="result-container">
         <div class="stats-bar">
-            <span class="stat-pill"><span class="dot"></span> <span class="num" id="stat-count">0</span> màu</span>
+            <span class="stat-pill"><span class="dot"></span> <span class="num" id="stat-count">0</span> <span data-i18n="stats.colors">màu</span></span>
             <span class="stat-pill file-name" id="stat-file"></span>
             <span class="stat-pill" id="stat-selected" style="display:none">✓ <span class="num">0</span> đã chọn</span>
         </div>
@@ -701,39 +990,42 @@ input[type="color"]:hover { transform: translateY(-2px); }
         <div class="toolbar">
             <div class="search-box">
                 <span class="icon">🔍</span>
-                <input type="text" id="search-input" placeholder="Tìm theo tên hoặc mã màu...">
+                <input type="text" id="search-input" placeholder="Tìm theo tên hoặc mã màu..." data-i18n-ph="search.ph">
             </div>
-            <select id="sort-select" title="Sắp xếp">
-                <option value="original">Thứ tự gốc</option>
-                <option value="hue">Theo sắc độ (Hue)</option>
-                <option value="lightness">Theo độ sáng</option>
-                <option value="saturation">Theo độ bão hòa</option>
-                <option value="name">Theo tên</option>
+            <select id="sort-select" title="Sắp xếp" data-i18n-title="sort.title">
+                <option value="original" data-i18n="sort.original">Thứ tự gốc</option>
+                <option value="hue" data-i18n="sort.hue">Theo sắc độ (Hue)</option>
+                <option value="lightness" data-i18n="sort.lightness">Theo độ sáng</option>
+                <option value="saturation" data-i18n="sort.saturation">Theo độ bão hòa</option>
+                <option value="name" data-i18n="sort.name">Theo tên</option>
             </select>
-            <select id="copy-format" title="Định dạng khi click vào màu">
+            <select id="copy-format" title="Định dạng khi click vào màu" data-i18n-title="copyformat.title">
                 <option value="hex">HEX</option>
                 <option value="rgb">RGB</option>
                 <option value="hsl">HSL</option>
             </select>
             <div class="menu-wrap">
-                <button class="menu-btn" id="copy-all-btn">📋 Sao chép tất cả ▾</button>
+                <button class="menu-btn" id="copy-all-btn" data-i18n="copyall">📋 Sao chép tất cả ▾</button>
                 <div class="menu" id="copy-all-menu">
-                    <button class="menu-item" data-mode="hex">Danh sách HEX<span class="k">#FF0000, #00FF00, ...</span></button>
+                    <button class="menu-item" data-mode="hex"><span data-i18n="copyall.hex">Danh sách HEX</span><span class="k">#FF0000, #00FF00, ...</span></button>
                     <button class="menu-item" data-mode="css">CSS Variables<span class="k">--color-1: #FF0000;</span></button>
                     <button class="menu-item" data-mode="scss">SCSS / Sass<span class="k">$color-1: #FF0000;</span></button>
                     <button class="menu-item" data-mode="json">JSON<span class="k">[{"hex":"#FF0000"}, ...]</span></button>
-                    <button class="menu-item" data-mode="rgb">Danh sách RGB<span class="k">rgb(255, 0, 0)</span></button>
+                    <button class="menu-item" data-mode="rgb"><span data-i18n="copyall.rgb">Danh sách RGB</span><span class="k">rgb(255, 0, 0)</span></button>
                 </div>
             </div>
             <div class="menu-wrap">
-                <button class="tool-btn" id="select-all-btn">☑ Chọn</button>
+                <button class="tool-btn" id="select-all-btn" data-i18n="select">☑ Chọn</button>
                 <div class="menu" id="select-menu">
-                    <button class="menu-item" data-mode="all">Chọn tất cả</button>
-                    <button class="menu-item" data-mode="none">Bỏ chọn tất cả</button>
-                    <button class="menu-item" data-mode="invert">Đảo ngược lựa chọn</button>
+                    <button class="menu-item" data-mode="all" data-i18n="select.all">Chọn tất cả</button>
+                    <button class="menu-item" data-mode="none" data-i18n="select.none">Bỏ chọn tất cả</button>
+                    <button class="menu-item" data-mode="invert" data-i18n="select.invert">Đảo ngược lựa chọn</button>
                 </div>
             </div>
-            <button class="tool-btn primary" id="export-btn">⬇ Xuất ảnh &amp; dữ liệu</button>
+            <button class="tool-btn" id="export-aco-btn" title="Xuất màu đã chọn thành file .aco" data-i18n-title="export.aco.title"><span data-i18n="export.aco">💾 Xuất .aco</span></button>
+            <button class="tool-btn" id="compare-btn" title="So sánh với file .aco khác" data-i18n-title="compare.title"><span data-i18n="compare.btn">🔁 So sánh</span></button>
+            <button class="tool-btn" id="dedupe-btn" title="Phát hiện màu trùng lặp" data-i18n-title="dedupe.title"><span data-i18n="dedupe.btn">🧹 Trùng lặp</span></button>
+            <button class="tool-btn primary" id="export-btn" data-i18n="export.main">⬇ Xuất ảnh &amp; dữ liệu</button>
         </div>
 
         <div id="interactive-grid"></div>
@@ -742,55 +1034,185 @@ input[type="color"]:hover { transform: translateY(-2px); }
 
     <!-- ===== Mục Trộn màu (dùng riêng, không cần mở ACO) ===== -->
     <section id="mixer-section" class="tab-section">
-        <div class="mixer-panel" id="mixer-panel">
+        <div class="mixer-panel" id="mixer-panel" data-drop-label="Thả file .aco để thêm màu">
             <div class="mixer-panel-head">
-                <h2>🎨 Trộn màu</h2>
+                <h2 data-i18n="mixer.title">🎨 Trộn màu</h2>
                 <div style="display:flex; gap:8px;">
-                    <button class="tool-btn" id="mix-equalize" title="Tự chia đều tỷ lệ theo số lượng màu">⚖️ Cân bằng tỷ lệ</button>
-                    <button class="tool-btn" id="mix-clear" title="Xóa hết màu đang trộn">🗑 Xóa hết</button>
+                    <button class="tool-btn" id="mix-equalize" title="Tự chia đều tỷ lệ theo số lượng màu" data-i18n-title="mixer.equalize.title"><span data-i18n="mixer.equalize">⚖️ Cân bằng tỷ lệ</span></button>
+                    <button class="tool-btn" id="mix-clear" title="Xóa hết màu đang trộn" data-i18n-title="mixer.clear.title"><span data-i18n="mixer.clear">🗑 Xóa hết</span></button>
                 </div>
             </div>
 
             <div class="opt-group">
-                <label>Thêm màu <span class="mixer-hint">· hoặc kéo thả file .aco vào đây</span></label>
+                <label><span data-i18n="mixer.addlabel">Thêm màu</span> <span class="mixer-hint" data-i18n="mixer.addlabel.hint">· hoặc kéo thả file .aco vào đây</span></label>
                 <div class="mixer-add-row">
-                    <input type="color" id="mix-color-picker" value="#3A86FF" title="Chọn màu bất kỳ">
-                    <button class="tool-btn" id="mix-add-color">➕ Thêm màu này</button>
-                    <button class="tool-btn" id="mix-open-aco">📁 Mở file ACO</button>
-                    <button class="tool-btn" id="mix-repick" title="Mở lại danh sách màu đã tải để chỉnh lựa chọn">🔁 Chỉnh lại màu</button>
+                    <input type="color" id="mix-color-picker" value="#3A86FF" title="Chọn màu bất kỳ" data-i18n-title="mixer.picker.title">
+                    <button class="tool-btn" id="mix-add-color" data-i18n="mixer.add">➕ Thêm màu này</button>
+                    <button class="tool-btn" id="mix-open-aco" data-i18n="mixer.open">📁 Mở file ACO</button>
+                    <button class="tool-btn" id="mix-repick" title="Mở lại danh sách màu đã tải để chỉnh lựa chọn" data-i18n-title="mixer.repick.title"><span data-i18n="mixer.repick">🔁 Chỉnh lại màu</span></button>
                     <input type="file" id="mix-aco-input" accept=".aco" style="display:none">
                 </div>
             </div>
 
             <div class="opt-group">
-                <label>Màu đang trộn <span class="mixer-hint">· tỷ lệ tự chia đều, kéo thanh trượt để chỉnh riêng</span></label>
+                <label><span data-i18n="mixer.mixing">Màu đang trộn</span> <span class="mixer-hint" data-i18n="mixer.mixing.hint">· tỷ lệ tự chia đều, kéo thanh trượt để chỉnh riêng</span></label>
                 <div class="mixer-colors" id="mixer-colors"></div>
             </div>
 
             <div class="opt-group">
-                <label>Kết quả trộn</label>
+                <label data-i18n="mixer.result">Kết quả trộn</label>
                 <div class="mixer-result" id="mixer-result"></div>
                 <div class="mixer-actions" style="margin-top:10px">
-                    <button class="tool-btn" id="mix-copy-hex">📋 Copy HEX</button>
-                    <button class="tool-btn" id="mix-copy-rgb">Copy RGB</button>
-                    <button class="tool-btn" id="mix-copy-hsl">Copy HSL</button>
-                    <button class="tool-btn primary" id="mix-save">💾 Lưu vào lịch sử</button>
+                    <button class="tool-btn" id="mix-copy-hex" data-i18n="mixer.copyhex">📋 Copy HEX</button>
+                    <button class="tool-btn" id="mix-copy-rgb" data-i18n="mixer.copyrgb">Copy RGB</button>
+                    <button class="tool-btn" id="mix-copy-hsl" data-i18n="mixer.copyhsl">Copy HSL</button>
+                    <button class="tool-btn primary" id="mix-save" data-i18n="mixer.save">💾 Lưu vào lịch sử</button>
                 </div>
             </div>
 
             <div class="opt-group">
-                <label>Lịch sử trộn <span class="mixer-hint">· click để copy lại</span></label>
+                <label><span data-i18n="mixer.history">Lịch sử trộn</span> <span class="mixer-hint" data-i18n="mixer.history.hint">· click để copy lại</span></label>
                 <div class="mix-history" id="mix-history"></div>
                 <div style="margin-top:10px; text-align:right;">
-                    <button class="tool-btn" id="mix-history-clear">🗑 Xóa lịch sử</button>
+                    <button class="tool-btn" id="mix-history-clear" data-i18n="mixer.historyclear">🗑 Xóa lịch sử</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer style="text-align:center; margin-top:34px; color:var(--text-faint); font-size:0.82rem; line-height:1.7;">
-        <b>ACO Color Viewer Pro</b> · Xem, trộn &amp; xuất bảng màu Photoshop ngay trên trình duyệt.<br>
-        Mọi dữ liệu xử lý cục bộ trên máy bạn — không tải lên bất kỳ máy chủ nào.
+    <!-- ===== Mục Random màu (chọn màu cho member) ===== -->
+    <section id="random-section" class="tab-section">
+        <div class="mixer-panel">
+            <div class="mixer-panel-head">
+                <h2 data-i18n="random.title">🎲 Random màu</h2>
+                <span class="mixer-hint" data-i18n="random.sub">Chọn màu ngẫu nhiên cho từng thành viên</span>
+            </div>
+
+            <div class="opt-group">
+                <label data-i18n="random.mode">Chế độ</label>
+                <div class="seg" id="rand-mode-seg">
+                    <button data-mode="full" class="active" data-i18n="random.full">🌈 Hoàn toàn ngẫu nhiên</button>
+                    <button data-mode="hue" data-i18n="random.hue">🎯 Theo họ màu</button>
+                </div>
+            </div>
+
+            <div class="opt-group" id="rand-hue-group" style="display:none">
+                <label data-i18n="random.huepick">Chọn họ màu</label>
+                <div class="hue-picker" id="hue-picker"></div>
+            </div>
+
+            <div class="opt-group">
+                <label data-i18n="random.count">Số lượng màu (tương ứng số thành viên)</label>
+                <div class="mixer-add-row">
+                    <input type="number" id="rand-count" value="5" min="1" max="100" style="width:100px">
+                    <label class="check-line" style="margin-left:4px">
+                        <input type="checkbox" id="rand-unique" checked> <span data-i18n="random.unique">Không trùng màu</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mixer-actions">
+                <button class="tool-btn primary" id="rand-go" data-i18n="random.go">🎲 Random ngay</button>
+                <button class="tool-btn" id="rand-copy-all" data-i18n="random.copyall">📋 Copy tất cả</button>
+                <button class="tool-btn" id="rand-clear" data-i18n="random.clear">🗑 Xóa</button>
+            </div>
+
+            <div class="opt-group" style="margin-top:20px">
+                <label><span data-i18n="random.result">Kết quả</span> <span class="mixer-hint" data-i18n="random.result.hint">· click vào màu để copy, số thứ tự = thành viên</span></label>
+                <div class="rand-grid" id="rand-grid">
+                    <div class="mixer-empty" style="grid-column:1/-1" data-i18n="random.empty">Bấm "🎲 Random ngay" để sinh màu</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Mục Công cụ (design utilities) ===== -->
+    <section id="tools-section" class="tab-section">
+        <div class="tools-wrap">
+            <div class="tool-card">
+                <h3>🧩 Palette Generator</h3>
+                <div class="mixer-add-row">
+                    <input type="color" id="harmony-base" value="#3A86FF" title="Màu gốc" data-i18n-title="harmony.base.title">
+                    <select id="harmony-type">
+                        <option value="complementary">Complementary</option>
+                        <option value="analogous">Analogous</option>
+                        <option value="triadic">Triadic</option>
+                        <option value="split">Split-complementary</option>
+                        <option value="tetradic">Tetradic</option>
+                    </select>
+                </div>
+                <div class="mini-grid" id="harmony-grid"></div>
+            </div>
+
+            <div class="tool-card">
+                <h3>🌈 Gradient Generator</h3>
+                <div class="grad-stops" id="grad-stops"></div>
+                <div class="mixer-add-row">
+                    <input type="color" id="grad-color" value="#3A86FF" title="Màu mới" data-i18n-title="grad.color.title">
+                    <button class="tool-btn" id="grad-add" data-i18n="grad.add">➕ Thêm màu</button>
+                    <button class="tool-btn" id="grad-clear" title="Xóa hết" data-i18n-title="grad.clear.title">🗑</button>
+                    <select id="grad-type">
+                        <option value="linear">Linear</option>
+                        <option value="radial">Radial</option>
+                    </select>
+                    <input type="number" id="grad-angle" value="90" min="0" max="360" style="width:72px" title="Góc (độ)" data-i18n-title="grad.angle.title">
+                </div>
+                <div class="grad-preview" id="grad-preview"></div>
+                <div class="mixer-actions" style="margin-top:10px">
+                    <button class="tool-btn primary" id="grad-copy" data-i18n="grad.copy">📋 Copy CSS</button>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <h3>🔳 Contrast Checker</h3>
+                <div class="mixer-add-row">
+                    <label class="check-line" style="font-weight:600"><span data-i18n="contrast.fg">Chữ</span> <input type="color" id="contrast-fg" value="#1A1A2E"></label>
+                    <label class="check-line" style="font-weight:600"><span data-i18n="contrast.bg">Nền</span> <input type="color" id="contrast-bg" value="#FFFFFF"></label>
+                </div>
+                <div class="contrast-demo" id="contrast-demo"><span id="contrast-sample">Aa</span></div>
+                <div id="contrast-result" class="contrast-result"></div>
+            </div>
+
+            <div class="tool-card">
+                <h3>👁 Color Blindness Preview</h3>
+                <p class="mixer-hint" style="margin-bottom:10px" data-i18n="blindness.desc">Xem palette dưới góc nhìn người mù màu (dùng palette đang mở ở tab Xem ACO).</p>
+                <div class="mixer-add-row">
+                    <select id="blindness-type">
+                        <option value="normal">Normal</option>
+                        <option value="protanopia" data-i18n="blindness.protanopia">Protanopia (đỏ)</option>
+                        <option value="deuteranopia" data-i18n="blindness.deuteranopia">Deuteranopia (xanh lá)</option>
+                        <option value="tritanopia" data-i18n="blindness.tritanopia">Tritanopia (xanh dương)</option>
+                        <option value="grayscale">Grayscale</option>
+                    </select>
+                </div>
+                <div class="mini-grid" id="blindness-grid"></div>
+            </div>
+
+            <div class="tool-card">
+                <h3 data-i18n="image.title">🖼 Image → Palette / Chấm màu</h3>
+                <div class="mixer-add-row">
+                    <button class="tool-btn" id="image-load" data-i18n="image.load">📁 Chọn ảnh</button>
+                    <input type="file" id="image-input" accept="image/*" style="display:none">
+                    <select id="image-count">
+                        <option value="5" data-i18n="image.count" data-i18n-fixed="5">5 màu</option>
+                        <option value="8" selected data-i18n="image.count" data-i18n-fixed="8">8 màu</option>
+                        <option value="12" data-i18n="image.count" data-i18n-fixed="12">12 màu</option>
+                        <option value="16" data-i18n="image.count" data-i18n-fixed="16">16 màu</option>
+                        <option value="20" data-i18n="image.count" data-i18n-fixed="20">20 màu</option>
+                    </select>
+                    <button class="tool-btn primary" id="image-extract" data-i18n="image.extract">🎨 Trích màu</button>
+                </div>
+                <p class="mixer-hint" style="margin-top:8px" data-i18n="image.hint">Chấm vào ảnh để lấy 1 màu · hoặc bấm "Trích màu" để lấy các màu chủ đạo.</p>
+                <canvas id="image-canvas" class="image-canvas"></canvas>
+                <div class="mini-grid" id="image-picked"></div>
+                <div class="mini-grid" id="image-palette"></div>
+            </div>
+        </div>
+    </section>
+
+        <footer style="text-align:center; margin-top:34px; color:var(--text-faint); font-size:0.82rem; line-height:1.7;">
+        <span data-i18n-html="footer"><b>ACO Color Viewer Pro</b> · Xem, trộn &amp; xuất bảng màu Photoshop ngay trên trình duyệt.<br>
+        Mọi dữ liệu xử lý cục bộ trên máy bạn — không tải lên bất kỳ máy chủ nào.</span>
     </footer>
 </div>
 
@@ -798,53 +1220,53 @@ input[type="color"]:hover { transform: translateY(-2px); }
 <div class="modal-overlay" id="modal">
     <div class="modal">
         <div class="modal-head">
-            <h2>⬇ Xuất bảng màu</h2>
+            <h2 data-i18n="export.title">⬇ Xuất bảng màu</h2>
             <button class="close-btn" id="modal-close">✕</button>
         </div>
         <div class="modal-body">
             <div class="opt-group">
-                <label>Bố cục</label>
+                <label data-i18n="export.layout">Bố cục</label>
                 <div class="seg" id="layout-seg">
-                    <button data-val="strip-h" class="active">Dải ngang</button>
-                    <button data-val="strip-v">Dải dọc</button>
-                    <button data-val="grid">Lưới</button>
+                    <button data-val="strip-h" class="active" data-i18n="export.striph">Dải ngang</button>
+                    <button data-val="strip-v" data-i18n="export.stripv">Dải dọc</button>
+                    <button data-val="grid" data-i18n="export.grid">Lưới</button>
                 </div>
             </div>
             <div class="opt-group" id="columns-group" style="display:none">
-                <label>Số cột (lưới)</label>
+                <label data-i18n="export.columns">Số cột (lưới)</label>
                 <input type="number" id="opt-columns" value="6" min="1" max="24">
             </div>
             <div class="opt-group">
-                <label>Kích thước ô (px)</label>
+                <label data-i18n="export.size">Kích thước ô (px)</label>
                 <input type="number" id="opt-size" value="200" min="40" max="1000">
             </div>
             <div class="opt-group">
-                <label>Khoảng cách (px)</label>
+                <label data-i18n="export.gap">Khoảng cách (px)</label>
                 <input type="number" id="opt-gap" value="20" min="0" max="200">
             </div>
             <div class="opt-group">
-                <label>Nhãn trên ô màu</label>
+                <label data-i18n="export.label">Nhãn trên ô màu</label>
                 <div class="seg" id="label-seg">
                     <button data-val="hex" class="active">HEX</button>
-                    <button data-val="hexname">HEX + Tên</button>
-                    <button data-val="none">Không nhãn</button>
+                    <button data-val="hexname" data-i18n="export.hexname">HEX + Tên</button>
+                    <button data-val="none" data-i18n="export.nolabel">Không nhãn</button>
                 </div>
             </div>
             <div class="opt-group">
-                <label>Nền</label>
+                <label data-i18n="export.bg">Nền</label>
                 <div class="seg" id="bg-seg">
-                    <button data-val="white" class="active">Trắng</button>
-                    <button data-val="transparent">Trong suốt</button>
+                    <button data-val="white" class="active" data-i18n="export.white">Trắng</button>
+                    <button data-val="transparent" data-i18n="export.transparent">Trong suốt</button>
                 </div>
             </div>
 
             <div class="preview-wrap">
-                <div class="preview-label">👁 Xem trước</div>
+                <div class="preview-label" data-i18n="export.preview">👁 Xem trước</div>
                 <canvas id="preview-canvas"></canvas>
             </div>
 
             <div class="export-actions">
-                <button class="tool-btn primary" id="export-png">🖼 Tải PNG</button>
+                <button class="tool-btn primary" id="export-png" data-i18n="export.png">🖼 Tải PNG</button>
                 <button class="tool-btn" id="export-svg">📐 SVG</button>
                 <button class="tool-btn" id="export-css">🎨 CSS</button>
                 <button class="tool-btn" id="export-json">{ } JSON</button>
@@ -858,34 +1280,174 @@ input[type="color"]:hover { transform: translateY(-2px); }
 <div class="modal-overlay" id="mix-pick-modal">
     <div class="modal" style="max-width: 720px;">
         <div class="modal-head">
-            <h2>📁 Chọn màu để trộn</h2>
+            <h2 data-i18n="pick.title">📁 Chọn màu để trộn</h2>
             <button class="close-btn" id="mix-pick-close">✕</button>
         </div>
         <div class="modal-body">
             <div class="opt-group">
                 <label id="mix-pick-count" style="font-weight:500"></label>
                 <div class="mixer-add-row">
-                    <button class="tool-btn" id="mix-pick-all">Chọn tất cả</button>
-                    <button class="tool-btn" id="mix-pick-none">Bỏ chọn</button>
-                    <button class="tool-btn" id="mix-pick-invert">Đảo ngược</button>
+                    <button class="tool-btn" id="mix-pick-all" data-i18n="pick.all">Chọn tất cả</button>
+                    <button class="tool-btn" id="mix-pick-none" data-i18n="pick.none">Bỏ chọn</button>
+                    <button class="tool-btn" id="mix-pick-invert" data-i18n="pick.invert">Đảo ngược</button>
                 </div>
             </div>
             <div class="opt-group">
                 <div class="mix-pick-grid" id="mix-pick-grid"></div>
             </div>
             <div class="export-actions">
-                <button class="tool-btn primary" id="mix-pick-add">➕ Thêm <span id="mix-pick-addcount">0</span> màu vào trộn</button>
+                <button class="tool-btn primary" id="mix-pick-add"><span data-i18n="pick.add.prefix">➕ Thêm</span> <span id="mix-pick-addcount">0</span> <span data-i18n="pick.add.suffix">màu vào trộn</span></button>
             </div>
         </div>
     </div>
 </div>
 
-<div id="toast">Đã copy mã màu</div>
+<!-- Modal Chi tiết màu -->
+<div class="modal-overlay" id="detail-modal">
+    <div class="modal" style="max-width:560px">
+        <div class="modal-head">
+            <h2 data-i18n="detail.title">🔍 Chi tiết màu</h2>
+            <button class="close-btn" id="detail-close">✕</button>
+        </div>
+        <div class="modal-body" id="detail-body"></div>
+    </div>
+</div>
+
+<!-- Modal So sánh palette -->
+<div class="modal-overlay" id="compare-modal">
+    <div class="modal" style="max-width:640px">
+        <div class="modal-head">
+            <h2 data-i18n="compare.title2">🔁 So sánh palette</h2>
+            <button class="close-btn" id="compare-close">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="mixer-add-row" style="margin-bottom:14px">
+                <button class="tool-btn primary" id="compare-load" data-i18n="compare.load">📁 Chọn file .aco để so sánh</button>
+                <input type="file" id="compare-file" accept=".aco" style="display:none">
+            </div>
+            <div id="compare-body"></div>
+        </div>
+    </div>
+</div>
+
+<div id="toast" data-i18n="toast.copied">Đã copy mã màu</div>
 
 <script>
 /* ============================================================
    DỮ LIỆU & TRẠNG THÁI
 ============================================================ */
+/* ============================================================
+   ĐA NGÔN NGỮ (i18n) — Tiếng Việt / English
+============================================================ */
+const I18N = {
+vi: {
+"tagline":"Xem · Sao chép · Xuất bảng màu Photoshop (.aco)",
+"install":"Cài đặt ứng dụng","theme":"Đổi giao diện sáng/tối","lang":"Ngôn ngữ",
+"tab.viewer":"📁 Xem ACO","tab.mixer":"🎨 Trộn màu","tab.random":"🎲 Random màu","tab.tools":"🛠 Công cụ",
+"drop.main":"Kéo thả file <b>.aco</b> vào đây","drop.sub":"hoặc click để chọn file từ máy tính","drop.hint":"Hỗ trợ ACO v1 &amp; v2 · RGB / HSB / CMYK / Lab / Grayscale",
+"stats.colors":"màu","stats.selected":"đã chọn",
+"search.ph":"Tìm theo tên hoặc mã màu...","sort.title":"Sắp xếp","sort.original":"Thứ tự gốc","sort.hue":"Theo sắc độ (Hue)","sort.lightness":"Theo độ sáng","sort.saturation":"Theo độ bão hòa","sort.name":"Theo tên",
+"copyformat.title":"Định dạng khi click vào màu","copyall":"📋 Sao chép tất cả ▾","copyall.hex":"Danh sách HEX","copyall.rgb":"Danh sách RGB",
+"select":"☑ Chọn","select.all":"Chọn tất cả","select.none":"Bỏ chọn tất cả","select.invert":"Đảo ngược lựa chọn",
+"export.aco.title":"Xuất màu đã chọn thành file .aco","export.aco":"💾 Xuất .aco","compare.title":"So sánh với file .aco khác","compare.btn":"🔁 So sánh","dedupe.title":"Phát hiện màu trùng lặp","dedupe.btn":"🧹 Trùng lặp","export.main":"⬇ Xuất ảnh &amp; dữ liệu",
+"mixer.title":"🎨 Trộn màu","mixer.equalize.title":"Tự chia đều tỷ lệ theo số lượng màu","mixer.equalize":"⚖️ Cân bằng tỷ lệ","mixer.clear.title":"Xóa hết màu đang trộn","mixer.clear":"🗑 Xóa hết",
+"mixer.addlabel":"Thêm màu","mixer.addlabel.hint":"· hoặc kéo thả file .aco vào đây","mixer.drop":"Thả file .aco để thêm màu","mixer.picker.title":"Chọn màu bất kỳ","mixer.add":"➕ Thêm màu này","mixer.open":"📁 Mở file ACO","mixer.repick.title":"Mở lại danh sách màu đã tải để chỉnh lựa chọn","mixer.repick":"🔁 Chỉnh lại màu",
+"mixer.mixing":"Màu đang trộn","mixer.mixing.hint":"· tỷ lệ tự chia đều, kéo thanh trượt để chỉnh riêng","mixer.result":"Kết quả trộn","mixer.copyhex":"📋 Copy HEX","mixer.copyrgb":"Copy RGB","mixer.copyhsl":"Copy HSL","mixer.save":"💾 Lưu vào lịch sử","mixer.history":"Lịch sử trộn","mixer.history.hint":"· click để copy lại","mixer.historyclear":"🗑 Xóa lịch sử","mixer.remove.title":"Bỏ màu này",
+"random.title":"🎲 Random màu","random.sub":"Chọn màu ngẫu nhiên cho từng thành viên","random.mode":"Chế độ","random.full":"🌈 Hoàn toàn ngẫu nhiên","random.hue":"🎯 Theo họ màu","random.huepick":"Chọn họ màu","random.count":"Số lượng màu (tương ứng số thành viên)","random.unique":"Không trùng màu","random.go":"🎲 Random ngay","random.copyall":"📋 Copy tất cả","random.clear":"🗑 Xóa","random.result":"Kết quả","random.result.hint":"· click vào màu để copy, số thứ tự = thành viên","random.empty":"Bấm \"🎲 Random ngay\" để sinh màu","random.member":"Thành viên",
+"harmony.base.title":"Màu gốc","grad.color.title":"Màu mới","grad.add":"➕ Thêm màu","grad.clear.title":"Xóa hết","grad.angle.title":"Góc (độ)","grad.copy":"📋 Copy CSS",
+"contrast.fg":"Chữ","contrast.bg":"Nền","contrast.hint":"Chữ thường cần ≥ 4.5:1 · Chữ lớn cần ≥ 3:1",
+"blindness.desc":"Xem palette dưới góc nhìn người mù màu (dùng palette đang mở ở tab Xem ACO).","blindness.protanopia":"Protanopia (đỏ)","blindness.deuteranopia":"Deuteranopia (xanh lá)","blindness.tritanopia":"Tritanopia (xanh dương)",
+"image.title":"🖼 Image → Palette / Chấm màu","image.load":"📁 Chọn ảnh","image.count":"{n} màu","image.extract":"🎨 Trích màu","image.hint":"Chấm vào ảnh để lấy 1 màu · hoặc bấm \"Trích màu\" để lấy các màu chủ đạo.",
+"footer":"<b>ACO Color Viewer Pro</b> · Xem, trộn &amp; xuất bảng màu Photoshop ngay trên trình duyệt.<br>Mọi dữ liệu xử lý cục bộ trên máy bạn — không tải lên bất kỳ máy chủ nào.",
+"export.title":"⬇ Xuất bảng màu","export.layout":"Bố cục","export.striph":"Dải ngang","export.stripv":"Dải dọc","export.grid":"Lưới","export.columns":"Số cột (lưới)","export.size":"Kích thước ô (px)","export.gap":"Khoảng cách (px)","export.label":"Nhãn trên ô màu","export.hexname":"HEX + Tên","export.nolabel":"Không nhãn","export.bg":"Nền","export.white":"Trắng","export.transparent":"Trong suốt","export.preview":"👁 Xem trước","export.png":"🖼 Tải PNG",
+"pick.title":"📁 Chọn màu để trộn","pick.all":"Chọn tất cả","pick.none":"Bỏ chọn","pick.invert":"Đảo ngược","pick.add.prefix":"➕ Thêm","pick.add.suffix":"màu vào trộn",
+"detail.title":"🔍 Chi tiết màu","detail.btn":"Chi tiết màu","detail.similar":"🎯 Tìm màu tương tự","detail.copy":"📋 Copy HEX","detail.luminance":"Độ sáng tương đối","detail.contrast":"Contrast với chữ đọc được","mixer.weight.title":"Tỷ lệ màu này trong hỗn hợp",
+"compare.title2":"🔁 So sánh palette","compare.load":"📁 Chọn file .aco để so sánh","compare.same":"Giống nhau","compare.added":"Mới trong file 2","compare.removed":"Bị xóa","compare.none":"Không có","compare.hint":"Chọn file thứ hai để so sánh với palette hiện tại.",
+"toast.copied":"Đã copy mã màu",
+"common.copy":"Copy","common.copied":"Đã copy","common.clickCopy":"Click để copy","common.none":"Không có","common.delete":"Xóa",
+"toast.badfile":"⚠ Vui lòng chọn đúng file .aco","toast.nocolors":"Không tìm thấy màu hợp lệ trong file","toast.readok":"✅ Đã đọc {n} màu từ {name}","toast.readerr":"⚠ Có lỗi khi đọc file .aco","toast.empty":"🔍 Không tìm thấy màu phù hợp","toast.copied2":"📋 Đã copy: {t}","toast.copyfail":"⚠ Không thể copy","toast.noneSelected":"⚠ Chưa có màu nào được chọn","toast.copiedN":"📋 Đã copy {n} màu ({mode})","toast.selectOne":"⚠ Chọn ít nhất 1 màu","toast.exportAco":"💾 Đã xuất {n} màu ra .aco","toast.reordered":"🔀 Đã đổi thứ tự màu","toast.noDup":"✅ Không có màu trùng lặp","toast.dup":"🧹 Phát hiện {n} màu trùng/gần giống. Bấm lại để ẩn.","toast.dupHidden":"Đã ẩn đánh dấu","toast.openFirst":"⚠ Mở file .aco trước","toast.readerr2":"⚠ Lỗi đọc file","toast.similar":"🎯 Đã tô sáng {n} màu gần nhất",
+"toast.png":"🖼 Đã tải PNG thành công","toast.svg":"📐 Đã tải SVG thành công","toast.css":"🎨 Đã tải CSS thành công","toast.json":"{ } Đã tải JSON thành công","toast.txt":"📄 Đã tải TXT thành công","toast.cssGrad":"📋 Đã copy CSS gradient",
+"toast.equalized":"⚖️ Đã chia đều tỷ lệ các màu","toast.addedHex":"➕ Đã thêm {hex}","toast.addedMix":"📁 Đã thêm {n} màu vào trộn","toast.mixUpdated":"✅ Đã cập nhật danh sách màu trộn","toast.noAco":"⚠ Chưa tải file ACO nào — bấm \"📁 Mở file ACO\" trước","toast.noResult":"⚠ Chưa có kết quả để thao tác","toast.saved":"💾 Đã lưu {hex} vào lịch sử","toast.historyCleared":"🗑 Đã xóa lịch sử",
+"toast.pickImage":"⚠ Chọn ảnh trước","toast.extracted":"🎨 Đã trích {n} màu chủ đạo","toast.picked":"📋 Đã copy màu chấm: {hex}","toast.randN":"🎲 Đã sinh {n} màu ngẫu nhiên","toast.noColors2":"⚠ Chưa có màu để copy","toast.copiedN2":"📋 Đã copy {n} màu","toast.installed":"✅ Đã cài đặt ứng dụng!",
+"mixer.empty":"Chưa có màu. Dùng ô chọn màu hoặc bấm \"📁 Mở file ACO\" để thêm.","mixer.emptyResult":"Thêm ít nhất 1 màu để xem kết quả trộn","history.empty":"Chưa có màu nào. Màu bạn copy hoặc lưu sẽ tự xuất hiện ở đây.","pick.count":"Có {n} màu · click để bỏ chọn màu không muốn trộn",
+"randcard.copy":"Click để copy {hex}","randcopyall":"{m} #{i}: {hex}",
+"hue.Red":"Đỏ","hue.Orange":"Cam","hue.Yellow":"Vàng","hue.Green":"Xanh lá","hue.Cyan":"Cyan","hue.Blue":"Xanh dương","hue.Purple":"Tím","hue.Pink":"Hồng"
+},
+en: {
+"tagline":"View · Copy · Export Photoshop (.aco) color palettes",
+"install":"Install app","theme":"Toggle light/dark theme","lang":"Language",
+"tab.viewer":"📁 View ACO","tab.mixer":"🎨 Mix colors","tab.random":"🎲 Random colors","tab.tools":"🛠 Tools",
+"drop.main":"Drag &amp; drop a <b>.aco</b> file here","drop.sub":"or click to choose a file from your computer","drop.hint":"Supports ACO v1 &amp; v2 · RGB / HSB / CMYK / Lab / Grayscale",
+"stats.colors":"colors","stats.selected":"selected",
+"search.ph":"Search by name or color code...","sort.title":"Sort","sort.original":"Original order","sort.hue":"By hue","sort.lightness":"By lightness","sort.saturation":"By saturation","sort.name":"By name",
+"copyformat.title":"Format when clicking a color","copyall":"📋 Copy all ▾","copyall.hex":"HEX list","copyall.rgb":"RGB list",
+"select":"☑ Select","select.all":"Select all","select.none":"Deselect all","select.invert":"Invert selection",
+"export.aco.title":"Export selected colors to .aco","export.aco":"💾 Export .aco","compare.title":"Compare with another .aco file","compare.btn":"🔁 Compare","dedupe.title":"Detect duplicate colors","dedupe.btn":"🧹 Duplicates","export.main":"⬇ Export image &amp; data",
+"mixer.title":"🎨 Mix colors","mixer.equalize.title":"Auto-equalize ratio by color count","mixer.equalize":"⚖️ Equalize ratio","mixer.clear.title":"Remove all mixing colors","mixer.clear":"🗑 Clear all",
+"mixer.addlabel":"Add color","mixer.addlabel.hint":"· or drag &amp; drop a .aco file here","mixer.drop":"Drop .aco file to add colors","mixer.picker.title":"Pick any color","mixer.add":"➕ Add this color","mixer.open":"📁 Open ACO file","mixer.repick.title":"Reopen the loaded color list to adjust selection","mixer.repick":"🔁 Re-adjust colors",
+"mixer.mixing":"Colors being mixed","mixer.mixing.hint":"· ratio auto-equalized, drag a slider to adjust individually","mixer.result":"Mix result","mixer.copyhex":"📋 Copy HEX","mixer.copyrgb":"Copy RGB","mixer.copyhsl":"Copy HSL","mixer.save":"💾 Save to history","mixer.history":"Mix history","mixer.history.hint":"· click to copy again","mixer.historyclear":"🗑 Clear history","mixer.remove.title":"Remove this color",
+"random.title":"🎲 Random colors","random.sub":"Generate random colors for each member","random.mode":"Mode","random.full":"🌈 Fully random","random.hue":"🎯 By color family","random.huepick":"Pick a color family","random.count":"Number of colors (matches member count)","random.unique":"No duplicate colors","random.go":"🎲 Randomize","random.copyall":"📋 Copy all","random.clear":"🗑 Clear","random.result":"Result","random.result.hint":"· click a color to copy, number = member","random.empty":"Click \"🎲 Randomize\" to generate colors","random.member":"Member",
+"harmony.base.title":"Base color","grad.color.title":"New color","grad.add":"➕ Add color","grad.clear.title":"Clear all","grad.angle.title":"Angle (degrees)","grad.copy":"📋 Copy CSS",
+"contrast.fg":"Text","contrast.bg":"Background","contrast.hint":"Body text needs ≥ 4.5:1 · Large text needs ≥ 3:1",
+"blindness.desc":"Preview the palette through color-blind vision (uses the palette open in the View ACO tab).","blindness.protanopia":"Protanopia (red)","blindness.deuteranopia":"Deuteranopia (green)","blindness.tritanopia":"Tritanopia (blue)",
+"image.title":"🖼 Image → Palette / Eyedropper","image.load":"📁 Choose image","image.count":"{n} colors","image.extract":"🎨 Extract colors","image.hint":"Click the image to pick a color · or click \"Extract colors\" to get dominant colors.",
+"footer":"<b>ACO Color Viewer Pro</b> · View, mix &amp; export Photoshop color palettes right in your browser.<br>All data is processed locally on your device — nothing is uploaded to any server.",
+"export.title":"⬇ Export palette","export.layout":"Layout","export.striph":"Horizontal strip","export.stripv":"Vertical strip","export.grid":"Grid","export.columns":"Columns (grid)","export.size":"Cell size (px)","export.gap":"Spacing (px)","export.label":"Label on cells","export.hexname":"HEX + Name","export.nolabel":"No label","export.bg":"Background","export.white":"White","export.transparent":"Transparent","export.preview":"👁 Preview","export.png":"🖼 Download PNG",
+"pick.title":"📁 Select colors to mix","pick.all":"Select all","pick.none":"Deselect","pick.invert":"Invert","pick.add.prefix":"➕ Add","pick.add.suffix":"colors to mix",
+"detail.title":"🔍 Color detail","detail.btn":"Color detail","detail.similar":"🎯 Find similar colors","detail.copy":"📋 Copy HEX","detail.luminance":"Relative luminance","detail.contrast":"Contrast with readable text","mixer.weight.title":"This color's share in the mix",
+"compare.title2":"🔁 Compare palettes","compare.load":"📁 Choose a .aco file to compare","compare.same":"Common","compare.added":"New in file 2","compare.removed":"Removed","compare.none":"None","compare.hint":"Choose a second file to compare with the current palette.",
+"toast.copied":"Copied color code",
+"common.copy":"Copy","common.copied":"Copied","common.clickCopy":"Click to copy","common.none":"None","common.delete":"Delete",
+"toast.badfile":"⚠ Please choose a valid .aco file","toast.nocolors":"No valid colors found in the file","toast.readok":"✅ Loaded {n} colors from {name}","toast.readerr":"⚠ Error reading the .aco file","toast.empty":"🔍 No matching colors found","toast.copied2":"📋 Copied: {t}","toast.copyfail":"⚠ Cannot copy","toast.noneSelected":"⚠ No colors selected","toast.copiedN":"📋 Copied {n} colors ({mode})","toast.selectOne":"⚠ Select at least 1 color","toast.exportAco":"💾 Exported {n} colors to .aco","toast.reordered":"🔀 Reordered colors","toast.noDup":"✅ No duplicate colors","toast.dup":"🧹 Found {n} duplicate/similar colors. Click again to hide.","toast.dupHidden":"Highlights hidden","toast.openFirst":"⚠ Open a .aco file first","toast.readerr2":"⚠ Error reading file","toast.similar":"🎯 Highlighted {n} closest colors",
+"toast.png":"🖼 PNG downloaded","toast.svg":"📐 SVG downloaded","toast.css":"🎨 CSS downloaded","toast.json":"{ } JSON downloaded","toast.txt":"📄 TXT downloaded","toast.cssGrad":"📋 CSS gradient copied",
+"toast.equalized":"⚖️ Equalized color ratios","toast.addedHex":"➕ Added {hex}","toast.addedMix":"📁 Added {n} colors to mix","toast.mixUpdated":"✅ Mix list updated","toast.noAco":"⚠ No ACO file loaded — click \"📁 Open ACO file\" first","toast.noResult":"⚠ Nothing to act on yet","toast.saved":"💾 Saved {hex} to history","toast.historyCleared":"🗑 History cleared",
+"toast.pickImage":"⚠ Choose an image first","toast.extracted":"🎨 Extracted {n} dominant colors","toast.picked":"📋 Copied picked color: {hex}","toast.randN":"🎲 Generated {n} random colors","toast.noColors2":"⚠ No colors to copy","toast.copiedN2":"📋 Copied {n} colors","toast.installed":"✅ App installed!",
+"mixer.empty":"No colors yet. Use the color picker or click \"📁 Open ACO file\" to add.","mixer.emptyResult":"Add at least 1 color to see the mix result","history.empty":"No colors yet. Colors you copy or save will appear here.","pick.count":"{n} colors · click to deselect colors you don't want to mix",
+"randcard.copy":"Click to copy {hex}","randcopyall":"{m} #{i}: {hex}",
+"hue.Red":"Red","hue.Orange":"Orange","hue.Yellow":"Yellow","hue.Green":"Green","hue.Cyan":"Cyan","hue.Blue":"Blue","hue.Purple":"Purple","hue.Pink":"Pink"
+}
+};
+let LANG = (function(){ try { return localStorage.getItem('aco-lang') === 'en' ? 'en' : 'vi'; } catch(e){ return 'vi'; } })();
+function t(key, vars) {
+    let s = (I18N[LANG] && I18N[LANG][key] != null) ? I18N[LANG][key] : (I18N.en[key] != null ? I18N.en[key] : key);
+    if (vars) for (const k in vars) s = s.split('{'+k+'}').join(vars[k]);
+    return s;
+}
+function applyLang() {
+    document.documentElement.setAttribute('lang', LANG);
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const fixed = el.getAttribute('data-i18n-fixed');
+        el.textContent = fixed != null ? t(el.getAttribute('data-i18n'), {n: fixed}) : t(el.getAttribute('data-i18n'));
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.getAttribute('data-i18n-html')); });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph'))); });
+    document.querySelectorAll('[data-i18n-title]').forEach(el => { el.setAttribute('title', t(el.getAttribute('data-i18n-title'))); });
+    const mp = document.getElementById('mixer-panel');
+    if (mp) mp.setAttribute('data-drop-label', t('mixer.drop'));
+    const lb = document.getElementById('lang-btn');
+    if (lb) { lb.textContent = LANG === 'vi' ? 'EN' : 'VI'; }
+    if (typeof updateThemeIcon === 'function') updateThemeIcon();
+    if (typeof updateSelectedStat === 'function') updateSelectedStat();
+    if (typeof renderMixer === 'function') renderMixer();
+    if (typeof renderHistory === 'function') renderHistory();
+    if (typeof renderRandGrid === 'function') renderRandGrid();
+    if (typeof renderHarmony === 'function') renderHarmony();
+    if (typeof renderGradient === 'function') renderGradient();
+    if (typeof renderContrast === 'function') renderContrast();
+    if (typeof renderBlindness === 'function') renderBlindness();
+    if (typeof renderHuePicker === 'function') renderHuePicker();
+    if (typeof renderPickGrid === 'function' && document.getElementById('mix-pick-modal').classList.contains('open')) renderPickGrid();
+    if (colors && colors.length && typeof render === 'function') render();
+}
+(function initLang() {
+    const lb = document.getElementById('lang-btn');
+    if (lb) lb.addEventListener('click', () => {
+        LANG = LANG === 'vi' ? 'en' : 'vi';
+        try { localStorage.setItem('aco-lang', LANG); } catch(e) {}
+        applyLang();
+    });
+})();
+
 let colors = [];          // { hex, r, g, b, h, s, l, name, space, selected }
 let filteredColors = [];
 let currentFile = '';
@@ -1164,7 +1726,7 @@ dropZone.addEventListener('drop', e => {
 
 function handleFile(file) {
     if (!file.name.toLowerCase().endsWith('.aco')) {
-        showToast('⚠ Vui lòng chọn đúng file .aco');
+        showToast(t('toast.badfile'));
         return;
     }
     currentFile = file.name;
@@ -1173,7 +1735,7 @@ function handleFile(file) {
         try {
             colors = parseACO(ev.target.result);
             if (colors.length === 0) {
-                showToast('Không tìm thấy màu hợp lệ trong file');
+                showToast(t('toast.nocolors'));
                 return;
             }
             // Đoán tên nếu không có
@@ -1181,11 +1743,11 @@ function handleFile(file) {
             resultContainer.style.display = 'block';
             document.getElementById('stat-file').textContent = '📄 ' + currentFile;
             render();
-            showToast(`✅ Đã đọc ${colors.length} màu từ ${file.name}`);
+            showToast(t('toast.readok', {n: colors.length, name: file.name}));
             resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } catch (err) {
             console.error(err);
-            showToast('⚠ Có lỗi khi đọc file .aco');
+            showToast(t('toast.readerr'));
         }
     };
     reader.readAsArrayBuffer(file);
@@ -1216,7 +1778,7 @@ function applyFilter() {
 
 function renderGrid() {
     if (filteredColors.length === 0) {
-        grid.innerHTML = '<div class="empty-state">🔍 Không tìm thấy màu phù hợp</div>';
+        grid.innerHTML = '<div class="empty-state">' + t('toast.empty') + '</div>';
         return;
     }
     grid.innerHTML = '';
@@ -1228,6 +1790,7 @@ function renderGrid() {
             <div class="preview" style="background:${c.hex}">
                 <span class="check">✓</span>
                 <span class="idx-badge">${c.idx || ''}</span>
+                <button class="detail-btn" title="${t('detail.btn')}">ℹ️</button>
             </div>
             <div class="info">
                 ${nameDisplay}
@@ -1236,7 +1799,7 @@ function renderGrid() {
             </div>
         `;
         card.addEventListener('click', () => copyColor(c));
-        // Toggle chọn bằng nút check (không trùng với copy)
+
         const check = card.querySelector('.check');
         check.addEventListener('click', e => {
             e.stopPropagation();
@@ -1244,6 +1807,11 @@ function renderGrid() {
             card.classList.toggle('selected', c.selected);
             updateSelectedStat();
         });
+
+        const detailBtn = card.querySelector('.detail-btn');
+        detailBtn.addEventListener('click', e => { e.stopPropagation(); showDetail(c); });
+
+        initDrag(card, c);
         grid.appendChild(card);
     });
 }
@@ -1258,7 +1826,7 @@ function updateSelectedStat() {
     const el = document.getElementById('stat-selected');
     if (n < colors.length) {
         el.style.display = '';
-        el.innerHTML = '✓ <span class="num">' + n + '</span> đã chọn';
+        el.innerHTML = '✓ <span class="num">' + n + '</span> ' + t('stats.selected');
     } else {
         el.style.display = 'none';
     }
@@ -1297,7 +1865,7 @@ function formatColor(c, fmt) {
 function copyColor(c) {
     const fmt = copyFormat.value;
     const text = formatColor(c, fmt);
-    copyText(text).then(() => showToast(`📋 Đã copy: ${text}`)).catch(() => showToast('⚠ Không thể copy'));
+    copyText(text).then(() => showToast(t('toast.copied2', {t: text}))).catch(() => showToast(t('toast.copyfail')));
 }
 
 function getSelected() {
@@ -1314,14 +1882,14 @@ document.querySelectorAll('#copy-all-menu .menu-item').forEach(btn => {
         closeMenus();
         const mode = btn.dataset.mode;
         const list = getSelected();
-        if (list.length === 0) { showToast('⚠ Chưa có màu nào được chọn'); return; }
+        if (list.length === 0) { showToast(t('toast.noneSelected')); return; }
         let text = '';
         if (mode === 'hex') text = list.map(c => c.hex).join(', ');
         else if (mode === 'css') text = list.map((c, i) => `--color-${i + 1}: ${c.hex};`).join('\n');
         else if (mode === 'scss') text = list.map((c, i) => `$color-${i + 1}: ${c.hex};`).join('\n');
         else if (mode === 'json') text = JSON.stringify(list.map(c => ({ name: c.name || nearestName(c.hex), hex: c.hex, rgb: [Math.round(c.r), Math.round(c.g), Math.round(c.b)] })), null, 2);
         else if (mode === 'rgb') text = list.map(c => `rgb(${Math.round(c.r)}, ${Math.round(c.g)}, ${Math.round(c.b)})`).join(', ');
-        copyText(text).then(() => showToast(`📋 Đã copy ${list.length} màu (${mode.toUpperCase()})`)).catch(() => showToast('⚠ Không thể copy'));
+        copyText(text).then(() => showToast(t('toast.copiedN', {n: list.length, mode: mode.toUpperCase()}))).catch(() => showToast(t('toast.copyfail')));
     });
 });
 
@@ -1371,7 +1939,7 @@ const exportOptions = {
 };
 
 document.getElementById('export-btn').addEventListener('click', () => {
-    if (getSelected().length === 0) { showToast('⚠ Chưa có màu nào được chọn'); return; }
+    if (getSelected().length === 0) { showToast(t('toast.noneSelected')); return; }
     modal.classList.add('open');
     drawPreview();
 });
@@ -1470,7 +2038,7 @@ function exportPNG() {
     link.download = 'Color_Palette.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
-    showToast('🖼 Đã tải PNG thành công');
+    showToast(t('toast.png'));
 }
 
 /* ============================================================
@@ -1506,27 +2074,27 @@ function exportSVG() {
     const bg = exportOptions.bg === 'white' ? `<rect width="${w}" height="${h}" fill="#ffffff"/>` : '';
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${bg}${rects}</svg>`;
     downloadText('Color_Palette.svg', svg, 'image/svg+xml');
-    showToast('📐 Đã tải SVG thành công');
+    showToast(t('toast.svg'));
 }
 
 function exportCSS() {
     const list = getSelected();
     const body = list.map((c, i) => `  --color-${i + 1}: ${c.hex};${c.name ? ` /* ${c.name} */` : ''}`).join('\n');
     downloadText('colors.css', `:root {\n${body}\n}\n`, 'text/css');
-    showToast('🎨 Đã tải CSS thành công');
+    showToast(t('toast.css'));
 }
 
 function exportJSON() {
     const list = getSelected();
     const data = list.map(c => ({ name: c.name || nearestName(c.hex), hex: c.hex, rgb: [Math.round(c.r), Math.round(c.g), Math.round(c.b)], hsl: [Math.round(c.h), Math.round(c.s), Math.round(c.l)] }));
     downloadText('colors.json', JSON.stringify(data, null, 2), 'application/json');
-    showToast('{ } Đã tải JSON thành công');
+    showToast(t('toast.json'));
 }
 
 function exportTXT() {
     const list = getSelected();
     downloadText('colors.txt', list.map(c => c.hex).join('\n'), 'text/plain');
-    showToast('📄 Đã tải TXT thành công');
+    showToast(t('toast.txt'));
 }
 
 document.getElementById('export-png').addEventListener('click', exportPNG);
@@ -1569,7 +2137,7 @@ function addMixerColor(r, g, b) {
     const { h, s, l } = rgbToHsl(r, g, b);
     mixerColors.push({ hex, r, g, b, h, s, l, name: null, space: 'RGB', selected: true, weight: 100 });
     renderMixer();
-    showToast('➕ Đã thêm ' + hex);
+    showToast(t('toast.addedHex', {hex: hex}));
 }
 
 /* --- Mở file ACO ngay trong mục trộn màu (không cần qua tab Xem ACO) --- */
@@ -1582,20 +2150,20 @@ mixAcoInput.addEventListener('change', e => {
 
 function handleMixACOFile(file) {
     if (!file.name.toLowerCase().endsWith('.aco')) {
-        showToast('⚠ Vui lòng chọn đúng file .aco');
+        showToast(t('toast.badfile'));
         return;
     }
     const reader = new FileReader();
     reader.onload = ev => {
         try {
             const parsed = parseACO(ev.target.result);
-            if (parsed.length === 0) { showToast('⚠ Không tìm thấy màu hợp lệ trong file'); return; }
+            if (parsed.length === 0) { showToast(t('toast.nocolors')); return; }
             mixPickColors = parsed.map(c => ({ ...c, selected: true }));
             mixPickFilename = file.name;
             openPickModal(false);
         } catch (err) {
             console.error(err);
-            showToast('⚠ Có lỗi khi đọc file .aco');
+            showToast(t('toast.readerr'));
         }
     };
     reader.readAsArrayBuffer(file);
@@ -1619,7 +2187,7 @@ mixerPanel.addEventListener('drop', e => {
 /* --- Mở lại danh sách màu đã tải để chỉnh lựa chọn (không cần up lại) --- */
 document.getElementById('mix-repick').addEventListener('click', () => {
     if (mixPickColors.length === 0) {
-        showToast('⚠ Chưa tải file ACO nào — bấm "📁 Mở file ACO" trước');
+        showToast(t('toast.noAco'));
         return;
     }
     openPickModal(true);
@@ -1640,7 +2208,7 @@ function renderPickGrid() {
     const grid = document.getElementById('mix-pick-grid');
     document.getElementById('mix-pick-count').textContent =
         (mixPickFilename ? '📄 ' + mixPickFilename + ' — ' : '') +
-        'Có ' + mixPickColors.length + ' màu · click để bỏ chọn màu không muốn trộn';
+        t('pick.count', {n: mixPickColors.length});
     grid.innerHTML = '';
     mixPickColors.forEach(c => {
         const it = document.createElement('div');
@@ -1680,7 +2248,7 @@ document.getElementById('mix-pick-add').addEventListener('click', () => {
     });
     mixPickModal.classList.remove('open');
     renderMixer();
-    showToast(added > 0 ? ('📁 Đã thêm ' + added + ' màu vào trộn') : '✅ Đã cập nhật danh sách màu trộn');
+    showToast(added > 0 ? t('toast.addedMix', {n: added}) : t('toast.mixUpdated'));
 });
 document.getElementById('mix-pick-close').addEventListener('click', () => mixPickModal.classList.remove('open'));
 mixPickModal.addEventListener('click', e => { if (e.target === mixPickModal) mixPickModal.classList.remove('open'); });
@@ -1689,7 +2257,7 @@ mixPickModal.addEventListener('click', e => { if (e.target === mixPickModal) mix
 document.getElementById('mix-equalize').addEventListener('click', () => {
     mixerColors.forEach(c => c.weight = 100);
     renderMixer();
-    showToast('⚖️ Đã chia đều tỷ lệ các màu');
+    showToast(t('toast.equalized'));
 });
 
 /* --- Xóa hết màu đang trộn --- */
@@ -1701,7 +2269,7 @@ document.getElementById('mix-clear').addEventListener('click', () => {
 function renderMixer() {
     const container = document.getElementById('mixer-colors');
     if (mixerColors.length === 0) {
-        container.innerHTML = '<div class="mixer-empty">Chưa có màu. Dùng ô chọn màu hoặc bấm "📁 Mở file ACO" để thêm.</div>';
+        container.innerHTML = '<div class="mixer-empty">' + t('mixer.empty') + '</div>';
         updateMixResult();
         return;
     }
@@ -1716,9 +2284,9 @@ function renderMixer() {
                 <div class="mixer-chip-name">${c.name ? escapeHtml(c.name) : '~ ' + escapeHtml(nearestName(c.hex))}</div>
                 <div class="mixer-chip-hex">${c.hex}</div>
             </div>
-            <input type="range" min="0" max="100" value="${c.weight}" class="mixer-weight" data-i="${i}" title="Tỷ lệ màu này trong hỗn hợp">
+            <input type="range" min="0" max="100" value="${c.weight}" class="mixer-weight" data-i="${i}" title="${t('mixer.weight.title')}">
             <span class="mixer-weight-val"></span>
-            <button class="mixer-remove" data-i="${i}" title="Bỏ màu này">✕</button>
+            <button class="mixer-remove" data-i="${i}" title="${t('mixer.remove.title')}">✕</button>
         `;
         container.appendChild(chip);
     });
@@ -1766,7 +2334,7 @@ function updateMixResult() {
     mixerResult = computeMix();
     const box = document.getElementById('mixer-result');
     if (!mixerResult) {
-        box.innerHTML = '<div class="mixer-empty" style="flex:1">Thêm ít nhất 1 màu để xem kết quả trộn</div>';
+        box.innerHTML = '<div class="mixer-empty" style="flex:1">' + t('mixer.emptyResult') + '</div>';
         return;
     }
     const m = mixerResult;
@@ -1783,29 +2351,29 @@ function updateMixResult() {
 }
 
 function requireMixResult() {
-    if (!mixerResult) { showToast('⚠ Chưa có kết quả để thao tác'); return null; }
+    if (!mixerResult) { showToast(t('toast.noResult')); return null; }
     return mixerResult;
 }
 
 document.getElementById('mix-copy-hex').addEventListener('click', () => {
     const m = requireMixResult(); if (!m) return;
-    copyText(m.hex).then(() => { addToHistory(m); showToast(`📋 Đã copy: ${m.hex}`); });
+    copyText(m.hex).then(() => { addToHistory(m); showToast(t('toast.copied2', {t: m.hex})); });
 });
 document.getElementById('mix-copy-rgb').addEventListener('click', () => {
     const m = requireMixResult(); if (!m) return;
-    const t = `rgb(${m.r}, ${m.g}, ${m.b})`;
-    copyText(t).then(() => { addToHistory(m); showToast(`📋 Đã copy: ${t}`); });
+    const txt = `rgb(${m.r}, ${m.g}, ${m.b})`;
+    copyText(txt).then(() => { addToHistory(m); showToast(t('toast.copied2', {t: txt})); });
 });
 document.getElementById('mix-copy-hsl').addEventListener('click', () => {
     const m = requireMixResult(); if (!m) return;
-    const t = `hsl(${Math.round(m.h)}, ${Math.round(m.s)}%, ${Math.round(m.l)}%)`;
-    copyText(t).then(() => { addToHistory(m); showToast(`📋 Đã copy: ${t}`); });
+    const txt = `hsl(${Math.round(m.h)}, ${Math.round(m.s)}%, ${Math.round(m.l)}%)`;
+    copyText(txt).then(() => { addToHistory(m); showToast(t('toast.copied2', {t: txt})); });
 });
 
 document.getElementById('mix-save').addEventListener('click', () => {
     const m = requireMixResult(); if (!m) return;
     addToHistory(m);
-    showToast('💾 Đã lưu ' + m.hex + ' vào lịch sử');
+    showToast(t('toast.saved', {hex: m.hex}));
 });
 
 /* ============================================================
@@ -1833,22 +2401,22 @@ function renderHistory() {
     const box = document.getElementById('mix-history');
     const h = loadHistory();
     if (h.length === 0) {
-        box.innerHTML = '<div class="history-empty">Chưa có màu nào. Màu bạn copy hoặc lưu sẽ tự xuất hiện ở đây.</div>';
+        box.innerHTML = '<div class="history-empty">' + t('history.empty') + '</div>';
         return;
     }
     box.innerHTML = '';
     h.forEach(item => {
         const el = document.createElement('div');
         el.className = 'history-item';
-        el.title = 'Click để copy ' + item.hex;
+        el.title = t('common.clickCopy') + ' ' + item.hex;
         el.innerHTML = `
             <div class="sw" style="background:${item.hex}"></div>
             <div class="tx" style="color:${item.hex}">${item.hex}</div>
-            <button class="del" title="Xóa">✕</button>
+            <button class="del" title="${t('common.delete')}">✕</button>
         `;
         el.addEventListener('click', e => {
             if (e.target.classList.contains('del')) return;
-            copyText(item.hex).then(() => showToast(`📋 Đã copy: ${item.hex}`));
+            copyText(item.hex).then(() => showToast(t('toast.copied2', {t: item.hex})));
         });
         el.querySelector('.del').addEventListener('click', e => {
             e.stopPropagation();
@@ -1860,7 +2428,7 @@ function renderHistory() {
 document.getElementById('mix-history-clear').addEventListener('click', () => {
     saveHistory([]);
     renderHistory();
-    showToast('🗑 Đã xóa lịch sử');
+    showToast(t('toast.historyCleared'));
 });
 
 // Khởi tạo
@@ -1870,8 +2438,8 @@ renderHistory();
 /* ============================================================
    TÌM KIẾM / SẮP XẾP / THEME
 ============================================================ */
-searchInput.addEventListener('input', renderGrid);
-sortSelect.addEventListener('change', renderGrid);
+searchInput.addEventListener('input', applyFilter);
+sortSelect.addEventListener('change', applyFilter);
 
 // Theme
 function safeGetTheme() {
@@ -1881,7 +2449,11 @@ function safeSetTheme(v) {
     try { localStorage.setItem('aco-theme', v); } catch (e) { /* bỏ qua trong sandbox */ }
 }
 const savedTheme = safeGetTheme();
-if (savedTheme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+if (savedTheme === 'light') {
+    document.documentElement.removeAttribute('data-theme');
+} else {
+    document.documentElement.setAttribute('data-theme', 'dark'); // mặc định giao diện tối
+}
 function updateThemeIcon() {
     const dark = document.documentElement.getAttribute('data-theme') === 'dark';
     themeBtn.textContent = dark ? '☀️' : '🌙';
@@ -1899,9 +2471,588 @@ document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
         modal.classList.remove('open');
         mixPickModal.classList.remove('open');
+        detailModal.classList.remove('open');
+        compareModal.classList.remove('open');
         closeMenus();
     }
 });
+
+/* ============================================================
+   CÔNG CỤ NÂNG CAO — 15 tính năng
+============================================================ */
+
+/* ---------- Chuyển đổi màu bổ sung ---------- */
+function rgbToHsv(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+    let h = 0;
+    if (d !== 0) {
+        if (max === r) h = ((g - b) / d) % 6;
+        else if (max === g) h = (b - r) / d + 2;
+        else h = (r - g) / d + 4;
+        h *= 60; if (h < 0) h += 360;
+    }
+    const s = max === 0 ? 0 : d / max;
+    return { h, s: s * 100, v: max * 100 };
+}
+function rgbToCmyk(r, g, b) {
+    let c = 1 - r / 255, m = 1 - g / 255, y = 1 - b / 255;
+    const k = Math.min(c, m, y);
+    if (k === 1) return { c: 0, m: 0, y: 0, k: 100 };
+    c = (c - k) / (1 - k); m = (m - k) / (1 - k); y = (y - k) / (1 - k);
+    return { c: c * 100, m: m * 100, y: y * 100, k: k * 100 };
+}
+function rgbToLab(r, g, b) {
+    const f = t => t > 0.04045 ? Math.pow((t + 0.055) / 1.055, 2.4) : t / 12.92;
+    const R = f(r / 255), G = f(g / 255), B = f(b / 255);
+    const X = (0.4124 * R + 0.3576 * G + 0.1805 * B) / 0.95047;
+    const Y = (0.2126 * R + 0.7152 * G + 0.0722 * B);
+    const Z = (0.0193 * R + 0.1192 * G + 0.9505 * B) / 1.08883;
+    const f2 = t => t > 0.008856 ? Math.cbrt(t) : (7.787 * t) + 16 / 116;
+    return { l: 116 * f2(Y) - 16, a: 500 * (f2(X) - f2(Y)), b: 200 * (f2(Y) - f2(Z)) };
+}
+function wcagLuminance(hex) {
+    const { r, g, b } = hexToRgb(hex);
+    const f = c => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+    return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+}
+function contrastRatio(a, b) {
+    const l1 = wcagLuminance(a), l2 = wcagLuminance(b);
+    const hi = Math.max(l1, l2), lo = Math.min(l1, l2);
+    return (hi + 0.05) / (lo + 0.05);
+}
+const BLINDNESS = {
+    protanopia:   [0.56667, 0.43333, 0, 0.55833, 0.44167, 0, 0, 0.24167, 0.75833],
+    deuteranopia: [0.625, 0.375, 0, 0.7, 0.3, 0, 0, 0.3, 0.7],
+    tritanopia:   [0.95, 0.05, 0, 0, 0.43333, 0.56667, 0, 0.475, 0.525]
+};
+function applyBlindness(hex, type) {
+    if (type === 'normal') return hex;
+    const { r, g, b } = hexToRgb(hex);
+    let nr, ng, nb;
+    if (type === 'grayscale') {
+        const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        nr = ng = nb = lum;
+    } else {
+        const m = BLINDNESS[type];
+        nr = m[0] * r + m[1] * g + m[2] * b;
+        ng = m[3] * r + m[4] * g + m[5] * b;
+        nb = m[6] * r + m[7] * g + m[8] * b;
+    }
+    return rgbToHex(clamp(Math.round(nr), 0, 255), clamp(Math.round(ng), 0, 255), clamp(Math.round(nb), 0, 255));
+}
+
+/* ---------- Smart color naming ---------- */
+function smartName(hex) {
+    const { r, g, b } = hexToRgb(hex);
+    const { h, s, l } = rgbToHsl(r, g, b);
+    if (s < 10) {
+        if (l > 92) return 'White';
+        if (l < 12) return 'Black';
+        if (l < 45) return 'Dark Gray';
+        if (l > 70) return 'Light Gray';
+        return 'Gray';
+    }
+    const hueNames = [[10, 'Red'], [40, 'Orange'], [65, 'Yellow'], [90, 'Yellow-Green'], [155, 'Green'], [185, 'Teal'], [215, 'Blue'], [250, 'Indigo'], [290, 'Purple'], [325, 'Magenta'], [348, 'Pink'], [360, 'Red']];
+    let base = 'Red';
+    for (const [deg, name] of hueNames) { if (h < deg) { base = name; break; } }
+    let adj = '';
+    if (s < 35) adj = 'Dusty ';
+    else if (s < 60) adj = 'Muted ';
+    else if (l > 45 && l < 70) adj = 'Vivid ';
+    else if (s < 55 && l > 60) adj = 'Pale ';
+    let light = '';
+    if (l < 25) light = 'Dark ';
+    else if (l > 82) light = 'Light ';
+    else if (l > 66) light = 'Soft ';
+    return (light + adj + base).trim() || 'Neutral';
+}
+
+/* ---------- 1. Color Detail Panel ---------- */
+const detailModal = document.getElementById('detail-modal');
+function showDetail(c) {
+    const { r, g, b } = c;
+    const hsl = rgbToHsl(r, g, b);
+    const hsv = rgbToHsv(r, g, b);
+    const cmyk = rgbToCmyk(r, g, b);
+    const lab = rgbToLab(r, g, b);
+    const lum = wcagLuminance(c.hex);
+    const tc = textColorFor(c.hex);
+    const contrast = contrastRatio(c.hex, tc);
+
+    const rows = [
+        ['HEX', c.hex],
+        ['RGB', `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`],
+        ['HSL', `hsl(${Math.round(hsl.h)}, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%)`],
+        ['HSV', `hsv(${Math.round(hsv.h)}, ${Math.round(hsv.s)}%, ${Math.round(hsv.v)}%)`],
+        ['CMYK', `cmyk(${cmyk.c.toFixed(0)}%, ${cmyk.m.toFixed(0)}%, ${cmyk.y.toFixed(0)}%, ${cmyk.k.toFixed(0)}%)`],
+        ['Lab', `Lab(${lab.l.toFixed(1)}, ${lab.a.toFixed(1)}, ${lab.b.toFixed(1)})`],
+        [t('detail.luminance'), lum.toFixed(3)],
+        [t('detail.contrast'), contrast.toFixed(2) + ':1']
+    ].map(([k, v]) => `
+        <div class="detail-row" data-val="${v}">
+            <span class="k">${k}</span><span class="v">${v}</span>
+        </div>`).join('');
+
+    document.getElementById('detail-body').innerHTML = `
+        <div class="detail-head">
+            <div class="detail-swatch"><div class="detail-swatch-inner" style="background:${c.hex}"></div></div>
+            <div class="detail-names">
+                <div class="dn-hex" style="color:${c.hex}">${c.hex}</div>
+                <div class="dn-name">${escapeHtml(c.name || smartName(c.hex))}</div>
+            </div>
+        </div>
+        ${rows}
+        <div class="mixer-actions" style="margin-top:14px">
+            <button class="tool-btn" id="detail-similar">${t('detail.similar')}</button>
+            <button class="tool-btn primary" id="detail-copy">${t('detail.copy')}</button>
+        </div>
+    `;
+    document.querySelectorAll('#detail-body .detail-row').forEach(r => {
+        r.addEventListener('click', () => copyText(r.dataset.val).then(() => showToast(t('toast.copied2', {t: r.dataset.val}))));
+    });
+    document.getElementById('detail-copy').addEventListener('click', () => copyText(c.hex).then(() => showToast(t('toast.copied2', {t: c.hex}))));
+    document.getElementById('detail-similar').addEventListener('click', () => {
+        detailModal.classList.remove('open');
+        findSimilar(c);
+    });
+    detailModal.classList.add('open');
+}
+document.getElementById('detail-close').addEventListener('click', () => detailModal.classList.remove('open'));
+detailModal.addEventListener('click', e => { if (e.target === detailModal) detailModal.classList.remove('open'); });
+
+/* ---------- 14. Similar Color Finder ---------- */
+function findSimilar(ref) {
+    const list = colors.slice().sort((a, b) => {
+        const da = Math.pow(a.r - ref.r, 2) + Math.pow(a.g - ref.g, 2) + Math.pow(a.b - ref.b, 2);
+        const db = Math.pow(b.r - ref.r, 2) + Math.pow(b.g - ref.g, 2) + Math.pow(b.b - ref.b, 2);
+        return da - db;
+    }).slice(1, 6);
+    const similarSet = new Set(list.map(c => c.hex));
+    document.querySelectorAll('.swatch').forEach(card => {
+        const hex = card.querySelector('.hex').textContent;
+        card.classList.toggle('similar', similarSet.has(hex));
+    });
+    showToast(t('toast.similar', {n: list.length}));
+    setTimeout(() => document.querySelectorAll('.swatch.similar').forEach(el => el.classList.remove('similar')), 3000);
+}
+
+/* ---------- 11. ACO Export ---------- */
+function downloadBlob(filename, blob) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url; link.download = filename;
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function exportACO() {
+    const list = getSelected();
+    if (list.length === 0) { showToast(t('toast.selectOne')); return; }
+    const bytes = [];
+    const u16 = v => { bytes.push((v >> 8) & 255, v & 255); };
+    u16(2); u16(list.length);
+    list.forEach(c => {
+        u16(0);
+        u16(Math.round(c.r) * 256); u16(Math.round(c.g) * 256); u16(Math.round(c.b) * 256); u16(0);
+        const name = c.name || smartName(c.hex);
+        for (const ch of name) u16(ch.charCodeAt(0));
+        u16(0);
+    });
+    downloadBlob('palette.aco', new Blob([new Uint8Array(bytes)], { type: 'application/octet-stream' }));
+    showToast(t('toast.exportAco', {n: list.length}));
+}
+document.getElementById('export-aco-btn').addEventListener('click', exportACO);
+
+/* ---------- 12. Drag-to-reorder ---------- */
+function initDrag(card, c) {
+    card.draggable = true;
+    card.addEventListener('dragstart', e => {
+        card.classList.add('dragging');
+        e.dataTransfer.setData('text/plain', c.hex);
+        e.dataTransfer.effectAllowed = 'move';
+    });
+    card.addEventListener('dragend', () => card.classList.remove('dragging'));
+    card.addEventListener('dragover', e => { e.preventDefault(); card.classList.add('drag-over'); });
+    card.addEventListener('dragleave', () => card.classList.remove('drag-over'));
+    card.addEventListener('drop', e => {
+        e.preventDefault(); card.classList.remove('drag-over');
+        const srcHex = e.dataTransfer.getData('text/plain');
+        if (srcHex && srcHex !== c.hex) reorderColors(srcHex, c.hex);
+    });
+}
+function reorderColors(srcHex, tgtHex) {
+    const si = colors.findIndex(x => x.hex === srcHex);
+    const ti = colors.findIndex(x => x.hex === tgtHex);
+    if (si < 0 || ti < 0) return;
+    const [moved] = colors.splice(si, 1);
+    colors.splice(ti, 0, moved);
+    colors.forEach((c, i) => c.idx = i + 1);
+    render();
+    showToast(t('toast.reordered'));
+}
+
+/* ---------- 13. Duplicate Detector ---------- */
+function findDupHexes() {
+    const exact = new Map(), dup = new Set();
+    colors.forEach(c => { if (exact.has(c.hex)) dup.add(c.hex); else exact.set(c.hex, true); });
+    for (let i = 0; i < colors.length; i++) {
+        for (let j = i + 1; j < colors.length; j++) {
+            const a = colors[i], b = colors[j];
+            if (Math.abs(a.r - b.r) < 8 && Math.abs(a.g - b.g) < 8 && Math.abs(a.b - b.b) < 8) { dup.add(a.hex); dup.add(b.hex); }
+        }
+    }
+    return dup;
+}
+let dedupeOn = false;
+document.getElementById('dedupe-btn').addEventListener('click', () => {
+    const dup = findDupHexes();
+    if (dup.size === 0) { showToast(t('toast.noDup')); return; }
+    dedupeOn = !dedupeOn;
+    if (dedupeOn) {
+        document.querySelectorAll('.swatch').forEach(card => {
+            const hex = card.querySelector('.hex').textContent;
+            card.classList.toggle('dup', dup.has(hex));
+        });
+        showToast(t('toast.dup', {n: dup.size}));
+    } else {
+        document.querySelectorAll('.swatch.dup').forEach(el => el.classList.remove('dup'));
+        showToast(t('toast.dupHidden'));
+    }
+});
+
+/* ---------- 10. Compare Palette ---------- */
+const compareModal = document.getElementById('compare-modal');
+document.getElementById('compare-btn').addEventListener('click', () => {
+    if (colors.length === 0) { showToast(t('toast.openFirst')); return; }
+    compareModal.classList.add('open');
+    document.getElementById('compare-body').innerHTML = '<p class="mixer-hint">' + t('compare.hint') + '</p>';
+});
+document.getElementById('compare-close').addEventListener('click', () => compareModal.classList.remove('open'));
+compareModal.addEventListener('click', e => { if (e.target === compareModal) compareModal.classList.remove('open'); });
+const compareFileInput = document.getElementById('compare-file');
+document.getElementById('compare-load').addEventListener('click', () => compareFileInput.click());
+compareFileInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        try {
+            const other = parseACO(ev.target.result);
+            renderCompare(other);
+        } catch (err) { showToast(t('toast.readerr2')); }
+    };
+    reader.readAsArrayBuffer(file);
+    e.target.value = '';
+});
+function renderCompare(other) {
+    const cur = new Set(colors.map(c => c.hex));
+    const oth = new Set(other.map(c => c.hex));
+    const common = colors.filter(c => oth.has(c.hex));
+    const added = other.filter(c => !cur.has(c.hex));
+    const removed = colors.filter(c => !oth.has(c.hex));
+    const row = c => `<div class="diff-row"><div class="pv" style="background:${c.hex}"></div><span class="tx" style="color:${c.hex}">${c.hex}</span><span class="mixer-hint">${escapeHtml(c.name || '')}</span></div>`;
+    document.getElementById('compare-body').innerHTML = `
+        <div class="diff-group"><h4>✅ ${t('compare.same')} (${common.length})</h4>${common.map(row).join('') || '<p class="mixer-hint">' + t('common.none') + '</p>'}</div>
+        <div class="diff-group"><h4>➕ ${t('compare.added')} (${added.length})</h4>${added.map(row).join('') || '<p class="mixer-hint">' + t('common.none') + '</p>'}</div>
+        <div class="diff-group"><h4>➖ ${t('compare.removed')} (${removed.length})</h4>${removed.map(row).join('') || '<p class="mixer-hint">' + t('common.none') + '</p>'}</div>
+    `;
+}
+
+/* ---------- 4. Palette Generator (Harmony) ---------- */
+function harmony(hex, type) {
+    const { r, g, b } = hexToRgb(hex);
+    const { h, s, l } = rgbToHsl(r, g, b);
+    const shift = deg => { const nh = ((h + deg) % 360 + 360) % 360; const rgb = hslToRgb(nh, s, l); return rgbToHex(rgb.r, rgb.g, rgb.b); };
+    const map = { complementary: [0, 180], analogous: [0, -30, 30, 60], triadic: [0, 120, 240], split: [0, 150, 210], tetradic: [0, 90, 180, 270] };
+    return (map[type] || [0]).map(d => d === 0 ? hex : shift(d));
+}
+function renderHarmony() {
+    const base = document.getElementById('harmony-base').value;
+    const type = document.getElementById('harmony-type').value;
+    const list = harmony(base, type);
+    document.getElementById('harmony-grid').innerHTML = list.map(hex => `
+        <div class="mini-swatch" title="Copy ${hex}">
+            <div class="pv" style="background:${hex}"></div>
+            <div class="tx" style="color:${hex}">${hex}</div>
+        </div>`).join('');
+    document.querySelectorAll('#harmony-grid .mini-swatch').forEach(el => {
+        el.addEventListener('click', () => copyText(el.title.replace('Copy ', '')).then(() => showToast(t('toast.copied2', {t: el.title.replace('Copy ', '')}))));
+    });
+}
+document.getElementById('harmony-base').addEventListener('input', renderHarmony);
+document.getElementById('harmony-type').addEventListener('change', renderHarmony);
+
+/* ---------- 5. Gradient Generator ---------- */
+let gradStops = ['#3A86FF', '#D946EF'];
+function renderGradient() {
+    const box = document.getElementById('grad-stops');
+    box.innerHTML = gradStops.map((hex, i) => `
+        <div class="grad-stop">
+            <input type="color" value="${hex}" data-i="${i}">
+            <span class="gs-hex">${hex}</span>
+            <button class="rm" data-i="${i}" title="${t('common.delete')}">✕</button>
+        </div>`).join('');
+    box.querySelectorAll('input[type="color"]').forEach(inp => {
+        inp.addEventListener('input', e => { gradStops[+e.target.dataset.i] = e.target.value; renderGradient(); });
+    });
+    box.querySelectorAll('.rm').forEach(b => {
+        b.addEventListener('click', e => { gradStops.splice(+e.target.dataset.i, 1); if (gradStops.length === 0) gradStops = ['#3A86FF']; renderGradient(); });
+    });
+    const type = document.getElementById('grad-type').value;
+    const angle = document.getElementById('grad-angle').value || 90;
+    const css = type === 'linear'
+        ? `linear-gradient(${angle}deg, ${gradStops.join(', ')})`
+        : `radial-gradient(circle, ${gradStops.join(', ')})`;
+    document.getElementById('grad-preview').style.background = css;
+    document.getElementById('grad-preview').dataset.css = css;
+}
+document.getElementById('grad-add').addEventListener('click', () => { gradStops.push(document.getElementById('grad-color').value); renderGradient(); });
+document.getElementById('grad-clear').addEventListener('click', () => { gradStops = ['#3A86FF']; renderGradient(); });
+document.getElementById('grad-type').addEventListener('change', renderGradient);
+document.getElementById('grad-angle').addEventListener('input', renderGradient);
+document.getElementById('grad-copy').addEventListener('click', () => {
+    const css = 'background: ' + document.getElementById('grad-preview').dataset.css + ';';
+    copyText(css).then(() => showToast(t('toast.cssGrad')));
+});
+
+/* ---------- 6. Contrast Checker ---------- */
+function renderContrast() {
+    const fg = document.getElementById('contrast-fg').value;
+    const bg = document.getElementById('contrast-bg').value;
+    document.getElementById('contrast-demo').style.background = bg;
+    document.getElementById('contrast-sample').style.color = fg;
+    const ratio = contrastRatio(fg, bg);
+    const normal = ratio >= 4.5, large = ratio >= 3, aa = ratio >= 3 && ratio < 4.5;
+    const badge = normal ? '<span class="cr-badge pass">AA + AAA ✓</span>' : aa ? '<span class="cr-badge aa">AA large ✓</span>' : '<span class="cr-badge fail">FAIL</span>';
+    document.getElementById('contrast-result').innerHTML = `
+        <div class="cr-row"><span class="cr-ratio">${ratio.toFixed(2)} : 1</span>${badge}</div>
+        <div class="cr-row"><span class="mixer-hint">' + t('contrast.hint') + '</span></div>`;
+}
+document.getElementById('contrast-fg').addEventListener('input', renderContrast);
+document.getElementById('contrast-bg').addEventListener('input', renderContrast);
+
+/* ---------- 7. Color Blindness Preview ---------- */
+function renderBlindness() {
+    const type = document.getElementById('blindness-type').value;
+    const list = colors.length ? colors : [{ hex: '#3A86FF' }, { hex: '#FF6B6B' }, { hex: '#4ECB71' }, { hex: '#FFD166' }];
+    document.getElementById('blindness-grid').innerHTML = list.map(c => {
+        const hex = applyBlindness(c.hex, type);
+        return `<div class="mini-swatch" title="${c.hex} → ${hex}"><div class="pv" style="background:${hex}"></div><div class="tx" style="color:${hex}">${hex}</div></div>`;
+    }).join('');
+    document.querySelectorAll('#blindness-grid .mini-swatch').forEach(el => {
+        el.addEventListener('click', () => copyText(el.title.split(' → ')[1]).then(() => showToast(t('toast.copied2', {t: el.title.split(' → ')[1]}))));
+    });
+}
+document.getElementById('blindness-type').addEventListener('change', renderBlindness);
+
+/* ---------- 2 & 3. Image → Palette / Color Picker ---------- */
+const imageInput = document.getElementById('image-input');
+const imageCanvas = document.getElementById('image-canvas');
+document.getElementById('image-load').addEventListener('click', () => imageInput.click());
+imageInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+        const maxW = 900;
+        const scale = Math.min(1, maxW / img.width);
+        imageCanvas.width = Math.round(img.width * scale);
+        imageCanvas.height = Math.round(img.height * scale);
+        const ctx = imageCanvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
+        imageCanvas.style.display = 'block';
+        URL.revokeObjectURL(url);
+    };
+    img.src = url;
+    e.target.value = '';
+});
+imageCanvas.addEventListener('click', ev => {
+    const rect = imageCanvas.getBoundingClientRect();
+    const x = Math.round((ev.clientX - rect.left) * imageCanvas.width / rect.width);
+    const y = Math.round((ev.clientY - rect.top) * imageCanvas.height / rect.height);
+    const d = imageCanvas.getContext('2d').getImageData(x, y, 1, 1).data;
+    const hex = rgbToHex(d[0], d[1], d[2]);
+    document.getElementById('image-picked').innerHTML = `<div class="mini-swatch" title="Copy ${hex}"><div class="pv" style="background:${hex}"></div><div class="tx" style="color:${hex}">${hex}</div></div>`;
+    copyText(hex).then(() => showToast(t('toast.picked', {hex: hex})));
+});
+function extractPalette(count) {
+    const ctx = imageCanvas.getContext('2d');
+    const data = ctx.getImageData(0, 0, imageCanvas.width, imageCanvas.height).data;
+    const map = new Map();
+    const step = 4;
+    for (let i = 0; i < data.length; i += 4 * step) {
+        const r = data[i], g = data[i + 1], b = data[i + 2];
+        if (data[i + 3] < 125) continue; // bỏ pixel trong suốt
+        const key = (r >> 4) << 8 | (g >> 4) << 4 | (b >> 4);
+        if (!map.has(key)) map.set(key, { r: 0, g: 0, b: 0, n: 0 });
+        const e = map.get(key); e.r += r; e.g += g; e.b += b; e.n++;
+    }
+    return [...map.values()].sort((a, b) => b.n - a.n).slice(0, count)
+        .map(e => { const r = Math.round(e.r / e.n), g = Math.round(e.g / e.n), b = Math.round(e.b / e.n); return { hex: rgbToHex(r, g, b), r, g, b }; });
+}
+document.getElementById('image-extract').addEventListener('click', () => {
+    if (!imageCanvas.style.display || imageCanvas.style.display === 'none') { showToast(t('toast.pickImage')); return; }
+    const count = parseInt(document.getElementById('image-count').value) || 8;
+    const palette = extractPalette(count);
+    document.getElementById('image-palette').innerHTML = palette.map(c => `
+        <div class="mini-swatch" title="Copy ${c.hex}"><div class="pv" style="background:${c.hex}"></div><div class="tx" style="color:${c.hex}">${c.hex}</div></div>`).join('');
+    document.querySelectorAll('#image-palette .mini-swatch').forEach(el => {
+        el.addEventListener('click', () => copyText(el.title.replace('Copy ', '')).then(() => showToast(t('toast.copied2', {t: el.title.replace('Copy ', '')}))));
+    });
+    showToast(t('toast.extracted', {n: palette.length}));
+});
+
+
+
+/* ---------- Khởi tạo các tool ---------- */
+renderHarmony();
+renderGradient();
+renderContrast();
+renderBlindness();
+
+/* ============================================================
+   RANDOM MÀU (chọn màu cho member)
+============================================================ */
+const HUES = [
+    { key: 'hue.Red', h: 0,   c: '#ef4444' },
+    { key: 'hue.Orange', h: 30,  c: '#f97316' },
+    { key: 'hue.Yellow', h: 55, c: '#eab308' },
+    { key: 'hue.Green', h: 120, c: '#22c55e' },
+    { key: 'hue.Cyan', h: 175, c: '#06b6d4' },
+    { key: 'hue.Blue', h: 220, c: '#3b82f6' },
+    { key: 'hue.Purple', h: 270, c: '#8b5cf6' },
+    { key: 'hue.Pink', h: 320, c: '#ec4899' }
+];
+let randMode = 'full';       // 'full' | 'hue'
+let randHue = 0;             // hue trung tâm khi chọn "theo họ màu"
+let randColors = [];         // kết quả sinh ra [{hex,r,g,b}]
+
+// Render nút chọn họ màu
+function renderHuePicker() {
+    const huePicker = document.getElementById('hue-picker');
+    huePicker.innerHTML = '';
+    HUES.forEach((hu, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'hue-btn' + (hu.h === randHue ? ' active' : '');
+        btn.style.background = hu.c;
+        btn.dataset.i = i;
+        btn.innerHTML = '<span>' + t(hu.key) + '</span>';
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.hue-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            randHue = hu.h;
+        });
+        huePicker.appendChild(btn);
+    });
+}
+renderHuePicker();
+
+// Áp dụng ngôn ngữ sau khi toàn bộ biến/hàm đã khai báo xong
+applyLang();
+
+// Chuyển chế độ random
+document.querySelectorAll('#rand-mode-seg button').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('#rand-mode-seg button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        randMode = btn.dataset.mode;
+        document.getElementById('rand-hue-group').style.display = randMode === 'hue' ? '' : 'none';
+    });
+});
+
+// Sinh 1 màu ngẫu nhiên (trả về {r,g,b})
+function genRandomColor() {
+    let h, s, l;
+    if (randMode === 'full') {
+        h = Math.floor(Math.random() * 360);
+        s = 25 + Math.floor(Math.random() * 75);   // 25..100
+        l = 25 + Math.floor(Math.random() * 50);   // 25..75
+    } else {
+        const spread = 26;
+        h = (((randHue - spread) + Math.random() * spread * 2) % 360 + 360) % 360;
+        s = 45 + Math.floor(Math.random() * 55);   // 45..100
+        l = 28 + Math.floor(Math.random() * 45);   // 28..73
+    }
+    return hslToRgb(h, s, l);
+}
+
+function doRandom() {
+    const count = Math.max(1, Math.min(100, parseInt(document.getElementById('rand-count').value) || 5));
+    const unique = document.getElementById('rand-unique').checked;
+    const out = [];
+    const seen = new Set();
+    let guard = 0;
+    while (out.length < count && guard < count * 50) {
+        guard++;
+        const { r, g, b } = genRandomColor();
+        const hex = rgbToHex(r, g, b);
+        if (unique && seen.has(hex)) continue;
+        seen.add(hex);
+        out.push({ hex, r, g, b });
+    }
+    randColors = out;
+    renderRandGrid();
+}
+
+function renderRandGrid() {
+    const grid = document.getElementById('rand-grid');
+    if (randColors.length === 0) {
+        grid.innerHTML = '<div class="mixer-empty" style="grid-column:1/-1">' + t('random.empty') + '</div>';
+        return;
+    }
+    grid.innerHTML = '';
+    randColors.forEach((c, i) => {
+        const card = document.createElement('div');
+        card.className = 'rand-card';
+        card.title = t('randcard.copy', {hex: c.hex});
+        card.innerHTML = `
+            <div class="pv" style="background:${c.hex}">
+                <span class="mem">#${i + 1}</span>
+            </div>
+            <div class="info">
+                <div class="hex" style="color:${c.hex}">${c.hex}</div>
+                <div class="rgb">rgb(${Math.round(c.r)}, ${Math.round(c.g)}, ${Math.round(c.b)})</div>
+            </div>
+        `;
+        card.addEventListener('click', () => {
+            copyText(c.hex).then(() => showToast(t('randcopyall', {m: t('random.member'), i: i + 1, hex: c.hex})));
+        });
+        grid.appendChild(card);
+    });
+}
+
+document.getElementById('rand-go').addEventListener('click', () => {
+    doRandom();
+    showToast(t('toast.randN', {n: randColors.length}));
+});
+document.getElementById('rand-copy-all').addEventListener('click', () => {
+    if (randColors.length === 0) { showToast(t('toast.noColors2')); return; }
+    const text = randColors.map((c, i) => t('randcopyall', {m: t('random.member'), i: i + 1, hex: c.hex})).join('\n');
+    copyText(text).then(() => showToast(t('toast.copiedN2', {n: randColors.length})));
+});
+document.getElementById('rand-clear').addEventListener('click', () => {
+    randColors = [];
+    renderRandGrid();
+});
+
+/* ============================================================
+   SCROLL REVEAL — hiện dần khi cuộn / mở tab
+============================================================ */
+(function initReveal() {
+    const els = document.querySelectorAll('.tool-card, .mixer-panel, #drop-zone, #result-container');
+    els.forEach(el => el.classList.add('reveal'));
+    if (!('IntersectionObserver' in window)) {
+        els.forEach(el => el.classList.add('in'));
+        return;
+    }
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(en => {
+            if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+    els.forEach(el => io.observe(el));
+})();
 
 /* ============================================================
    SPLASH — ẩn màn hình khởi động khi tải xong
@@ -1941,12 +3092,12 @@ document.addEventListener('click', async (e) => {
     if (e.target && e.target.id === 'install-btn' && deferredPrompt) {
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') showToast('✅ Đã cài đặt ứng dụng!');
+        if (outcome === 'accepted') showToast(t('toast.installed'));
         deferredPrompt = null;
         const btn = document.getElementById('install-btn');
         if (btn) btn.style.display = 'none';
     }
 });
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a33db5b6ec16094a',t:'MTc4ODE5Njg2Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
