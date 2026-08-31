@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACO Color Viewer Pro</title>
+<style>
+:root {
+    --bg: #eef1f7;
+    --bg-grad-1: #e7ecf7;
+    --bg-grad-2: #f3ecfa;
+    --card: #ffffff;
+    --card-2: #f7f8fc;
+    --text: #1e2233;
+    --text-dim: #6b7280;
+    --text-faint: #9aa1b0;
+    --border: #e5e8f0;
+    --accent-1: #6366f1;
+    --accent-2: #8b5cf6;
+    --accent-soft: #eef0ff;
+    --shadow: 0 8px 30px rgba(30, 34, 51, 0.08);
+    --shadow-sm: 0 2px 10px rgba(30, 34, 51, 0.06);
+    --toast-bg: rgba(15, 23, 42, 0.92);
+    --hover: #f1f3f9;
+    --radius: 16px;
+    --danger: #ef4444;
+}
+[data-theme="dark"] {
+    --bg: #0e1017;
+    --bg-grad-1: #10131d;
+    --bg-grad-2: #171326;
+    --card: #191c27;
+    --card-2: #1f2330;
+    --text: #e7e9f0;
+    --text-dim: #9aa1b5;
+    --text-faint: #636b7e;
+    --border: #2a2f3f;
+    --accent-soft: #242742;
+    --shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+    --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.35);
+    --toast-bg: rgba(236, 240, 255, 0.94);
+    --hover: #242838;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    background: radial-gradient(1200px 600px at 8% -10%, var(--bg-grad-1), transparent),
+                radial-gradient(1000px 600px at 100% 0%, var(--bg-grad-2), transparent),
+                var(--bg);
+    min-height: 100vh;
+    color: var(--text);
+    padding: 30px 20px 80px;
+    transition: background 0.3s, color 0.3s;
+}
+.container { max-width: 1100px; margin: 0 auto; }
+
+/* ===== Header ===== */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.logo {
+    width: 46px; height: 46px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    display: grid; place-items: center;
+    box-shadow: 0 6px 18px rgba(99, 102, 241, 0.35);
+    flex-shrink: 0;
+}
+.logo svg { width: 26px; height: 26px; }
+.brand h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.2px; }
+.brand p { font-size: 0.85rem; color: var(--text-dim); margin-top: 2px; }
+.header-actions { display: flex; align-items: center; gap: 10px; }
+.theme-btn {
+    width: 42px; height: 42px; border-radius: 12px;
+    border: 1px solid var(--border); background: var(--card);
+    cursor: pointer; display: grid; place-items: center;
+    color: var(--text); box-shadow: var(--shadow-sm);
+    transition: transform 0.15s, background 0.2s;
+}
+.theme-btn:hover { transform: translateY(-1px); background: var(--hover); }
+
+/* ===== Drop zone ===== */
+#drop-zone {
+    border: 2px dashed #b9c0d6;
+    border-radius: var(--radius);
+    background: var(--card);
+    padding: 46px 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+}
+[data-theme="dark"] #drop-zone { border-color: #3a4156; }
+#drop-zone:hover, #drop-zone.dragover {
+    border-color: var(--accent-1);
+    background: var(--accent-soft);
+    transform: translateY(-2px);
+}
+.drop-icon { font-size: 2.4rem; margin-bottom: 10px; }
+#drop-zone .main { font-size: 1.1rem; font-weight: 600; }
+#drop-zone .sub { font-size: 0.88rem; color: var(--text-dim); margin-top: 6px; }
+#drop-zone .hint { font-size: 0.78rem; color: var(--text-faint); margin-top: 14px; }
+
+/* ===== Result ===== */
+#result-container { display: none; margin-top: 28px; animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* Stats bar */
+.stats-bar {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+.stat-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--card); border: 1px solid var(--border);
+    padding: 8px 14px; border-radius: 999px;
+    font-size: 0.85rem; font-weight: 600;
+    box-shadow: var(--shadow-sm);
+}
+.stat-pill .dot { width: 9px; height: 9px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); }
+.stat-pill .num { color: var(--accent-1); }
+.file-name { max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-dim); font-weight: 500; }
+
+/* Toolbar */
+.toolbar {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    background: var(--card); border: 1px solid var(--border);
+    padding: 12px 14px; border-radius: var(--radius);
+    box-shadow: var(--shadow-sm); margin-bottom: 20px;
+}
+.search-box {
+    flex: 1; min-width: 180px; position: relative;
+}
+.search-box input {
+    width: 100%; padding: 9px 12px 9px 36px;
+    border: 1px solid var(--border); border-radius: 10px;
+    background: var(--card-2); color: var(--text); font-size: 0.9rem;
+    outline: none; transition: border 0.2s;
+}
+.search-box input:focus { border-color: var(--accent-1); }
+.search-box .icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-faint); font-size: 0.95rem; }
+
+select, .tool-btn, .menu-btn {
+    padding: 9px 14px; border: 1px solid var(--border); border-radius: 10px;
+    background: var(--card-2); color: var(--text); font-size: 0.88rem;
+    cursor: pointer; font-family: inherit; font-weight: 500;
+    transition: all 0.15s; white-space: nowrap;
+}
+select:focus { outline: none; border-color: var(--accent-1); }
+.tool-btn:hover, .menu-btn:hover { background: var(--hover); border-color: var(--accent-1); }
+.tool-btn.primary {
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    color: #fff; border: none; font-weight: 600;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+}
+.tool-btn.primary:hover { filter: brightness(1.08); border: none; }
+.tool-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Dropdown menu */
+.menu-wrap { position: relative; }
+.menu {
+    position: absolute; top: calc(100% + 6px); right: 0; z-index: 50;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; box-shadow: 0 12px 34px rgba(0,0,0,0.16);
+    min-width: 210px; padding: 6px; display: none;
+}
+.menu.open { display: block; animation: fadeIn 0.15s ease; }
+.menu-item {
+    display: block; width: 100%; text-align: left;
+    padding: 10px 12px; border: none; background: none;
+    color: var(--text); font-size: 0.87rem; font-family: inherit;
+    border-radius: 8px; cursor: pointer;
+}
+.menu-item:hover { background: var(--hover); }
+.menu-item .k { color: var(--text-faint); font-size: 0.75rem; display: block; margin-top: 2px; }
+.menu-sep { height: 1px; background: var(--border); margin: 5px 8px; }
+
+/* Grid */
+#interactive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+}
+.swatch {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden; cursor: pointer;
+    transition: all 0.18s; position: relative;
+    box-shadow: var(--shadow-sm);
+}
+.swatch:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(0,0,0,0.14); }
+.swatch .preview { height: 74px; position: relative; }
+.swatch .check {
+    position: absolute; top: 8px; left: 8px; width: 22px; height: 22px;
+    border-radius: 7px; background: rgba(255,255,255,0.9); border: 2px solid rgba(0,0,0,0.15);
+    display: grid; place-items: center; font-size: 0.7rem; color: #fff;
+    transition: all 0.15s; opacity: 0;
+}
+.swatch.selected .check { opacity: 1; background: var(--accent-1); border-color: transparent; }
+.swatch:hover .check { opacity: 1; }
+.swatch .info { padding: 10px 12px 12px; }
+.swatch .name {
+    font-size: 0.8rem; font-weight: 600; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px;
+}
+.swatch .name.empty { color: var(--text-faint); font-weight: 500; font-style: italic; }
+.swatch .hex {
+    font-family: 'Consolas', 'SF Mono', monospace;
+    font-size: 0.88rem; font-weight: 600; letter-spacing: 0.3px;
+}
+.swatch .meta { font-size: 0.72rem; color: var(--text-faint); margin-top: 4px; font-family: 'Consolas', monospace; }
+
+.empty-state {
+    text-align: center; padding: 60px 20px; color: var(--text-dim);
+    background: var(--card); border: 1px dashed var(--border); border-radius: var(--radius);
+}
+
+/* ===== Modal ===== */
+.modal-overlay {
+    position: fixed; inset: 0; background: rgba(10, 12, 20, 0.55);
+    backdrop-filter: blur(4px); z-index: 100;
+    display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 18px; width: 100%; max-width: 640px;
+    max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+    animation: modalIn 0.22s ease;
+}
+@keyframes modalIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: none; } }
+.modal-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 22px; border-bottom: 1px solid var(--border);
+}
+.modal-head h2 { font-size: 1.15rem; font-weight: 700; }
+.close-btn {
+    width: 34px; height: 34px; border-radius: 10px; border: none;
+    background: var(--hover); color: var(--text); cursor: pointer; font-size: 1.1rem;
+}
+.close-btn:hover { background: var(--danger); color: #fff; }
+.modal-body { padding: 20px 22px; }
+.opt-group { margin-bottom: 18px; }
+.opt-group label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-dim); margin-bottom: 8px; }
+.opt-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.seg button {
+    padding: 8px 14px; border: none; background: var(--card-2); color: var(--text);
+    font-size: 0.84rem; cursor: pointer; font-family: inherit; font-weight: 500;
+}
+.seg button.active { background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: #fff; }
+.seg button:not(:last-child) { border-right: 1px solid var(--border); }
+input[type="number"] {
+    width: 90px; padding: 8px 10px; border: 1px solid var(--border);
+    border-radius: 10px; background: var(--card-2); color: var(--text); font-size: 0.86rem;
+    outline: none; font-family: inherit;
+}
+input[type="number"]:focus { border-color: var(--accent-1); }
+input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--accent-1); cursor: pointer; }
+.check-line { display: flex; align-items: center; gap: 8px; font-size: 0.87rem; cursor: pointer; }
+.preview-wrap {
+    background: var(--card-2); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px; margin-bottom: 18px;
+}
+.preview-label { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 10px; font-weight: 600; }
+#preview-canvas { width: 100%; height: auto; border-radius: 8px; display: block; background: repeating-conic-gradient(#e3e6ee 0 25%, #f6f7fb 0 50%) 0 0/20px 20px; }
+[data-theme="dark"] #preview-canvas { background: repeating-conic-gradient(#2a2f3f 0 25%, #20242f 0 50%) 0 0/20px 20px; }
+.export-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.export-actions .tool-btn { flex: 1; min-width: 120px; text-align: center; justify-content: center; }
+
+/* ===== Color Mixer ===== */
+.mixer-colors { display: flex; flex-direction: column; gap: 8px; max-height: 260px; overflow-y: auto; padding-right: 2px; }
+.mixer-chip {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--card-2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 8px 12px;
+}
+.mixer-swatch { width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0; border: 1px solid var(--border); }
+.mixer-chip-info { flex: 1; min-width: 0; }
+.mixer-chip-name { font-size: 0.84rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mixer-chip-hex { font-family: 'Consolas', monospace; font-size: 0.78rem; color: var(--text-dim); }
+.mixer-weight { width: 120px; accent-color: var(--accent-1); cursor: pointer; }
+.mixer-weight-val { font-size: 0.78rem; color: var(--text-dim); width: 40px; text-align: right; }
+.mixer-remove { width: 28px; height: 28px; border-radius: 8px; border: none; background: var(--hover); color: var(--text-dim); cursor: pointer; font-size: 0.8rem; flex-shrink: 0; }
+.mixer-remove:hover { background: var(--danger); color: #fff; }
+.mixer-hint { font-size: 0.8rem; color: var(--text-faint); }
+.mixer-result { display: flex; gap: 16px; align-items: stretch; }
+.mixer-result-swatch { flex: 1; min-height: 120px; border-radius: 14px; display: grid; place-items: center; border: 1px solid var(--border); }
+.mixer-result-hex { font-family: 'Consolas', monospace; font-size: 1.5rem; font-weight: 700; text-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+.mixer-result-info { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 8px; background: var(--card-2); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
+.mixer-result-row { display: flex; justify-content: space-between; gap: 12px; font-size: 0.86rem; }
+.mixer-result-row span { color: var(--text-dim); font-weight: 600; }
+.mixer-result-row b { font-family: 'Consolas', monospace; }
+.mixer-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.mixer-actions .tool-btn { flex: 1; min-width: 100px; text-align: center; justify-content: center; }
+.mixer-actions .tool-btn.primary { flex: 1.3; }
+.mixer-empty { text-align: center; padding: 24px; color: var(--text-dim); background: var(--card-2); border: 1px dashed var(--border); border-radius: 12px; font-size: 0.88rem; }
+
+@media (max-width: 640px) {
+    .mixer-result { flex-direction: column; }
+    .mixer-weight { width: 80px; }
+}
+
+/* ===== Tab bar ===== */
+.tabbar {
+    display: flex; gap: 6px; margin-bottom: 24px;
+    background: var(--card); border: 1px solid var(--border);
+    padding: 6px; border-radius: 14px; box-shadow: var(--shadow-sm);
+    width: max-content; max-width: 100%;
+}
+.tab {
+    padding: 10px 22px; border: none; border-radius: 10px;
+    background: transparent; color: var(--text-dim);
+    font-size: 0.92rem; font-weight: 600; cursor: pointer; font-family: inherit;
+    transition: all 0.15s; white-space: nowrap;
+}
+.tab:hover { color: var(--text); background: var(--hover); }
+.tab.active {
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    color: #fff; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+.tab-section { display: none; }
+.tab-section.active { display: block; animation: fadeIn 0.3s ease; }
+
+/* ===== Mixer panel (tab riêng) ===== */
+.mixer-panel {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow-sm);
+}
+.mixer-panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.mixer-panel-head h2 { font-size: 1.2rem; font-weight: 700; }
+.mixer-add-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+input[type="color"] {
+    width: 54px; height: 42px; border: 1px solid var(--border); border-radius: 10px;
+    padding: 3px; background: var(--card-2); cursor: pointer;
+}
+.mix-history {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px;
+}
+.history-item {
+    background: var(--card-2); border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; cursor: pointer; position: relative; transition: all 0.15s;
+}
+.history-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.history-item .sw { height: 46px; }
+.history-item .tx { padding: 6px 8px; font-family: 'Consolas', monospace; font-size: 0.76rem; font-weight: 600; text-align: center; }
+.history-item .del {
+    position: absolute; top: 4px; right: 4px; width: 22px; height: 22px;
+    border-radius: 7px; border: none; background: rgba(0,0,0,0.35); color: #fff;
+    cursor: pointer; font-size: 0.7rem; display: none; line-height: 1;
+}
+.history-item:hover .del { display: block; }
+.history-empty { color: var(--text-faint); font-size: 0.86rem; padding: 10px 2px; }
+
+/* Toast */
+#toast {
+    position: fixed; bottom: -70px; left: 50%; transform: translateX(-50%);
+    background: var(--toast-bg); color: #fff;
+    padding: 13px 26px; border-radius: 999px; font-size: 0.88rem; font-weight: 600;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    transition: bottom 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    pointer-events: none; z-index: 1000; max-width: 90vw;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+[data-theme="dark"] #toast { color: #111; }
+#toast.show { bottom: 34px; }
+
+@media (max-width: 640px) {
+    .brand h1 { font-size: 1.2rem; }
+    #interactive-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <div class="brand">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+                    <circle cx="12" cy="12" r="4" fill="white"/>
+                    <path d="M4 10a8 8 0 0 1 16 0" />
+                    <path d="M6 14a8 8 0 0 0 12 0" />
+                </svg>
+            </div>
+            <div>
+                <h1>ACO Color Viewer</h1>
+                <p>Xem · Sao chép · Xuất bảng màu Photoshop (.aco)</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="theme-btn" id="theme-btn" title="Đổi giao diện sáng/tối">🌙</button>
+        </div>
+    </header>
+
+    <div class="tabbar">
+        <button class="tab active" data-tab="viewer">📁 Xem ACO</button>
+        <button class="tab" data-tab="mixer">🎨 Trộn màu</button>
+    </div>
+
+    <section id="viewer-section" class="tab-section active">
+    <div id="drop-zone">
+        <div class="drop-icon">🎨</div>
+        <div class="main">Kéo thả file <b>.aco</b> vào đây</div>
+        <div class="sub">hoặc click để chọn file từ máy tính</div>
+        <div class="hint">Hỗ trợ ACO v1 &amp; v2 · RGB / HSB / CMYK / Lab / Grayscale</div>
+        <input type="file" id="file-input" accept=".aco" style="display:none">
+    </div>
+
+    <div id="result-container">
+        <div class="stats-bar">
+            <span class="stat-pill"><span class="dot"></span> <span class="num" id="stat-count">0</span> màu</span>
+            <span class="stat-pill file-name" id="stat-file"></span>
+            <span class="stat-pill" id="stat-selected" style="display:none">✓ <span class="num">0</span> đã chọn</span>
+        </div>
+
+        <div class="toolbar">
+            <div class="search-box">
+                <span class="icon">🔍</span>
+                <input type="text" id="search-input" placeholder="Tìm theo tên hoặc mã màu...">
+            </div>
+            <select id="sort-select" title="Sắp xếp">
+                <option value="original">Thứ tự gốc</option>
+                <option value="hue">Theo sắc độ (Hue)</option>
+                <option value="lightness">Theo độ sáng</option>
+                <option value="saturation">Theo độ bão hòa</option>
+                <option value="name">Theo tên</option>
+            </select>
+            <select id="copy-format" title="Định dạng khi click vào màu">
+                <option value="hex">HEX</option>
+                <option value="rgb">RGB</option>
+                <option value="hsl">HSL</option>
+            </select>
+            <div class="menu-wrap">
+                <button class="menu-btn" id="copy-all-btn">📋 Sao chép tất cả ▾</button>
+                <div class="menu" id="copy-all-menu">
+                    <button class="menu-item" data-mode="hex">Danh sách HEX<span class="k">#FF0000, #00FF00, ...</span></button>
+                    <button class="menu-item" data-mode="css">CSS Variables<span class="k">--color-1: #FF0000;</span></button>
+                    <button class="menu-item" data-mode="scss">SCSS / Sass<span class="k">$color-1: #FF0000;</span></button>
+                    <button class="menu-item" data-mode="json">JSON<span class="k">[{"hex":"#FF0000"}, ...]</span></button>
+                    <button class="menu-item" data-mode="rgb">Danh sách RGB<span class="k">rgb(255, 0, 0)</span></button>
+                </div>
+            </div>
+            <div class="menu-wrap">
+                <button class="tool-btn" id="select-all-btn">☑ Chọn</button>
+                <div class="menu" id="select-menu">
+                    <button class="menu-item" data-mode="all">Chọn tất cả</button>
+                    <button class="menu-item" data-mode="none">Bỏ chọn tất cả</button>
+                    <button class="menu-item" data-mode="invert">Đảo ngược lựa chọn</button>
+                </div>
+            </div>
+            <button class="tool-btn primary" id="export-btn">⬇ Xuất ảnh &amp; dữ liệu</button>
+        </div>
+
+        <div id="interactive-grid"></div>
+    </div>
+    </section>
+
+    <!-- ===== Mục Trộn màu (dùng riêng, không cần mở ACO) ===== -->
+    <section id="mixer-section" class="tab-section">
+        <div class="mixer-panel">
+            <div class="mixer-panel-head">
+                <h2>🎨 Trộn màu</h2>
+                <button class="tool-btn" id="mix-clear" title="Xóa hết màu đang trộn">🗑 Xóa hết</button>
+            </div>
+
+            <div class="opt-group">
+                <label>Thêm màu</label>
+                <div class="mixer-add-row">
+                    <input type="color" id="mix-color-picker" value="#3A86FF" title="Chọn màu bất kỳ">
+                    <button class="tool-btn" id="mix-add-color">➕ Thêm màu này</button>
+                    <button class="tool-btn" id="mix-from-aco">📁 Lấy màu từ ACO đang mở</button>
+                </div>
+            </div>
+
+            <div class="opt-group">
+                <label>Màu đang trộn <span class="mixer-hint">· kéo thanh trượt để chỉnh tỷ lệ từng màu</span></label>
+                <div class="mixer-colors" id="mixer-colors"></div>
+            </div>
+
+            <div class="opt-group">
+                <label>Kết quả trộn</label>
+                <div class="mixer-result" id="mixer-result"></div>
+                <div class="mixer-actions" style="margin-top:10px">
+                    <button class="tool-btn" id="mix-copy-hex">📋 Copy HEX</button>
+                    <button class="tool-btn" id="mix-copy-rgb">Copy RGB</button>
+                    <button class="tool-btn" id="mix-copy-hsl">Copy HSL</button>
+                    <button class="tool-btn primary" id="mix-save">💾 Lưu vào lịch sử</button>
+                </div>
+            </div>
+
+            <div class="opt-group">
+                <label>Lịch sử trộn <span class="mixer-hint">· click để copy lại</span></label>
+                <div class="mix-history" id="mix-history"></div>
+                <div style="margin-top:10px; text-align:right;">
+                    <button class="tool-btn" id="mix-history-clear">🗑 Xóa lịch sử</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Modal xuất -->
+<div class="modal-overlay" id="modal">
+    <div class="modal">
+        <div class="modal-head">
+            <h2>⬇ Xuất bảng màu</h2>
+            <button class="close-btn" id="modal-close">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="opt-group">
+                <label>Bố cục</label>
+                <div class="seg" id="layout-seg">
+                    <button data-val="strip-h" class="active">Dải ngang</button>
+                    <button data-val="strip-v">Dải dọc</button>
+                    <button data-val="grid">Lưới</button>
+                </div>
+            </div>
+            <div class="opt-group" id="columns-group" style="display:none">
+                <label>Số cột (lưới)</label>
+                <input type="number" id="opt-columns" value="6" min="1" max="24">
+            </div>
+            <div class="opt-group">
+                <label>Kích thước ô (px)</label>
+                <input type="number" id="opt-size" value="200" min="40" max="1000">
+            </div>
+            <div class="opt-group">
+                <label>Khoảng cách (px)</label>
+                <input type="number" id="opt-gap" value="20" min="0" max="200">
+            </div>
+            <div class="opt-group">
+                <label>Nhãn trên ô màu</label>
+                <div class="seg" id="label-seg">
+                    <button data-val="hex" class="active">HEX</button>
+                    <button data-val="hexname">HEX + Tên</button>
+                    <button data-val="none">Không nhãn</button>
+                </div>
+            </div>
+            <div class="opt-group">
+                <label>Nền</label>
+                <div class="seg" id="bg-seg">
+                    <button data-val="white" class="active">Trắng</button>
+                    <button data-val="transparent">Trong suốt</button>
+                </div>
+            </div>
+
+            <div class="preview-wrap">
+                <div class="preview-label">👁 Xem trước</div>
+                <canvas id="preview-canvas"></canvas>
+            </div>
+
+            <div class="export-actions">
+                <button class="tool-btn primary" id="export-png">🖼 Tải PNG</button>
+                <button class="tool-btn" id="export-svg">📐 SVG</button>
+                <button class="tool-btn" id="export-css">🎨 CSS</button>
+                <button class="tool-btn" id="export-json">{ } JSON</button>
+                <button class="tool-btn" id="export-txt">📄 TXT</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast">Đã copy mã màu</div>
+
+<script>
+/* ============================================================
+   DỮ LIỆU & TRẠNG THÁI
+============================================================ */
+let colors = [];          // { hex, r, g, b, h, s, l, name, space, selected }
+let filteredColors = [];
+let currentFile = '';
+
+/* ============================================================
+   BẢNG TÊN MÀU CSS (để đoán tên khi file không có tên)
+============================================================ */
+const CSS_NAMES = [
+["aliceblue","#F0F8FF"],["antiquewhite","#FAEBD7"],["aqua","#00FFFF"],["aquamarine","#7FFFD4"],
+["azure","#F0FFFF"],["beige","#F5F5DC"],["bisque","#FFE4C4"],["black","#000000"],
+["blanchedalmond","#FFEBCD"],["blue","#0000FF"],["blueviolet","#8A2BE2"],["brown","#A52A2A"],
+["burlywood","#DEB887"],["cadetblue","#5F9EA0"],["chartreuse","#7FFF00"],["chocolate","#D2691E"],
+["coral","#FF7F50"],["cornflowerblue","#6495ED"],["cornsilk","#FFF8DC"],["crimson","#DC143C"],
+["cyan","#00FFFF"],["darkblue","#00008B"],["darkcyan","#008B8B"],["darkgoldenrod","#B8860B"],
+["darkgray","#A9A9A9"],["darkgreen","#006400"],["darkkhaki","#BDB76B"],["darkmagenta","#8B008B"],
+["darkolivegreen","#556B2F"],["darkorange","#FF8C00"],["darkorchid","#9932CC"],["darkred","#8B0000"],
+["darksalmon","#E9967A"],["darkseagreen","#8FBC8F"],["darkslateblue","#483D8B"],["darkslategray","#2F4F4F"],
+["darkturquoise","#00CED1"],["darkviolet","#9400D3"],["deeppink","#FF1493"],["deepskyblue","#00BFFF"],
+["dimgray","#696969"],["dodgerblue","#1E90FF"],["firebrick","#B22222"],["floralwhite","#FFFAF0"],
+["forestgreen","#228B22"],["fuchsia","#FF00FF"],["gainsboro","#DCDCDC"],["ghostwhite","#F8F8FF"],
+["gold","#FFD700"],["goldenrod","#DAA520"],["gray","#808080"],["green","#008000"],
+["greenyellow","#ADFF2F"],["honeydew","#F0FFF0"],["hotpink","#FF69B4"],["indianred","#CD5C5C"],
+["indigo","#4B0082"],["ivory","#FFFFF0"],["khaki","#F0E68C"],["lavender","#E6E6FA"],
+["lavenderblush","#FFF0F5"],["lawngreen","#7CFC00"],["lemonchiffon","#FFFACD"],["lightblue","#ADD8E6"],
+["lightcoral","#F08080"],["lightcyan","#E0FFFF"],["lightgoldenrodyellow","#FAFAD2"],["lightgreen","#90EE90"],
+["lightgray","#D3D3D3"],["lightpink","#FFB6C1"],["lightsalmon","#FFA07A"],["lightseagreen","#20B2AA"],
+["lightskyblue","#87CEFA"],["lightslategray","#778899"],["lightsteelblue","#B0C4DE"],["lightyellow","#FFFFE0"],
+["lime","#00FF00"],["limegreen","#32CD32"],["linen","#FAF0E6"],["magenta","#FF00FF"],
+["maroon","#800000"],["mediumaquamarine","#66CDAA"],["mediumblue","#0000CD"],["mediumorchid","#BA55D3"],
+["mediumpurple","#9370DB"],["mediumseagreen","#3CB371"],["mediumslateblue","#7B68EE"],["mediumspringgreen","#00FA9A"],
+["mediumturquoise","#48D1CC"],["mediumvioletred","#C71585"],["midnightblue","#191970"],["mintcream","#F5FFFA"],
+["mistyrose","#FFE4E1"],["moccasin","#FFE4B5"],["navajowhite","#FFDEAD"],["navy","#000080"],
+["oldlace","#FDF5E6"],["olive","#808000"],["olivedrab","#6B8E23"],["orange","#FFA500"],
+["orangered","#FF4500"],["orchid","#DA70D6"],["palegoldenrod","#EEE8AA"],["palegreen","#98FB98"],
+["paleturquoise","#AFEEEE"],["palevioletred","#DB7093"],["papayawhip","#FFEFD5"],["peachpuff","#FFDAB9"],
+["peru","#CD853F"],["pink","#FFC0CB"],["plum","#DDA0DD"],["powderblue","#B0E0E6"],
+["purple","#800080"],["rebeccapurple","#663399"],["red","#FF0000"],["rosybrown","#BC8F8F"],
+["royalblue","#4169E1"],["saddlebrown","#8B4513"],["salmon","#FA8072"],["sandybrown","#F4A460"],
+["seagreen","#2E8B57"],["seashell","#FFF5EE"],["sienna","#A0522D"],["silver","#C0C0C0"],
+["skyblue","#87CEEB"],["slateblue","#6A5ACD"],["slategray","#708090"],["snow","#FFFAFA"],
+["springgreen","#00FF7F"],["steelblue","#4682B4"],["tan","#D2B48C"],["teal","#008080"],
+["thistle","#D8BFD8"],["tomato","#FF6347"],["turquoise","#40E0D0"],["violet","#EE82EE"],
+["wheat","#F5DEB3"],["white","#FFFFFF"],["whitesmoke","#F5F5F5"],["yellow","#FFFF00"],
+["yellowgreen","#9ACD32"]
+];
+
+/* ============================================================
+   TIỆN ÍCH MÀU
+============================================================ */
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+function rgbToHex(r, g, b) {
+    return "#" + [r, g, b].map(v => clamp(Math.round(v), 0, 255).toString(16).padStart(2, "0")).join("").toUpperCase();
+}
+function hexToRgb(hex) {
+    const n = parseInt(hex.slice(1), 16);
+    return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+}
+function rgbToHsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h = 0, s = 0, l = (max + min) / 2;
+    if (max !== min) {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            default: h = (r - g) / d + 4;
+        }
+        h /= 6;
+    }
+    return { h: h * 360, s: s * 100, l: l * 100 };
+}
+function hslToRgb(h, s, l) {
+    h /= 360; s /= 100; l /= 100;
+    if (s === 0) { const v = l * 255; return { r: v, g: v, b: v }; }
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    const hue2rgb = (t) => {
+        if (t < 0) t += 1; if (t > 1) t -= 1;
+        if (t < 1/6) return p + (q - p) * 6 * t;
+        if (t < 1/2) return q;
+        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        return p;
+    };
+    return { r: hue2rgb(h + 1/3) * 255, g: hue2rgb(h) * 255, b: hue2rgb(h - 1/3) * 255 };
+}
+function hsvToRgb(h, s, v) {
+    h = ((h % 360) + 360) % 360;
+    s /= 100; v /= 100;
+    const c = v * s;
+    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+    const m = v - c;
+    let r = 0, g = 0, b = 0;
+    if (h < 60)      { r = c; g = x; b = 0; }
+    else if (h < 120) { r = x; g = c; b = 0; }
+    else if (h < 180) { r = 0; g = c; b = x; }
+    else if (h < 240) { r = 0; g = x; b = c; }
+    else if (h < 300) { r = x; g = 0; b = c; }
+    else              { r = c; g = 0; b = x; }
+    return { r: (r + m) * 255, g: (g + m) * 255, b: (b + m) * 255 };
+}
+function luminance(r, g, b) {
+    return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+}
+function textColorFor(hex) {
+    const { r, g, b } = hexToRgb(hex);
+    return luminance(r, g, b) > 0.55 ? "#1e2233" : "#ffffff";
+}
+function nearestName(hex) {
+    const { r, g, b } = hexToRgb(hex);
+    let best = null, bestDist = Infinity;
+    for (const [name, h] of CSS_NAMES) {
+        const c = hexToRgb(h);
+        const d = Math.pow(c.r - r, 2) + Math.pow(c.g - g, 2) + Math.pow(c.b - b, 2);
+        if (d < bestDist) { bestDist = d; best = name; }
+    }
+    return best;
+}
+
+/* ============================================================
+   CHUYỂN ĐỔI KHÔNG GIAN MÀU → RGB
+============================================================ */
+function labToRgb(L, a, b) {
+    let y = (L + 16) / 116;
+    let x = a / 500 + y;
+    let z = y - b / 200;
+    const f = (t) => t > 0.206893 ? t * t * t : (t - 16 / 116) / 7.787;
+    x = f(x); y = f(y); z = f(z);
+    // D65
+    const X = x * 0.95047, Y = y * 1.0, Z = z * 1.08883;
+    let r = X * 3.2406 + Y * -1.5372 + Z * -0.4986;
+    let g = X * -0.9689 + Y * 1.8758 + Z * 0.0415;
+    let bl = X * 0.0557 + Y * -0.2040 + Z * 1.0570;
+    const gamma = (c) => c > 0.0031308 ? 1.055 * Math.pow(c, 1 / 2.4) - 0.055 : 12.92 * c;
+    return { r: gamma(r) * 255, g: gamma(g) * 255, b: gamma(bl) * 255 };
+}
+function colorSpaceToRGB(space, a, b, c, d) {
+    switch (space) {
+        case 0: // RGB 0..65535
+            return { r: a / 256, g: b / 256, b: c / 256 };
+        case 1: { // HSB (HSV) 0..65535
+            const h = (a / 65535) * 360;
+            const s = (b / 65535) * 100;
+            const v = (c / 65535) * 100;
+            return hsvToRgb(h, s, v);
+        }
+        case 2: { // CMYK 0..65535
+            const C = a / 65535, M = b / 65535, Y = c / 65535, K = d / 65535;
+            return {
+                r: 255 * (1 - C) * (1 - K),
+                g: 255 * (1 - M) * (1 - K),
+                b: 255 * (1 - Y) * (1 - K)
+            };
+        }
+        case 7: { // Lab
+            const L = a / 100;
+            const aa = ((b - 12800) / 12800) * 127;
+            const bb = ((c - 12800) / 12800) * 127;
+            return labToRgb(L, aa, bb);
+        }
+        case 8: { // Grayscale 0..10000
+            const g = (a / 10000) * 255;
+            return { r: g, g: g, b: g };
+        }
+        default:
+            return null;
+    }
+}
+const SPACE_NAMES = { 0: "RGB", 1: "HSB", 2: "CMYK", 7: "Lab", 8: "Grayscale" };
+
+/* ============================================================
+   ĐỌC FILE ACO (hỗ trợ v1 + v2, đọc tên màu)
+============================================================ */
+function parseACO(buffer) {
+    const view = new DataView(buffer);
+    const result = [];
+    let offset = 0;
+
+    function readSection() {
+        const version = view.getUint16(offset); offset += 2;
+        const count = view.getUint16(offset); offset += 2;
+        for (let i = 0; i < count; i++) {
+            const space = view.getUint16(offset); offset += 2;
+            const a = view.getUint16(offset); offset += 2;
+            const b = view.getUint16(offset); offset += 2;
+            const c = view.getUint16(offset); offset += 2;
+            const d = view.getUint16(offset); offset += 2;
+            let name = "";
+            if (version === 2) {
+                // Tên màu: chuỗi UTF-16BE kết thúc bằng null (0 hoặc 2 byte)
+                while (offset + 1 < buffer.byteLength) {
+                    const code = view.getUint16(offset); offset += 2;
+                    if (code === 0) break;
+                    name += String.fromCharCode(code);
+                }
+            }
+            const rgb = colorSpaceToRGB(space, a, b, c, d);
+            if (rgb) {
+                const hex = rgbToHex(rgb.r, rgb.g, rgb.b);
+                const { h, s, l } = rgbToHsl(rgb.r, rgb.g, rgb.b);
+                result.push({
+                    hex, r: rgb.r, g: rgb.g, b: rgb.b, h, s, l,
+                    name: name.trim() || null,
+                    space: SPACE_NAMES[space] || "?",
+                    selected: true
+                });
+            }
+        }
+    }
+
+    if (offset + 4 <= buffer.byteLength) readSection();
+    // Đọc phần v2 nếu còn dữ liệu
+    if (offset + 4 <= buffer.byteLength) readSection();
+
+    return result;
+}
+
+/* ============================================================
+   DOM
+============================================================ */
+const dropZone = document.getElementById('drop-zone');
+const fileInput = document.getElementById('file-input');
+const resultContainer = document.getElementById('result-container');
+const grid = document.getElementById('interactive-grid');
+const toast = document.getElementById('toast');
+const searchInput = document.getElementById('search-input');
+const sortSelect = document.getElementById('sort-select');
+const copyFormat = document.getElementById('copy-format');
+const themeBtn = document.getElementById('theme-btn');
+
+let toastTimeout;
+function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => toast.classList.remove('show'), 2400);
+}
+
+/* ============================================================
+   ĐỌC FILE
+============================================================ */
+dropZone.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+
+function handleFile(file) {
+    if (!file.name.toLowerCase().endsWith('.aco')) {
+        showToast('⚠ Vui lòng chọn đúng file .aco');
+        return;
+    }
+    currentFile = file.name;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        try {
+            colors = parseACO(ev.target.result);
+            if (colors.length === 0) {
+                showToast('Không tìm thấy màu hợp lệ trong file');
+                return;
+            }
+            // Đoán tên nếu không có
+            colors.forEach(c => { if (!c.name) c.name = null; });
+            resultContainer.style.display = 'block';
+            document.getElementById('stat-file').textContent = '📄 ' + currentFile;
+            render();
+            showToast(`✅ Đã đọc ${colors.length} màu từ ${file.name}`);
+            resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } catch (err) {
+            console.error(err);
+            showToast('⚠ Có lỗi khi đọc file .aco');
+        }
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+/* ============================================================
+   HIỂN THỊ LƯỚI MÀU
+============================================================ */
+function applyFilter() {
+    const q = searchInput.value.trim().toLowerCase();
+    let list = colors.slice();
+    if (q) {
+        list = list.filter(c =>
+            c.hex.toLowerCase().includes(q) ||
+            (c.name && c.name.toLowerCase().includes(q)) ||
+            `rgb(${Math.round(c.r)}, ${Math.round(c.g)}, ${Math.round(c.b)})`.includes(q)
+        );
+    }
+    const sort = sortSelect.value;
+    if (sort === 'hue') list.sort((a, b) => a.h - b.h);
+    else if (sort === 'lightness') list.sort((a, b) => a.l - b.l);
+    else if (sort === 'saturation') list.sort((a, b) => a.s - b.s);
+    else if (sort === 'name') list.sort((a, b) => (a.name || a.hex).localeCompare(b.name || b.hex));
+    filteredColors = list;
+    renderGrid();
+    updateSelectedStat();
+}
+
+function renderGrid() {
+    if (filteredColors.length === 0) {
+        grid.innerHTML = '<div class="empty-state">🔍 Không tìm thấy màu phù hợp</div>';
+        return;
+    }
+    grid.innerHTML = '';
+    filteredColors.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'swatch' + (c.selected ? ' selected' : '');
+        const nameDisplay = c.name ? `<span class="name">${escapeHtml(c.name)}</span>` : `<span class="name empty">~ ${escapeHtml(nearestName(c.hex))}</span>`;
+        card.innerHTML = `
+            <div class="preview" style="background:${c.hex}">
+                <span class="check">✓</span>
+            </div>
+            <div class="info">
+                ${nameDisplay}
+                <div class="hex" style="color:${c.hex}">${c.hex}</div>
+                <div class="meta">rgb(${Math.round(c.r)}, ${Math.round(c.g)}, ${Math.round(c.b)}) · ${c.space}</div>
+            </div>
+        `;
+        card.addEventListener('click', () => copyColor(c));
+        // Toggle chọn bằng nút check (không trùng với copy)
+        const check = card.querySelector('.check');
+        check.addEventListener('click', e => {
+            e.stopPropagation();
+            c.selected = !c.selected;
+            card.classList.toggle('selected', c.selected);
+            updateSelectedStat();
+        });
+        grid.appendChild(card);
+    });
+}
+
+function render() {
+    document.getElementById('stat-count').textContent = colors.length;
+    applyFilter();
+}
+
+function updateSelectedStat() {
+    const n = colors.filter(c => c.selected).length;
+    const el = document.getElementById('stat-selected');
+    if (n < colors.length) {
+        el.style.display = '';
+        el.innerHTML = '✓ <span class="num">' + n + '</span> đã chọn';
+    } else {
+        el.style.display = 'none';
+    }
+}
+
+function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+}
+
+/* ============================================================
+   COPY
+============================================================ */
+function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+    }
+    return fallbackCopy(text);
+}
+function fallbackCopy(text) {
+    return new Promise((resolve, reject) => {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); resolve(); } catch (e) { reject(e); }
+        document.body.removeChild(ta);
+    });
+}
+
+function formatColor(c, fmt) {
+    if (fmt === 'rgb') return `rgb(${Math.round(c.r)}, ${Math.round(c.g)}, ${Math.round(c.b)})`;
+    if (fmt === 'hsl') return `hsl(${Math.round(c.h)}, ${Math.round(c.s)}%, ${Math.round(c.l)}%)`;
+    return c.hex;
+}
+
+function copyColor(c) {
+    const fmt = copyFormat.value;
+    const text = formatColor(c, fmt);
+    copyText(text).then(() => showToast(`📋 Đã copy: ${text}`)).catch(() => showToast('⚠ Không thể copy'));
+}
+
+function getSelected() {
+    return filteredColors.filter(c => c.selected);
+}
+
+// Copy tất cả
+document.getElementById('copy-all-btn').addEventListener('click', e => {
+    e.stopPropagation();
+    toggleMenu('copy-all-menu');
+});
+document.querySelectorAll('#copy-all-menu .menu-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+        closeMenus();
+        const mode = btn.dataset.mode;
+        const list = getSelected();
+        if (list.length === 0) { showToast('⚠ Chưa có màu nào được chọn'); return; }
+        let text = '';
+        if (mode === 'hex') text = list.map(c => c.hex).join(', ');
+        else if (mode === 'css') text = list.map((c, i) => `--color-${i + 1}: ${c.hex};`).join('\n');
+        else if (mode === 'scss') text = list.map((c, i) => `$color-${i + 1}: ${c.hex};`).join('\n');
+        else if (mode === 'json') text = JSON.stringify(list.map(c => ({ name: c.name || nearestName(c.hex), hex: c.hex, rgb: [Math.round(c.r), Math.round(c.g), Math.round(c.b)] })), null, 2);
+        else if (mode === 'rgb') text = list.map(c => `rgb(${Math.round(c.r)}, ${Math.round(c.g)}, ${Math.round(c.b)})`).join(', ');
+        copyText(text).then(() => showToast(`📋 Đã copy ${list.length} màu (${mode.toUpperCase()})`)).catch(() => showToast('⚠ Không thể copy'));
+    });
+});
+
+// Chọn / bỏ chọn
+document.getElementById('select-all-btn').addEventListener('click', e => {
+    e.stopPropagation();
+    toggleMenu('select-menu');
+});
+document.querySelectorAll('#select-menu .menu-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+        closeMenus();
+        const mode = btn.dataset.mode;
+        colors.forEach(c => {
+            if (mode === 'all') c.selected = true;
+            else if (mode === 'none') c.selected = false;
+            else c.selected = !c.selected;
+        });
+        renderGrid();
+        updateSelectedStat();
+    });
+});
+
+function toggleMenu(id) {
+    const menu = document.getElementById(id);
+    const isOpen = menu.classList.contains('open');
+    closeMenus();
+    if (!isOpen) menu.classList.add('open');
+}
+function closeMenus() {
+    document.querySelectorAll('.menu').forEach(m => m.classList.remove('open'));
+}
+document.addEventListener('click', e => {
+    if (!e.target.closest('.menu-wrap')) closeMenus();
+});
+
+/* ============================================================
+   XUẤT PNG (dùng Canvas thuần, không cần CDN)
+============================================================ */
+const modal = document.getElementById('modal');
+const exportOptions = {
+    layout: 'strip-h',
+    columns: 6,
+    size: 200,
+    gap: 20,
+    label: 'hex',
+    bg: 'white'
+};
+
+document.getElementById('export-btn').addEventListener('click', () => {
+    if (getSelected().length === 0) { showToast('⚠ Chưa có màu nào được chọn'); return; }
+    modal.classList.add('open');
+    drawPreview();
+});
+document.getElementById('modal-close').addEventListener('click', () => modal.classList.remove('open'));
+modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+
+// Segment controls
+function bindSeg(id, key) {
+    document.querySelectorAll(`#${id} button`).forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll(`#${id} button`).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            exportOptions[key] = btn.dataset.val;
+            document.getElementById('columns-group').style.display = exportOptions.layout === 'grid' ? '' : 'none';
+            drawPreview();
+        });
+    });
+}
+bindSeg('layout-seg', 'layout');
+bindSeg('label-seg', 'label');
+bindSeg('bg-seg', 'bg');
+
+document.getElementById('opt-columns').addEventListener('input', e => { exportOptions.columns = parseInt(e.target.value) || 6; drawPreview(); });
+document.getElementById('opt-size').addEventListener('input', e => { exportOptions.size = parseInt(e.target.value) || 200; drawPreview(); });
+document.getElementById('opt-gap').addEventListener('input', e => { exportOptions.gap = parseInt(e.target.value) || 20; drawPreview(); });
+
+function computeLayout(n) {
+    const { layout, columns, size, gap } = exportOptions;
+    if (layout === 'strip-h') return { cols: n, rows: 1, w: n * size + (n - 1) * gap, h: size };
+    if (layout === 'strip-v') return { cols: 1, rows: n, w: size, h: n * size + (n - 1) * gap };
+    const cols = Math.max(1, Math.min(columns, n));
+    const rows = Math.ceil(n / cols);
+    return { cols, rows, w: cols * size + (cols - 1) * gap, h: rows * size + (rows - 1) * gap };
+}
+
+function drawSwatch(ctx, color, x, y, size) {
+    ctx.fillStyle = color.hex;
+    ctx.fillRect(x, y, size, size);
+
+    if (exportOptions.label === 'none') return;
+    const tc = textColorFor(color.hex);
+    ctx.fillStyle = tc;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const fontScale = size / 200;
+
+    if (exportOptions.label === 'hexname' && color.name) {
+        ctx.font = `600 ${Math.round(16 * fontScale)}px 'Segoe UI', sans-serif`;
+        ctx.globalAlpha = 0.85;
+        ctx.fillText(color.name, x + size / 2, y + size * 0.22);
+        ctx.globalAlpha = 1;
+    }
+    ctx.font = `700 ${Math.round(26 * fontScale)}px 'Consolas', monospace`;
+    ctx.fillText(color.hex, x + size / 2, y + size * (exportOptions.label === 'hexname' ? 0.62 : 0.5));
+}
+
+function drawPreview() {
+    const list = getSelected();
+    if (list.length === 0) return;
+    const { cols, rows, w, h } = computeLayout(list.length);
+    const scale = 2;
+    const canvas = document.getElementById('preview-canvas');
+    canvas.width = w * scale;
+    canvas.height = h * scale;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(scale, scale);
+    ctx.clearRect(0, 0, w, h);
+
+    const { gap, size } = exportOptions;
+    list.forEach((c, i) => {
+        const col = i % cols, row = Math.floor(i / cols);
+        drawSwatch(ctx, c, col * (size + gap), row * (size + gap), size);
+    });
+}
+
+function exportPNG() {
+    const list = getSelected();
+    if (list.length === 0) return;
+    const { cols, rows, w, h } = computeLayout(list.length);
+    const { gap, size } = exportOptions;
+    const canvas = document.createElement('canvas');
+    const scale = 2;
+    canvas.width = w * scale;
+    canvas.height = h * scale;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(scale, scale);
+    if (exportOptions.bg === 'white') {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, w, h);
+    }
+    list.forEach((c, i) => {
+        const col = i % cols, row = Math.floor(i / cols);
+        drawSwatch(ctx, c, col * (size + gap), row * (size + gap), size);
+    });
+    const link = document.createElement('a');
+    link.download = 'Color_Palette.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    showToast('🖼 Đã tải PNG thành công');
+}
+
+/* ============================================================
+   XUẤT SVG / CSS / JSON / TXT
+============================================================ */
+function downloadText(filename, content, mime) {
+    const blob = new Blob([content], { type: mime || 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function exportSVG() {
+    const list = getSelected();
+    const { cols, rows, w, h } = computeLayout(list.length);
+    const { gap, size } = exportOptions;
+    let rects = '';
+    list.forEach((c, i) => {
+        const col = i % cols, row = Math.floor(i / cols);
+        const x = col * (size + gap), y = row * (size + gap);
+        rects += `<rect x="${x}" y="${y}" width="${size}" height="${size}" fill="${c.hex}"/>`;
+        if (exportOptions.label !== 'none') {
+            const tc = textColorFor(c.hex);
+            const fs = Math.round(26 * size / 200);
+            rects += `<text x="${x + size / 2}" y="${y + size / 2 + fs / 3}" font-family="Consolas, monospace" font-size="${fs}" font-weight="700" fill="${tc}" text-anchor="middle">${c.hex}</text>`;
+        }
+    });
+    const bg = exportOptions.bg === 'white' ? `<rect width="${w}" height="${h}" fill="#ffffff"/>` : '';
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${bg}${rects}</svg>`;
+    downloadText('Color_Palette.svg', svg, 'image/svg+xml');
+    showToast('📐 Đã tải SVG thành công');
+}
+
+function exportCSS() {
+    const list = getSelected();
+    const body = list.map((c, i) => `  --color-${i + 1}: ${c.hex};${c.name ? ` /* ${c.name} */` : ''}`).join('\n');
+    downloadText('colors.css', `:root {\n${body}\n}\n`, 'text/css');
+    showToast('🎨 Đã tải CSS thành công');
+}
+
+function exportJSON() {
+    const list = getSelected();
+    const data = list.map(c => ({ name: c.name || nearestName(c.hex), hex: c.hex, rgb: [Math.round(c.r), Math.round(c.g), Math.round(c.b)], hsl: [Math.round(c.h), Math.round(c.s), Math.round(c.l)] }));
+    downloadText('colors.json', JSON.stringify(data, null, 2), 'application/json');
+    showToast('{ } Đã tải JSON thành công');
+}
+
+function exportTXT() {
+    const list = getSelected();
+    downloadText('colors.txt', list.map(c => c.hex).join('\n'), 'text/plain');
+    showToast('📄 Đã tải TXT thành công');
+}
+
+document.getElementById('export-png').addEventListener('click', exportPNG);
+document.getElementById('export-svg').addEventListener('click', exportSVG);
+document.getElementById('export-css').addEventListener('click', exportCSS);
+document.getElementById('export-json').addEventListener('click', exportJSON);
+document.getElementById('export-txt').addEventListener('click', exportTXT);
+
+/* ============================================================
+   TAB ĐIỀU HƯỚNG
+============================================================ */
+document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+        document.getElementById(tab.dataset.tab + '-section').classList.add('active');
+    });
+});
+
+/* ============================================================
+   TRỘN MÀU (Color Mixer) — mục riêng, dùng độc lập không cần ACO
+============================================================ */
+let mixerColors = [];     // danh sách màu đang trộn [{...color, weight}]
+let mixerResult = null;   // kết quả hiện tại
+const HISTORY_KEY = 'aco-mix-history';
+const MAX_HISTORY = 60;
+
+/* --- Thêm màu thủ công bằng ô chọn màu --- */
+const mixColorPicker = document.getElementById('mix-color-picker');
+document.getElementById('mix-add-color').addEventListener('click', () => {
+    const { r, g, b } = hexToRgb(mixColorPicker.value);
+    addMixerColor(r, g, b);
+});
+function addMixerColor(r, g, b) {
+    const hex = rgbToHex(r, g, b);
+    const { h, s, l } = rgbToHsl(r, g, b);
+    mixerColors.push({ hex, r, g, b, h, s, l, name: null, space: 'RGB', selected: true, weight: 100 });
+    renderMixer();
+    showToast('➕ Đã thêm ' + hex);
+}
+
+/* --- Lấy màu từ ACO đang mở --- */
+document.getElementById('mix-from-aco').addEventListener('click', () => {
+    if (colors.length === 0) {
+        showToast('⚠ Chưa mở file .aco — hãy qua tab "Xem ACO" để mở file trước');
+        return;
+    }
+    const sel = colors.filter(c => c.selected);
+    const src = sel.length > 0 ? sel : colors;
+    src.forEach(c => mixerColors.push({ ...c, weight: 100 }));
+    renderMixer();
+    showToast(`📁 Đã thêm ${src.length} màu từ ACO`);
+});
+
+/* --- Xóa hết màu đang trộn --- */
+document.getElementById('mix-clear').addEventListener('click', () => {
+    mixerColors = [];
+    renderMixer();
+});
+
+function renderMixer() {
+    const container = document.getElementById('mixer-colors');
+    if (mixerColors.length === 0) {
+        container.innerHTML = '<div class="mixer-empty">Chưa có màu. Dùng ô chọn màu phía trên để thêm, hoặc "Lấy màu từ ACO".</div>';
+        updateMixResult();
+        return;
+    }
+    container.innerHTML = '';
+    mixerColors.forEach((c, i) => {
+        const chip = document.createElement('div');
+        chip.className = 'mixer-chip';
+        chip.innerHTML = `
+            <span class="mixer-swatch" style="background:${c.hex}"></span>
+            <div class="mixer-chip-info">
+                <div class="mixer-chip-name">${c.name ? escapeHtml(c.name) : '~ ' + escapeHtml(nearestName(c.hex))}</div>
+                <div class="mixer-chip-hex">${c.hex}</div>
+            </div>
+            <input type="range" min="0" max="100" value="${c.weight}" class="mixer-weight" data-i="${i}" title="Tỷ lệ màu này trong hỗn hợp">
+            <span class="mixer-weight-val">${c.weight}%</span>
+            <button class="mixer-remove" data-i="${i}" title="Bỏ màu này">✕</button>
+        `;
+        container.appendChild(chip);
+    });
+    container.querySelectorAll('.mixer-weight').forEach(inp => {
+        inp.addEventListener('input', e => {
+            const i = +e.target.dataset.i;
+            mixerColors[i].weight = +e.target.value;
+            inp.parentElement.querySelector('.mixer-weight-val').textContent = e.target.value + '%';
+            updateMixResult();
+        });
+    });
+    container.querySelectorAll('.mixer-remove').forEach(btn => {
+        btn.addEventListener('click', e => {
+            mixerColors.splice(+e.target.dataset.i, 1);
+            renderMixer();
+        });
+    });
+    updateMixResult();
+}
+
+/* Trộn đơn giản: trung bình có trọng số theo tỷ lệ từng màu */
+function computeMix() {
+    if (mixerColors.length === 0) return null;
+    const wsum = mixerColors.reduce((s, c) => s + c.weight, 0) || 1;
+    const ch = k => mixerColors.reduce((s, c) => s + c[k] * c.weight, 0) / wsum;
+    const r = clamp(Math.round(ch('r')), 0, 255);
+    const g = clamp(Math.round(ch('g')), 0, 255);
+    const b = clamp(Math.round(ch('b')), 0, 255);
+    const hex = rgbToHex(r, g, b);
+    const { h, s, l } = rgbToHsl(r, g, b);
+    return { hex, r, g, b, h, s, l };
+}
+
+function updateMixResult() {
+    mixerResult = computeMix();
+    const box = document.getElementById('mixer-result');
+    if (!mixerResult) {
+        box.innerHTML = '<div class="mixer-empty" style="flex:1">Thêm ít nhất 1 màu để xem kết quả trộn</div>';
+        return;
+    }
+    const m = mixerResult;
+    box.innerHTML = `
+        <div class="mixer-result-swatch" style="background:${m.hex}">
+            <span class="mixer-result-hex" style="color:${textColorFor(m.hex)}">${m.hex}</span>
+        </div>
+        <div class="mixer-result-info">
+            <div class="mixer-result-row"><span>HEX</span><b>${m.hex}</b></div>
+            <div class="mixer-result-row"><span>RGB</span><b>rgb(${m.r}, ${m.g}, ${m.b})</b></div>
+            <div class="mixer-result-row"><span>HSL</span><b>hsl(${Math.round(m.h)}, ${Math.round(m.s)}%, ${Math.round(m.l)}%)</b></div>
+        </div>
+    `;
+}
+
+function requireMixResult() {
+    if (!mixerResult) { showToast('⚠ Chưa có kết quả để thao tác'); return null; }
+    return mixerResult;
+}
+
+document.getElementById('mix-copy-hex').addEventListener('click', () => {
+    const m = requireMixResult(); if (!m) return;
+    copyText(m.hex).then(() => { addToHistory(m); showToast(`📋 Đã copy: ${m.hex}`); });
+});
+document.getElementById('mix-copy-rgb').addEventListener('click', () => {
+    const m = requireMixResult(); if (!m) return;
+    const t = `rgb(${m.r}, ${m.g}, ${m.b})`;
+    copyText(t).then(() => { addToHistory(m); showToast(`📋 Đã copy: ${t}`); });
+});
+document.getElementById('mix-copy-hsl').addEventListener('click', () => {
+    const m = requireMixResult(); if (!m) return;
+    const t = `hsl(${Math.round(m.h)}, ${Math.round(m.s)}%, ${Math.round(m.l)}%)`;
+    copyText(t).then(() => { addToHistory(m); showToast(`📋 Đã copy: ${t}`); });
+});
+
+document.getElementById('mix-save').addEventListener('click', () => {
+    const m = requireMixResult(); if (!m) return;
+    addToHistory(m);
+    showToast('💾 Đã lưu ' + m.hex + ' vào lịch sử');
+});
+
+/* ============================================================
+   LỊCH SỬ TRỘN
+============================================================ */
+function loadHistory() {
+    try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch (e) { return []; }
+}
+function saveHistory(h) {
+    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch (e) { /* sandbox */ }
+}
+function addToHistory(m) {
+    const h = loadHistory();
+    if (h.length && h[0].hex === m.hex) return; // tránh trùng màu liền kề
+    h.unshift({ hex: m.hex, r: m.r, g: m.g, b: m.b, h: m.h, s: m.s, l: m.l, t: Date.now() });
+    if (h.length > MAX_HISTORY) h.length = MAX_HISTORY;
+    saveHistory(h);
+    renderHistory();
+}
+function removeFromHistory(hex) {
+    saveHistory(loadHistory().filter(x => x.hex !== hex));
+    renderHistory();
+}
+function renderHistory() {
+    const box = document.getElementById('mix-history');
+    const h = loadHistory();
+    if (h.length === 0) {
+        box.innerHTML = '<div class="history-empty">Chưa có màu nào. Màu bạn copy hoặc lưu sẽ tự xuất hiện ở đây.</div>';
+        return;
+    }
+    box.innerHTML = '';
+    h.forEach(item => {
+        const el = document.createElement('div');
+        el.className = 'history-item';
+        el.title = 'Click để copy ' + item.hex;
+        el.innerHTML = `
+            <div class="sw" style="background:${item.hex}"></div>
+            <div class="tx" style="color:${item.hex}">${item.hex}</div>
+            <button class="del" title="Xóa">✕</button>
+        `;
+        el.addEventListener('click', e => {
+            if (e.target.classList.contains('del')) return;
+            copyText(item.hex).then(() => showToast(`📋 Đã copy: ${item.hex}`));
+        });
+        el.querySelector('.del').addEventListener('click', e => {
+            e.stopPropagation();
+            removeFromHistory(item.hex);
+        });
+        box.appendChild(el);
+    });
+}
+document.getElementById('mix-history-clear').addEventListener('click', () => {
+    saveHistory([]);
+    renderHistory();
+    showToast('🗑 Đã xóa lịch sử');
+});
+
+// Khởi tạo
+renderMixer();
+renderHistory();
+
+/* ============================================================
+   TÌM KIẾM / SẮP XẾP / THEME
+============================================================ */
+searchInput.addEventListener('input', renderGrid);
+sortSelect.addEventListener('change', renderGrid);
+
+// Theme
+function safeGetTheme() {
+    try { return localStorage.getItem('aco-theme'); } catch (e) { return null; }
+}
+function safeSetTheme(v) {
+    try { localStorage.setItem('aco-theme', v); } catch (e) { /* bỏ qua trong sandbox */ }
+}
+const savedTheme = safeGetTheme();
+if (savedTheme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+function updateThemeIcon() {
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    themeBtn.textContent = dark ? '☀️' : '🌙';
+}
+updateThemeIcon();
+themeBtn.addEventListener('click', () => {
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', dark ? '' : 'dark');
+    safeSetTheme(dark ? 'light' : 'dark');
+    updateThemeIcon();
+});
+
+/* Phím tắt: Esc đóng modal */
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        modal.classList.remove('open');
+        closeMenus();
+    }
+});
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v3d52b47920f24c319d37e2661827c42b1787588026925" integrity="sha512-d9sL6GJLXn6fInD1+TVXhTcQOsmxeHfmHAvwGDIxp5TO+uo1fiWW7mHomMj4MLRlCsJDTqXzWLHJFFlPCEIj/A==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a33ab5bb2f44dd6e',t:'MTc4ODE2NTQxMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
