@@ -109,14 +109,30 @@ Các định dạng xuất:
 
 ---
 
-## 6. Giao diện sáng/tối
+## 6. Cài đặt làm App (PWA)
+
+Ứng dụng có thể cài thành app thật trên cả máy tính và điện thoại:
+
+| Nền tảng | Cách cài |
+|----------|----------|
+| **Máy tính** (Chrome/Edge) | Mở link → bấm nút **📲** ở góc phải hoặc biểu tượng cài đặt trên thanh địa chỉ → **Install** |
+| **Android** (Chrome) | Mở link → menu **⋮** → **Thêm vào Màn hình chính** |
+| **iPhone/iPad** (Safari) | Mở link → nút **Chia sẻ** → **Thêm vào Màn hình chính** |
+
+Sau khi cài: app có **icon riêng**, mở **cửa sổ độc lập** (không có thanh địa chỉ), và chạy được **cả khi không có mạng** (offline).
+
+> **Yêu cầu:** app phải được mở qua **HTTPS** (link deploy như GitHub Pages/Netlify/Vercel). Không cài được khi mở file `file://` trực tiếp.
+
+---
+
+## 7. Giao diện sáng/tối
 
 - Nút **🌙 / ☀️** ở góc phải trên để đổi giao diện.
 - Lựa chọn của bạn được ghi nhớ cho những lần mở sau.
 
 ---
 
-## 7. Câu hỏi thường gặp
+## 8. Câu hỏi thường gặp
 
 **Hỏi:** Tôi mở file nhưng không thấy màu nào?
 **Đáp:** Kiểm tra file có đúng định dạng `.aco` không. Một số file xuất từ phần mềm khác có thể dùng cấu trúc khác.
