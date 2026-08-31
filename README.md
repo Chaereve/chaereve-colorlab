@@ -1,138 +1,207 @@
 # 🎨 ACO Color Viewer Pro
 
-Công cụ xem, trộn và xuất bảng màu Photoshop (`.aco`) chạy **ngay trên trình duyệt** — không cần cài đặt, không cần đăng ký, không tải dữ liệu lên mạng.
+> **🇬🇧 English** · [🇻🇳 Tiếng Việt](README.vi.md)
 
-> Mọi dữ liệu được xử lý **hoàn toàn cục bộ** trên máy/điện thoại của bạn.
+A tool to **view, mix, and export Photoshop (`.aco`) color palettes** — running entirely **in your browser**. No installation, no sign-up, no data upload.
 
----
+> Everything is processed **100% locally** on your device.
 
-## ✨ Tính năng
-
-### 📁 Xem ACO
-- Kéo thả hoặc chọn file `.aco` để mở
-- Hỗ trợ **ACO v1 & v2**, đọc được **tên màu** và các hệ màu RGB / HSB / CMYK / Lab / Grayscale
-- Mỗi màu hiển thị kèm **số thứ tự**, tên màu, mã HEX, RGB và hệ màu gốc
-- **Tìm kiếm** theo tên/HEX/RGB, **sắp xếp** theo sắc độ, độ sáng, bão hòa, tên
-
-### 📋 Sao chép
-- Click thẻ màu để copy mã (**HEX / RGB / HSL** — tùy chọn)
-- **Copy tất cả** dưới dạng: danh sách HEX, CSS Variables, SCSS, JSON, RGB
-
-### 🎨 Trộn màu (dùng độc lập, không cần mở ACO)
-- Thêm màu bằng **ô chọn màu** hoặc **mở file ACO** ngay trong mục này
-- Lưới chọn lọc: **loại bỏ màu không muốn trộn** bằng một cú click
-- **Chỉnh lại lựa chọn** mà không cần tải lại file
-- Tỷ lệ mỗi màu **tự động chia đều**, kéo thanh trượt để chỉnh riêng
-- **Lịch sử trộn** tự lưu, click để copy lại
-
-### ⬇ Xuất
-- **PNG / SVG / CSS / JSON / TXT**
-- Tùy chọn bố cục (dải ngang / dải dọc / lưới), kích thước, nhãn, nền trong suốt
-- Xem trước trực tiếp trước khi tải
-
-### 🌙 Giao diện
-- Chế độ **sáng / tối**, giao diện hiện đại
-- **Thiết kế riêng cho điện thoại** (nav dưới cùng, bottom-sheet, nút to vừa tay)
-
-### 📲 Cài đặt làm App (PWA)
-- Cài được trên **máy tính (Windows/Mac/Linux)** và **điện thoại (Android/iOS)**
-- Có **icon riêng**, mở cửa sổ độc lập, chạy **offline** không cần mạng
-
-### 🖥 Bản desktop (.exe)
-- Đóng gói thành **ứng dụng cài đặt trên Windows** bằng Electron — xem thư mục `electron-app/`
+**🌐 Bilingual UI:** the app has a built-in **Vietnamese ↔ English** language switcher (the `EN` / `VI` button in the top-right corner).
 
 ---
 
-## 🚀 Cách sử dụng
+## ✨ Features
 
-### Trên máy tính / điện thoại
-Chỉ cần mở file `index.html` bằng trình duyệt (double-click), hoặc truy cập link web đã deploy.
+### 📁 View ACO
+- Drag & drop (or click) a `.aco` file to open it.
+- Supports **ACO v1 & v2**, reads **color names** and the RGB / HSB / CMYK / Lab / Grayscale color spaces.
+- Each color shows an **index number**, name, HEX, RGB and its original color space.
+- **Search** by name/HEX/RGB and **sort** by hue, lightness, saturation, or name.
 
-### Quy trình nhanh
-1. Chọn tab **📁 Xem ACO** → kéo thả file `.aco` vào
-2. Click màu để copy, hoặc tick chọn nhiều màu để xuất
-3. Chọn tab **🎨 Trộn màu** → thêm màu → xem kết quả trộn ngay
-4. Bấm **⬇ Xuất ảnh & dữ liệu** để tải bảng màu
+### 📋 Copy
+- Click a swatch to copy its code (**HEX / RGB / HSL** — selectable).
+- **Copy all** as: HEX list, CSS variables, SCSS, JSON, or RGB list.
+
+### 🎨 Mix colors (standalone — no ACO required)
+- Add colors with the **color picker** or **open an ACO file** right in this tab.
+- A selection grid lets you **exclude colors you don't want to mix** with one click.
+- **Re-adjust your selection** without re-uploading the file.
+- Ratios **auto-equalize** by color count; drag a slider to tweak each one.
+- **Mix history** is saved automatically; click to copy again.
+
+### 🎲 Random colors (per member)
+- Generate 1–100 random colors for each "member", either fully random or within a chosen color family (red / orange / yellow / green / cyan / blue / purple / pink), with optional no-duplicate mode.
+
+### 🛠 Design tools
+- **Palette Generator** — complementary / analogous / triadic / split / tetradic.
+- **Gradient Generator** — linear/radial CSS gradient with copy-to-clipboard.
+- **Contrast Checker** — WCAG ratio with AA/AAA badges.
+- **Color Blindness Preview** — protanopia / deuteranopia / tritanopia / grayscale.
+- **Image → Palette / Eyedropper** — click an image to pick a color, or extract dominant colors.
+- **Color detail panel** — HEX / RGB / HSL / HSV / CMYK / Lab, luminance, contrast.
+- **Duplicate detector** and **similar-color finder**.
+
+### ⬇ Export
+- **PNG / SVG / CSS / JSON / TXT** with layout, size, label and background options (including transparent).
+- **ACO export** (v2, with color names) of your selected colors.
+
+### 🌙 UI
+- **Dark / light** theme (dark is the default).
+- **Language switcher: Vietnamese / English**.
+- Smooth animations and a mobile-first layout (bottom nav, bottom sheets, large touch targets).
+
+### 📲 Install as an app (PWA)
+- Installable on **desktop (Windows/macOS/Linux)** and **mobile (Android/iOS)**.
+- Has its own icon, opens in a standalone window, and works **offline**.
+
+### 🖥 Desktop version (.exe)
+- Packaged as a **Windows installer** using Electron — see the `electron-app/` folder.
 
 ---
 
-## 📲 Cài đặt làm App (PWA)
+## 🚀 Usage
 
-Sau khi app được deploy (có link https), bạn có thể cài thành app thật:
+### On desktop / mobile
+Just open `index.html` in any browser (double-click it), or visit the deployed URL.
 
-### Trên máy tính (Chrome / Edge)
-1. Mở link web của app
-2. Bấm biểu tượng **📲** (nút "Cài đặt" xuất hiện ở góc phải) **hoặc** biểu tượng cài đặt trên thanh địa chỉ
-3. Chọn **Install / Cài đặt** → app xuất hiện trên Desktop và menu Start
-
-### Trên Android (Chrome)
-1. Mở link web của app
-2. Bấm menu **⋮ → "Thêm vào Màn hình chính"** (Add to Home Screen)
-3. App có icon riêng, mở toàn màn hình như app thường
-
-### Trên iPhone / iPad (Safari)
-1. Mở link web của app
-2. Bấm nút **Chia sẻ** (hình vuông + mũi tên) → **"Thêm vào Màn hình chính"**
-3. App xuất hiện trên màn hình chính
-
-> **Lưu ý quan trọng:** PWA yêu cầu phục vụ qua **HTTPS** (GitHub Pages, Netlify, Vercel đều hỗ trợ sẵn). Không cài được khi mở file trực tiếp `file://` hoặc qua `http://` không an toàn (trừ localhost).
+### Quick flow
+1. Open the **📁 View ACO** tab → drag & drop a `.aco` file.
+2. Click a color to copy it, or tick several colors to export them.
+3. Open the **🎨 Mix colors** tab → add colors → see the mix result instantly.
+4. Click **⬇ Export image & data** to download the palette.
 
 ---
 
-## 🖥 Chạy thử trên máy (không cần deploy)
+## 🌐 Language switcher
+
+Click the **`EN` / `VI`** button (next to the theme button, top-right) to switch the whole interface between **English** and **Vietnamese**. Your choice is remembered across sessions.
+
+---
+
+## 📲 Install as an app (PWA)
+
+Once the app is deployed (over HTTPS), you can install it as a real app:
+
+| Platform | How |
+|----------|-----|
+| **Desktop** (Chrome/Edge) | Open the URL → click the **📲** button (top-right) or the install icon in the address bar → **Install** |
+| **Android** (Chrome) | Open the URL → **⋮** menu → **Add to Home Screen** |
+| **iPhone/iPad** (Safari) | Open the URL → **Share** button → **Add to Home Screen** |
+
+> **Important:** PWAs must be served over **HTTPS** (GitHub Pages, Netlify and Vercel all do this). You cannot install when opening a `file://` directly.
+
+---
+
+## 🖥 Run locally (no deploy needed)
 
 ```bash
-# Cách 1: Mở trực tiếp
-#   Nhấp đúp vào file index.html
-
-# Cách 2: Chạy server local (tùy chọn)
+# Option 1: double-click index.html
+# Option 2: local server (optional)
 python3 -m http.server 8080
-# rồi mở trình duyệt tại http://localhost:8080
+# then open http://localhost:8080 in your browser
 ```
 
 ---
 
-## 🌐 Deploy lên GitHub Pages
+## 🌍 Deploy to GitHub Pages
 
-1. Tạo repo mới trên GitHub (ví dụ `aco-color-viewer`)
-2. Upload file `index.html` vào repo
-3. Vào **Settings → Pages → Source** chọn **Deploy from a branch** → nhánh `main` → thư mục `/ (root)`
-4. Chờ 1–2 phút, truy cập: `https://<tên-người-dùng>.github.io/aco-color-viewer/`
+1. Create a new repository on GitHub (e.g. `aco-color-viewer`).
+2. Upload the contents of the `aco-color-viewer/` folder (including the `icons/` folder).
+3. Go to **Settings → Pages → Source** → **Deploy from a branch** → branch `main`, folder `/ (root)` → **Save**.
+4. Wait 1–2 minutes, then visit: `https://<your-username>.github.io/aco-color-viewer/`
 
-> App là **một file HTML tự chứa** (không cần backend, không cần CDN) nên chạy được trên mọi dịch vụ hosting tĩnh: GitHub Pages, Netlify, Vercel, Cloudflare Pages...
-
----
-
-## ❓ Câu hỏi thường gặp
-
-**Dữ liệu của tôi có bị tải lên mạng không?**
-Không. Ứng dụng xử lý hoàn toàn trên trình duyệt, không gửi dữ liệu ra ngoài.
-
-**Mở file nhưng không thấy màu?**
-Kiểm tra file có đúng định dạng `.aco` không. Một số phần mềm xuất file với cấu trúc khác.
-
-**Trộn màu kiểu gì?**
-Ứng dụng hòa trộn các màu theo tỷ lệ (trung bình có trọng số) — giống pha sơn. Kéo thanh trượt để màu nào "nặng" hơn.
-
-**Làm sao trộn chỉ một phần màu trong file?**
-Mở file ACO trong mục Trộn màu → click bỏ chọn màu không muốn → bấm "Thêm màu vào trộn".
+> The app is a **single self-contained HTML file** (no backend, no CDN), so it runs on any static host: GitHub Pages, Netlify, Vercel, Cloudflare Pages…
 
 ---
 
-## 📚 Hướng dẫn chi tiết
+## 🌐 Making your GitHub page bilingual (2 languages)
 
-Xem file **[HUONG_DAN_SU_DUNG.md](HUONG_DAN_SU_DUNG.md)** để có hướng dẫn đầy đủ từng chức năng.
+You already have a **language switcher inside the app** (EN/VI button). For the **repository page / README** itself, GitHub does not auto-translate READMEs, so use one of these approaches:
+
+### Method A — Two README files with a language switcher (recommended)
+1. Keep `README.md` in **English** (default shown).
+2. Create `README.vi.md` in **Vietnamese**.
+3. At the top of **both** files, add a small language switcher:
+
+   ```markdown
+   [🇬🇧 English](README.md) · [🇻🇳 Tiếng Việt](README.vi.md)
+   ```
+
+Visitors land on the English README and switch languages with one click.
+
+### Method B — Single file with two stacked sections
+1. Put everything in one `README.md`.
+2. Use a table of contents with anchors:
+
+   ```markdown
+   [English](#english) · [Tiếng Việt](#tiếng-việt)
+
+   ## English
+   ...english content...
+
+   ## Tiếng Việt
+   ...Vietnamese content...
+   ```
+
+### Method C — Full bilingual website (Jekyll)
+GitHub Pages supports Jekyll, which can serve a multilingual static site. This is heavier and only needed if you want more than a README.
+
+> In all cases, the **app itself** is already bilingual via the EN/VI button, so end users always get the right language regardless of the README.
 
 ---
 
-## 🛠 Công nghệ
+## 🔄 Updating GitHub and rebuilding the .exe
 
-- **HTML + CSS + JavaScript** thuần (Vanilla JS), không framework, không thư viện ngoài
-- Xử lý nhị phân ACO bằng `DataView`, vẽ/export bằng Canvas API
-- Hoàn toàn chạy phía client (client-side)
+After you change something (e.g. `index.html`), you need to update both the web version and the desktop `.exe`. Full step-by-step instructions are in **[HUONG_DAN_TUNG_BUOC.md](HUONG_DAN_TUNG_BUOC.md)** (Vietnamese). Quick summary:
+
+### Update the web version (GitHub)
+1. Open your repository on GitHub.
+2. Go to the file you changed → **Edit (pencil)** → paste the new content → **Commit changes**. Or use **Add file → Upload files** to replace a whole file/folder.
+3. GitHub Pages rebuilds automatically — refresh the live URL after 1–2 minutes (hard refresh with **Ctrl+F5**).
+
+### Update the .exe (Windows)
+1. Copy the updated `index.html` into `electron-app/` on your Windows machine (overwrite the old one).
+2. Open a command prompt in `electron-app/` and run:
+   ```bash
+   npm run dist:win
+   ```
+   (run `npm install` first if it's a fresh copy)
+3. The new `.exe` appears in `electron-app/dist/`. Replace the old installer/portable exe with the new one.
 
 ---
 
-## 📄 Giấy phép
+## ❓ FAQ
 
-Tự do sử dụng cho mục đích cá nhân và công việc.
+**Is my data uploaded anywhere?**
+No. Everything runs in your browser — nothing is sent over the network.
+
+**The file opens but no colors appear?**
+Check that it's a valid `.aco` file. Some apps export ACO with a non-standard structure.
+
+**How does color mixing work?**
+The app blends colors by ratio (weighted average) — like mixing paint. Drag a slider to make a color "heavier".
+
+**How do I mix only some colors from a file?**
+Open the ACO in the **Mix colors** tab → click to deselect the colors you don't want → click **Add colors to mix**.
+
+---
+
+## 📚 Guides
+
+- **English user guide:** [USER_GUIDE.md](USER_GUIDE.md)
+- **Vietnamese user guide:** [HUONG_DAN_SU_DUNG.md](HUONG_DAN_SU_DUNG.md)
+- **Step-by-step (deploy + .exe build, Vietnamese):** [HUONG_DAN_TUNG_BUOC.md](HUONG_DAN_TUNG_BUOC.md)
+
+---
+
+## 🛠 Tech stack
+
+- Pure **HTML + CSS + JavaScript** (Vanilla JS) — no framework, no external libraries.
+- Binary ACO parsing with `DataView`; drawing/export with the Canvas API.
+- Fully client-side.
+
+---
+
+## 📄 License
+
+Free to use for personal and commercial work.
