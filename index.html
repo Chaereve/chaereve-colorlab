@@ -360,6 +360,29 @@ input[type="color"] {
 .history-item:hover .del { display: block; }
 .history-empty { color: var(--text-faint); font-size: 0.86rem; padding: 10px 2px; }
 
+/* ===== Lưới chọn màu từ ACO (trong trộn màu) ===== */
+.mix-pick-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 8px; max-height: 320px; overflow-y: auto; padding-right: 2px;
+}
+.pick-item {
+    border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+    cursor: pointer; position: relative; background: var(--card-2);
+    transition: all 0.15s;
+}
+.pick-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.pick-item .pv { height: 40px; }
+.pick-item .tx { padding: 4px 6px; font-family: 'Consolas', monospace; font-size: 0.68rem; text-align: center; font-weight: 600; }
+.pick-item .ck {
+    position: absolute; top: 4px; left: 4px; width: 18px; height: 18px;
+    border-radius: 6px; background: rgba(255,255,255,0.9); border: 2px solid rgba(0,0,0,0.15);
+    display: grid; place-items: center; font-size: 0.6rem; color: #fff;
+    transition: all 0.15s; opacity: 0;
+}
+.pick-item.selected .ck { opacity: 1; background: var(--accent-1); border-color: transparent; }
+.pick-item:hover .ck { opacity: 1; }
+.pick-item.selected { border-color: var(--accent-1); }
+
 /* Toast */
 #toast {
     position: fixed; bottom: -70px; left: 50%; transform: translateX(-50%);
@@ -469,7 +492,10 @@ input[type="color"] {
         <div class="mixer-panel">
             <div class="mixer-panel-head">
                 <h2>🎨 Trộn màu</h2>
-                <button class="tool-btn" id="mix-clear" title="Xóa hết màu đang trộn">🗑 Xóa hết</button>
+                <div style="display:flex; gap:8px;">
+                    <button class="tool-btn" id="mix-equalize" title="Tự chia đều tỷ lệ theo số lượng màu">⚖️ Cân bằng tỷ lệ</button>
+                    <button class="tool-btn" id="mix-clear" title="Xóa hết màu đang trộn">🗑 Xóa hết</button>
+                </div>
             </div>
 
             <div class="opt-group">
@@ -477,12 +503,13 @@ input[type="color"] {
                 <div class="mixer-add-row">
                     <input type="color" id="mix-color-picker" value="#3A86FF" title="Chọn màu bất kỳ">
                     <button class="tool-btn" id="mix-add-color">➕ Thêm màu này</button>
-                    <button class="tool-btn" id="mix-from-aco">📁 Lấy màu từ ACO đang mở</button>
+                    <button class="tool-btn" id="mix-open-aco">📁 Mở file ACO</button>
+                    <input type="file" id="mix-aco-input" accept=".aco" style="display:none">
                 </div>
             </div>
 
             <div class="opt-group">
-                <label>Màu đang trộn <span class="mixer-hint">· kéo thanh trượt để chỉnh tỷ lệ từng màu</span></label>
+                <label>Màu đang trộn <span class="mixer-hint">· tỷ lệ tự chia đều, kéo thanh trượt để chỉnh riêng</span></label>
                 <div class="mixer-colors" id="mixer-colors"></div>
             </div>
 
@@ -563,6 +590,32 @@ input[type="color"] {
                 <button class="tool-btn" id="export-css">🎨 CSS</button>
                 <button class="tool-btn" id="export-json">{ } JSON</button>
                 <button class="tool-btn" id="export-txt">📄 TXT</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal chọn lọc màu từ ACO (trong trộn màu) -->
+<div class="modal-overlay" id="mix-pick-modal">
+    <div class="modal" style="max-width: 720px;">
+        <div class="modal-head">
+            <h2>📁 Chọn màu để trộn</h2>
+            <button class="close-btn" id="mix-pick-close">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="opt-group">
+                <label id="mix-pick-count" style="font-weight:500"></label>
+                <div class="mixer-add-row">
+                    <button class="tool-btn" id="mix-pick-all">Chọn tất cả</button>
+                    <button class="tool-btn" id="mix-pick-none">Bỏ chọn</button>
+                    <button class="tool-btn" id="mix-pick-invert">Đảo ngược</button>
+                </div>
+            </div>
+            <div class="opt-group">
+                <div class="mix-pick-grid" id="mix-pick-grid"></div>
+            </div>
+            <div class="export-actions">
+                <button class="tool-btn primary" id="mix-pick-add">➕ Thêm <span id="mix-pick-addcount">0</span> màu vào trộn</button>
             </div>
         </div>
     </div>
@@ -1215,8 +1268,10 @@ document.querySelectorAll('.tab').forEach(tab => {
 ============================================================ */
 let mixerColors = [];     // danh sách màu đang trộn [{...color, weight}]
 let mixerResult = null;   // kết quả hiện tại
+let mixPickColors = [];   // màu từ ACO để chọn lọc trước khi thêm vào trộn
 const HISTORY_KEY = 'aco-mix-history';
 const MAX_HISTORY = 60;
+const mixPickModal = document.getElementById('mix-pick-modal');
 
 /* --- Thêm màu thủ công bằng ô chọn màu --- */
 const mixColorPicker = document.getElementById('mix-color-picker');
@@ -1232,17 +1287,78 @@ function addMixerColor(r, g, b) {
     showToast('➕ Đã thêm ' + hex);
 }
 
-/* --- Lấy màu từ ACO đang mở --- */
-document.getElementById('mix-from-aco').addEventListener('click', () => {
-    if (colors.length === 0) {
-        showToast('⚠ Chưa mở file .aco — hãy qua tab "Xem ACO" để mở file trước');
-        return;
-    }
-    const sel = colors.filter(c => c.selected);
-    const src = sel.length > 0 ? sel : colors;
-    src.forEach(c => mixerColors.push({ ...c, weight: 100 }));
+/* --- Mở file ACO ngay trong mục trộn màu (không cần qua tab Xem ACO) --- */
+const mixAcoInput = document.getElementById('mix-aco-input');
+document.getElementById('mix-open-aco').addEventListener('click', () => mixAcoInput.click());
+mixAcoInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        try {
+            const parsed = parseACO(ev.target.result);
+            if (parsed.length === 0) { showToast('⚠ Không tìm thấy màu hợp lệ trong file'); return; }
+            mixPickColors = parsed.map(c => ({ ...c, selected: true }));
+            renderPickGrid();
+            mixPickModal.classList.add('open');
+        } catch (err) {
+            console.error(err);
+            showToast('⚠ Có lỗi khi đọc file .aco');
+        }
+    };
+    reader.readAsArrayBuffer(file);
+    e.target.value = ''; // cho phép chọn lại cùng file
+});
+
+/* --- Lưới chọn lọc màu từ ACO --- */
+function renderPickGrid() {
+    const grid = document.getElementById('mix-pick-grid');
+    document.getElementById('mix-pick-count').textContent =
+        'File có ' + mixPickColors.length + ' màu — click để bỏ chọn màu không muốn trộn';
+    grid.innerHTML = '';
+    mixPickColors.forEach(c => {
+        const it = document.createElement('div');
+        it.className = 'pick-item' + (c.selected ? ' selected' : '');
+        it.innerHTML = `
+            <span class="ck">✓</span>
+            <div class="pv" style="background:${c.hex}"></div>
+            <div class="tx" style="color:${c.hex}">${c.hex}</div>
+        `;
+        it.addEventListener('click', () => {
+            c.selected = !c.selected;
+            it.classList.toggle('selected', c.selected);
+            updatePickCount();
+        });
+        grid.appendChild(it);
+    });
+    updatePickCount();
+}
+function updatePickCount() {
+    document.getElementById('mix-pick-addcount').textContent = mixPickColors.filter(c => c.selected).length;
+}
+document.getElementById('mix-pick-all').addEventListener('click', () => setPickAll(true));
+document.getElementById('mix-pick-none').addEventListener('click', () => setPickAll(false));
+document.getElementById('mix-pick-invert').addEventListener('click', () => {
+    mixPickColors.forEach(c => c.selected = !c.selected);
+    renderPickGrid();
+});
+function setPickAll(v) { mixPickColors.forEach(c => c.selected = v); renderPickGrid(); }
+document.getElementById('mix-pick-add').addEventListener('click', () => {
+    const sel = mixPickColors.filter(c => c.selected);
+    if (sel.length === 0) { showToast('⚠ Chưa chọn màu nào'); return; }
+    sel.forEach(c => mixerColors.push({ ...c, weight: 100 }));
+    mixPickModal.classList.remove('open');
     renderMixer();
-    showToast(`📁 Đã thêm ${src.length} màu từ ACO`);
+    showToast(`📁 Đã thêm ${sel.length} màu vào trộn`);
+});
+document.getElementById('mix-pick-close').addEventListener('click', () => mixPickModal.classList.remove('open'));
+mixPickModal.addEventListener('click', e => { if (e.target === mixPickModal) mixPickModal.classList.remove('open'); });
+
+/* --- Cân bằng tỷ lệ theo số lượng màu --- */
+document.getElementById('mix-equalize').addEventListener('click', () => {
+    mixerColors.forEach(c => c.weight = 100);
+    renderMixer();
+    showToast('⚖️ Đã chia đều tỷ lệ các màu');
 });
 
 /* --- Xóa hết màu đang trộn --- */
@@ -1254,7 +1370,7 @@ document.getElementById('mix-clear').addEventListener('click', () => {
 function renderMixer() {
     const container = document.getElementById('mixer-colors');
     if (mixerColors.length === 0) {
-        container.innerHTML = '<div class="mixer-empty">Chưa có màu. Dùng ô chọn màu phía trên để thêm, hoặc "Lấy màu từ ACO".</div>';
+        container.innerHTML = '<div class="mixer-empty">Chưa có màu. Dùng ô chọn màu hoặc bấm "📁 Mở file ACO" để thêm.</div>';
         updateMixResult();
         return;
     }
@@ -1269,16 +1385,17 @@ function renderMixer() {
                 <div class="mixer-chip-hex">${c.hex}</div>
             </div>
             <input type="range" min="0" max="100" value="${c.weight}" class="mixer-weight" data-i="${i}" title="Tỷ lệ màu này trong hỗn hợp">
-            <span class="mixer-weight-val">${c.weight}%</span>
+            <span class="mixer-weight-val"></span>
             <button class="mixer-remove" data-i="${i}" title="Bỏ màu này">✕</button>
         `;
         container.appendChild(chip);
     });
+    refreshWeights();
     container.querySelectorAll('.mixer-weight').forEach(inp => {
         inp.addEventListener('input', e => {
             const i = +e.target.dataset.i;
             mixerColors[i].weight = +e.target.value;
-            inp.parentElement.querySelector('.mixer-weight-val').textContent = e.target.value + '%';
+            refreshWeights();
             updateMixResult();
         });
     });
@@ -1289,6 +1406,15 @@ function renderMixer() {
         });
     });
     updateMixResult();
+}
+
+// Hiển thị tỷ lệ % tự tính: phần của mỗi màu = weight / tổng weight
+function refreshWeights() {
+    const totalW = mixerColors.reduce((s, c) => s + c.weight, 0) || 1;
+    document.querySelectorAll('#mixer-colors .mixer-chip').forEach((chip, i) => {
+        const share = mixerColors[i].weight / totalW * 100;
+        chip.querySelector('.mixer-weight-val').textContent = Math.round(share) + '%';
+    });
 }
 
 /* Trộn đơn giản: trung bình có trọng số theo tỷ lệ từng màu */
@@ -1440,10 +1566,11 @@ themeBtn.addEventListener('click', () => {
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
         modal.classList.remove('open');
+        mixPickModal.classList.remove('open');
         closeMenus();
     }
 });
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v3d52b47920f24c319d37e2661827c42b1787588026925" integrity="sha512-d9sL6GJLXn6fInD1+TVXhTcQOsmxeHfmHAvwGDIxp5TO+uo1fiWW7mHomMj4MLRlCsJDTqXzWLHJFFlPCEIj/A==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a33ab5bb2f44dd6e',t:'MTc4ODE2NTQxMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
