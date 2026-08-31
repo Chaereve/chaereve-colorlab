@@ -34,6 +34,13 @@ Công cụ xem, trộn và xuất bảng màu Photoshop (`.aco`) chạy **ngay t
 - Chế độ **sáng / tối**, giao diện hiện đại
 - **Thiết kế riêng cho điện thoại** (nav dưới cùng, bottom-sheet, nút to vừa tay)
 
+### 📲 Cài đặt làm App (PWA)
+- Cài được trên **máy tính (Windows/Mac/Linux)** và **điện thoại (Android/iOS)**
+- Có **icon riêng**, mở cửa sổ độc lập, chạy **offline** không cần mạng
+
+### 🖥 Bản desktop (.exe)
+- Đóng gói thành **ứng dụng cài đặt trên Windows** bằng Electron — xem thư mục `electron-app/`
+
 ---
 
 ## 🚀 Cách sử dụng
@@ -46,6 +53,29 @@ Chỉ cần mở file `index.html` bằng trình duyệt (double-click), hoặc 
 2. Click màu để copy, hoặc tick chọn nhiều màu để xuất
 3. Chọn tab **🎨 Trộn màu** → thêm màu → xem kết quả trộn ngay
 4. Bấm **⬇ Xuất ảnh & dữ liệu** để tải bảng màu
+
+---
+
+## 📲 Cài đặt làm App (PWA)
+
+Sau khi app được deploy (có link https), bạn có thể cài thành app thật:
+
+### Trên máy tính (Chrome / Edge)
+1. Mở link web của app
+2. Bấm biểu tượng **📲** (nút "Cài đặt" xuất hiện ở góc phải) **hoặc** biểu tượng cài đặt trên thanh địa chỉ
+3. Chọn **Install / Cài đặt** → app xuất hiện trên Desktop và menu Start
+
+### Trên Android (Chrome)
+1. Mở link web của app
+2. Bấm menu **⋮ → "Thêm vào Màn hình chính"** (Add to Home Screen)
+3. App có icon riêng, mở toàn màn hình như app thường
+
+### Trên iPhone / iPad (Safari)
+1. Mở link web của app
+2. Bấm nút **Chia sẻ** (hình vuông + mũi tên) → **"Thêm vào Màn hình chính"**
+3. App xuất hiện trên màn hình chính
+
+> **Lưu ý quan trọng:** PWA yêu cầu phục vụ qua **HTTPS** (GitHub Pages, Netlify, Vercel đều hỗ trợ sẵn). Không cài được khi mở file trực tiếp `file://` hoặc qua `http://` không an toàn (trừ localhost).
 
 ---
 
