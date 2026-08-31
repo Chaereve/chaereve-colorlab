@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ACO Color Viewer Pro</title>
 <style>
 /* ============================================================
@@ -443,15 +443,136 @@ input[type="color"]:hover { transform: translateY(-2px); }
 [data-theme="dark"] #toast { color: #111; }
 #toast.show { bottom: 34px; }
 
-/* ============ RESPONSIVE ============ */
+/* ============ RESPONSIVE — MOBILE ============ */
 @media (max-width: 640px) {
-    .brand h1 { font-size: 1.25rem; }
-    .logo { width: 46px; height: 46px; border-radius: 15px; }
-    #interactive-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
-    .swatch .preview { height: 80px; }
-    .mixer-result { flex-direction: column; }
-    .mixer-weight { width: 88px; }
-    .mixer-panel { padding: 18px; }
+    /* Bù khoảng trống cho nav dưới cùng */
+    body {
+        padding: 0 14px calc(88px + env(safe-area-inset-bottom, 0px));
+    }
+    .container { max-width: 100%; }
+
+    /* Header gọn */
+    header { padding: 18px 2px 14px; margin-bottom: 0; }
+    .logo { width: 44px; height: 44px; border-radius: 14px; }
+    .logo svg { width: 24px; height: 24px; }
+    .brand { gap: 12px; }
+    .brand h1 { font-size: 1.18rem; }
+    .brand p { font-size: 0.76rem; margin-top: 1px; max-width: 220px; }
+    .theme-btn { width: 44px; height: 44px; border-radius: 14px; flex-shrink: 0; }
+
+    /* ===== Tabbar -> Nav dưới cùng cố định ===== */
+    .tabbar {
+        position: fixed;
+        left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+        top: auto; margin: 0; width: auto;
+        display: flex; border-radius: 20px;
+        background: var(--card); border: 1px solid var(--border);
+        box-shadow: 0 10px 40px -8px rgba(0,0,0,0.35);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        padding: 6px; z-index: 60;
+    }
+    .tab {
+        flex: 1; padding: 13px 10px; border-radius: 15px;
+        font-size: 0.9rem; text-align: center; min-height: 50px;
+    }
+
+    /* ===== Khu kéo-thả ===== */
+    #drop-zone { padding: 34px 18px 30px; border-radius: 20px; }
+    .drop-icon { width: 64px; height: 64px; border-radius: 20px; font-size: 2rem; margin-bottom: 14px; }
+    #drop-zone .main { font-size: 1.04rem; }
+    #drop-zone .sub { font-size: 0.85rem; }
+    #drop-zone .hint { font-size: 0.72rem; margin-top: 14px; }
+
+    /* ===== Stats ===== */
+    .stats-bar { gap: 8px; }
+    .stat-pill { padding: 8px 13px; font-size: 0.8rem; }
+    .file-name { max-width: 180px; }
+
+    /* ===== Toolbar: xếp chồng, nút to vừa tay ===== */
+    .toolbar { padding: 12px; gap: 8px; border-radius: 18px; }
+    .search-box { flex: 1 1 100%; min-width: 0; }
+    .search-box input { padding: 12px 14px 12px 38px; font-size: 0.9rem; }
+    .toolbar select, .toolbar .tool-btn, .toolbar .menu-btn {
+        padding: 11px 13px; min-height: 46px; font-size: 0.86rem;
+        flex: 1 1 auto;
+    }
+    #copy-format, #sort-select { flex: 1 1 40%; }
+
+    /* ===== Lưới thẻ màu ===== */
+    #interactive-grid { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 10px; }
+    .swatch { border-radius: 14px; }
+    .swatch .preview { height: 62px; }
+    .swatch .info { padding: 8px 9px 10px; }
+    .swatch .name { font-size: 0.72rem; }
+    .swatch .hex { font-size: 0.78rem; }
+    .swatch .meta { font-size: 0.62rem; margin-top: 3px; }
+    .swatch .check { width: 20px; height: 20px; top: 6px; left: 6px; font-size: 0.64rem; }
+    .idx-badge { min-width: 18px; height: 18px; top: 6px; right: 6px; font-size: 0.62rem; padding: 0 5px; }
+    .empty-state { padding: 44px 16px; }
+
+    /* ===== Modal -> bottom-sheet toàn màn hình ===== */
+    .modal-overlay { padding: 0; align-items: flex-end; }
+    .modal {
+        max-width: 100%; width: 100%;
+        border-radius: 24px 24px 0 0;
+        max-height: 92vh;
+        animation: sheetUp 0.28s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    @keyframes sheetUp { from { transform: translateY(100%); } to { transform: none; } }
+    .modal-head { padding: 16px 20px; border-radius: 24px 24px 0 0; }
+    .modal-head h2 { font-size: 1.05rem; }
+    .modal-body { padding: 18px 20px 24px; }
+    .seg { width: 100%; }
+    .seg button { flex: 1; padding: 11px 10px; }
+    .export-actions .tool-btn { min-width: 0; flex: 1 1 30%; padding: 12px 8px; }
+    .opt-group label { font-size: 0.82rem; }
+
+    /* ===== Mixer ===== */
+    .mixer-panel { padding: 18px; border-radius: 18px; }
+    .mixer-panel-head { gap: 10px; }
+    .mixer-panel-head h2 { font-size: 1.15rem; }
+    .mixer-panel-head .tool-btn { padding: 10px 12px; min-height: 44px; }
+    input[type="color"] { width: 50px; height: 46px; }
+    .mixer-add-row { gap: 8px; }
+    .mixer-add-row .tool-btn { padding: 11px 12px; min-height: 46px; font-size: 0.84rem; }
+    .mixer-chip { gap: 10px; padding: 8px 10px; }
+    .mixer-num { width: 22px; height: 22px; font-size: 0.66rem; }
+    .mixer-swatch { width: 36px; height: 36px; border-radius: 10px; }
+    .mixer-chip-name { font-size: 0.78rem; }
+    .mixer-chip-hex { font-size: 0.72rem; }
+    .mixer-weight { width: 78px; }
+    .mixer-weight-val { width: 36px; font-size: 0.72rem; }
+    .mixer-remove { width: 30px; height: 30px; }
+    .mixer-result { flex-direction: column; gap: 12px; }
+    .mixer-result-swatch { min-height: 110px; }
+    .mixer-result-hex { font-size: 1.4rem; }
+    .mixer-result-info { padding: 14px 16px; }
+    .mixer-actions .tool-btn { padding: 12px 8px; min-height: 46px; font-size: 0.84rem; }
+    .mixer-actions .tool-btn.primary { flex: 1 1 100%; }
+
+    /* ===== History & Picker ===== */
+    .mix-history { grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 8px; }
+    .history-item .sw { height: 42px; }
+    .history-item .tx { font-size: 0.68rem; }
+    .mix-pick-grid { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 8px; max-height: 300px; }
+    .pick-item .pv { height: 38px; }
+    .pick-item .tx { font-size: 0.62rem; }
+    .pick-item .ck { width: 18px; height: 18px; top: 4px; left: 4px; font-size: 0.6rem; }
+
+    /* ===== Toast nằm trên nav dưới ===== */
+    #toast { bottom: -90px; font-size: 0.82rem; padding: 12px 22px; }
+    #toast.show { bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
+
+    /* Footer */
+    footer { font-size: 0.72rem; padding: 0 8px; }
+}
+
+/* Màn hình rất nhỏ */
+@media (max-width: 360px) {
+    .brand p { display: none; }
+    #interactive-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+    .toolbar select, .toolbar .tool-btn, .toolbar .menu-btn { padding: 10px 10px; font-size: 0.8rem; }
+    .mixer-add-row .tool-btn { font-size: 0.78rem; padding: 11px 10px; }
 }
 
 </style>
@@ -1683,5 +1804,5 @@ document.addEventListener('keydown', e => {
     }
 });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a33af38a6a78e2ff',t:'MTc4ODE2Nzk0Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a33afda94e885783',t:'MTc4ODE2ODM1Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
