@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ACO Color Viewer Pro</title>
+
+<!-- PWA -->
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#6366f1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0d14" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ACO Color">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
+<link rel="shortcut icon" href="./icons/favicon-64.png">
 <style>
 /* ============================================================
    ACO COLOR VIEWER PRO — THEME CAO CẤP
@@ -84,19 +97,16 @@ header {
 }
 .brand { display: flex; align-items: center; gap: 16px; }
 .logo {
-    width: 54px; height: 54px; border-radius: 18px;
-    background: var(--grad);
+    width: 54px; height: 54px; border-radius: 16px;
     display: grid; place-items: center; flex-shrink: 0;
-    box-shadow: 0 12px 30px -8px rgba(124, 90, 246, 0.55),
-                inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    overflow: hidden;
+    box-shadow: 0 12px 30px -8px rgba(124, 90, 246, 0.5);
     position: relative;
 }
-.logo::after {
-    content: ''; position: absolute; inset: 0; border-radius: 18px;
-    background: linear-gradient(120deg, rgba(255,255,255,0.35), transparent 55%);
-    opacity: 0.9; pointer-events: none;
+.logo img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    border-radius: 16px;
 }
-.logo svg { width: 28px; height: 28px; }
 .brand h1 {
     font-size: 1.55rem; font-weight: 800; letter-spacing: -0.02em;
     background: linear-gradient(120deg, var(--accent-1), var(--accent-2) 55%, var(--accent-3));
@@ -250,8 +260,22 @@ select:hover { border-color: var(--accent-1); }
     border-radius: 18px; overflow: hidden; cursor: pointer;
     transition: all 0.22s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative;
     box-shadow: var(--shadow-sm);
+    animation: cardIn 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) both;
 }
 .swatch:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: var(--accent-1); }
+@keyframes cardIn { from { opacity: 0; transform: translateY(10px) scale(0.97); } to { opacity: 1; transform: none; } }
+.swatch:nth-child(1) { animation-delay: 0ms; }
+.swatch:nth-child(2) { animation-delay: 20ms; }
+.swatch:nth-child(3) { animation-delay: 40ms; }
+.swatch:nth-child(4) { animation-delay: 60ms; }
+.swatch:nth-child(5) { animation-delay: 80ms; }
+.swatch:nth-child(6) { animation-delay: 100ms; }
+.swatch:nth-child(7) { animation-delay: 120ms; }
+.swatch:nth-child(8) { animation-delay: 140ms; }
+.swatch:nth-child(9) { animation-delay: 160ms; }
+.swatch:nth-child(10) { animation-delay: 180ms; }
+.swatch:nth-child(11) { animation-delay: 200ms; }
+.swatch:nth-child(12) { animation-delay: 220ms; }
 .swatch .preview { height: 96px; position: relative; }
 .swatch .check {
     position: absolute; top: 9px; left: 9px; width: 24px; height: 24px;
@@ -343,6 +367,21 @@ input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--accent-1
 .mixer-panel {
     background: var(--card); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow-md);
+    transition: border-color 0.2s, box-shadow 0.2s, outline 0.2s;
+    position: relative;
+}
+.mixer-panel.dragover {
+    border-color: var(--accent-1);
+    box-shadow: var(--shadow-lg), 0 0 0 4px var(--ring);
+}
+.mixer-panel.dragover::after {
+    content: 'Thả file .aco để thêm màu';
+    position: absolute; inset: 8px; border-radius: calc(var(--radius) - 6px);
+    border: 2px dashed var(--accent-1);
+    background: color-mix(in srgb, var(--accent-1) 8%, transparent);
+    display: grid; place-items: center;
+    font-size: 1.05rem; font-weight: 700; color: var(--accent-1);
+    pointer-events: none; z-index: 5;
 }
 .mixer-panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
 .mixer-panel-head h2 { font-size: 1.3rem; font-weight: 800; }
@@ -442,6 +481,40 @@ input[type="color"]:hover { transform: translateY(-2px); }
 }
 [data-theme="dark"] #toast { color: #111; }
 #toast.show { bottom: 34px; }
+
+/* ============ SPLASH (màn hình khởi động) ============ */
+#splash {
+    position: fixed; inset: 0; z-index: 9999;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 22px;
+    background:
+        radial-gradient(900px 500px at 50% 30%, rgba(99, 102, 241, 0.22), transparent 65%),
+        radial-gradient(700px 460px at 50% 110%, rgba(217, 70, 239, 0.18), transparent 65%),
+        #0b0d14;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+#splash.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+#splash .s-logo {
+    width: 118px; height: 118px; border-radius: 28px; overflow: hidden;
+    box-shadow: 0 24px 60px -12px rgba(124, 90, 246, 0.7);
+    animation: splashPop 0.7s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+#splash .s-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#splash .s-name {
+    color: #fff; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.01em;
+}
+#splash .s-sub { color: #9aa1b8; font-size: 0.85rem; margin-top: -12px; }
+#splash .s-spinner {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 3px solid rgba(255,255,255,0.15);
+    border-top-color: #8b5cf6;
+    animation: spin 0.8s linear infinite;
+}
+@keyframes splashPop { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+    #splash .s-spinner { animation: none; }
+}
 
 /* ============ RESPONSIVE — MOBILE ============ */
 @media (max-width: 640px) {
@@ -578,16 +651,20 @@ input[type="color"]:hover { transform: translateY(-2px); }
 </style>
 </head>
 <body>
+<!-- Màn hình khởi động -->
+<div id="splash">
+    <div class="s-logo"><img src="./icons/icon-192.png" alt="Chaereve"></div>
+    <div class="s-name">Chaereve</div>
+    <div class="s-sub">ACO Color Viewer</div>
+    <div class="s-spinner"></div>
+</div>
+
 <div class="container">
 
     <header>
         <div class="brand">
             <div class="logo">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
-                    <circle cx="12" cy="12" r="4" fill="white"/>
-                    <path d="M4 10a8 8 0 0 1 16 0" />
-                    <path d="M6 14a8 8 0 0 0 12 0" />
-                </svg>
+                <img src="./icons/icon-192.png" alt="Chaereve" width="54" height="54">
             </div>
             <div>
                 <h1>ACO Color Viewer</h1>
@@ -595,6 +672,7 @@ input[type="color"]:hover { transform: translateY(-2px); }
             </div>
         </div>
         <div class="header-actions">
+            <button class="theme-btn" id="install-btn" title="Cài đặt ứng dụng" style="display:none;">📲</button>
             <button class="theme-btn" id="theme-btn" title="Đổi giao diện sáng/tối">🌙</button>
         </div>
     </header>
@@ -664,7 +742,7 @@ input[type="color"]:hover { transform: translateY(-2px); }
 
     <!-- ===== Mục Trộn màu (dùng riêng, không cần mở ACO) ===== -->
     <section id="mixer-section" class="tab-section">
-        <div class="mixer-panel">
+        <div class="mixer-panel" id="mixer-panel">
             <div class="mixer-panel-head">
                 <h2>🎨 Trộn màu</h2>
                 <div style="display:flex; gap:8px;">
@@ -674,7 +752,7 @@ input[type="color"]:hover { transform: translateY(-2px); }
             </div>
 
             <div class="opt-group">
-                <label>Thêm màu</label>
+                <label>Thêm màu <span class="mixer-hint">· hoặc kéo thả file .aco vào đây</span></label>
                 <div class="mixer-add-row">
                     <input type="color" id="mix-color-picker" value="#3A86FF" title="Chọn màu bất kỳ">
                     <button class="tool-btn" id="mix-add-color">➕ Thêm màu này</button>
@@ -1498,8 +1576,15 @@ function addMixerColor(r, g, b) {
 const mixAcoInput = document.getElementById('mix-aco-input');
 document.getElementById('mix-open-aco').addEventListener('click', () => mixAcoInput.click());
 mixAcoInput.addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (!file) return;
+    if (e.target.files[0]) handleMixACOFile(e.target.files[0]);
+    e.target.value = ''; // cho phép chọn lại cùng file
+});
+
+function handleMixACOFile(file) {
+    if (!file.name.toLowerCase().endsWith('.aco')) {
+        showToast('⚠ Vui lòng chọn đúng file .aco');
+        return;
+    }
     const reader = new FileReader();
     reader.onload = ev => {
         try {
@@ -1514,7 +1599,21 @@ mixAcoInput.addEventListener('change', e => {
         }
     };
     reader.readAsArrayBuffer(file);
-    e.target.value = ''; // cho phép chọn lại cùng file
+}
+
+/* --- Kéo thả file ACO thẳng vào mục trộn màu --- */
+const mixerPanel = document.getElementById('mixer-panel');
+['dragover', 'dragenter'].forEach(ev => mixerPanel.addEventListener(ev, e => {
+    e.preventDefault();
+    mixerPanel.classList.add('dragover');
+}));
+['dragleave', 'drop'].forEach(ev => mixerPanel.addEventListener(ev, e => {
+    e.preventDefault();
+    mixerPanel.classList.remove('dragover');
+}));
+mixerPanel.addEventListener('drop', e => {
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (file) handleMixACOFile(file);
 });
 
 /* --- Mở lại danh sách màu đã tải để chỉnh lựa chọn (không cần up lại) --- */
@@ -1803,6 +1902,51 @@ document.addEventListener('keydown', e => {
         closeMenus();
     }
 });
+
+/* ============================================================
+   SPLASH — ẩn màn hình khởi động khi tải xong
+============================================================ */
+(function hideSplash() {
+    const splash = document.getElementById('splash');
+    const done = () => splash && splash.classList.add('hide');
+    // Hiển thị tối thiểu 900ms để logo kịp hiện, rồi ẩn
+    if (document.readyState === 'complete') {
+        setTimeout(done, 900);
+    } else {
+        window.addEventListener('load', () => setTimeout(done, 900));
+        // Phòng trường hợp load treo: tự ẩn sau 4s
+        setTimeout(done, 4000);
+    }
+})();
+
+/* ============================================================
+   PWA — Đăng ký Service Worker + gợi ý cài đặt app
+============================================================ */
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+}
+
+// Bắt sự kiện beforeinstallprompt để hiện nút cài đặt app
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const btn = document.getElementById('install-btn');
+    if (btn) btn.style.display = 'inline-flex';
+});
+
+document.addEventListener('click', async (e) => {
+    if (e.target && e.target.id === 'install-btn' && deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') showToast('✅ Đã cài đặt ứng dụng!');
+        deferredPrompt = null;
+        const btn = document.getElementById('install-btn');
+        if (btn) btn.style.display = 'none';
+    }
+});
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a33afda94e885783',t:'MTc4ODE2ODM1Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a33b133e3882850e',t:'MTc4ODE2OTI0MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
