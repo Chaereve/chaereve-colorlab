@@ -1,12 +1,19 @@
-# 🎨 ACO Color Viewer Pro
+# 🎨 Chaereve ColorLab
 
-> **🇬🇧 English** · [🇻🇳 Tiếng Việt](README.vi.md)
+<p align="center">
+  <a href="README.md"><img alt="English" src="https://img.shields.io/badge/English-22d3ee?style=for-the-badge"></a>&nbsp;
+  <a href="README.vi.md"><img alt="Tiếng Việt" src="https://img.shields.io/badge/Ti%E1%BA%BFng%20Vi%E1%BB%87t-1a3fd6?style=for-the-badge"></a>&nbsp;
+  <a href="README.zh.md"><img alt="中文" src="https://img.shields.io/badge/%E4%B8%AD%E6%96%87-1a3fd6?style=for-the-badge"></a>&nbsp;
+  <a href="README.ko.md"><img alt="한국어" src="https://img.shields.io/badge/%ED%95%9C%EA%B5%AD%EC%96%B4-1a3fd6?style=for-the-badge"></a>&nbsp;
+  <a href="README.ja.md"><img alt="日本語" src="https://img.shields.io/badge/%E6%97%A5%E6%9C%AC%E8%AA%9E-1a3fd6?style=for-the-badge"></a>&nbsp;
+  <a href="README.es.md"><img alt="Español" src="https://img.shields.io/badge/Espa%C3%B1ol-1a3fd6?style=for-the-badge"></a>
+</p>
 
 A tool to **view, mix, and export Photoshop (`.aco`) color palettes** — running entirely **in your browser**. No installation, no sign-up, no data upload.
 
 > Everything is processed **100% locally** on your device.
 
-**🌐 Bilingual UI:** the app has a built-in **Vietnamese ↔ English** language switcher (the `EN` / `VI` button in the top-right corner).
+**🌐 Multilingual UI (6 languages):** Vietnamese, English, 中文 (简体), 한국어, 日本語, Español — switch in **⚙️ Settings**.
 
 ---
 
@@ -17,10 +24,16 @@ A tool to **view, mix, and export Photoshop (`.aco`) color palettes** — runnin
 - Supports **ACO v1 & v2**, reads **color names** and the RGB / HSB / CMYK / Lab / Grayscale color spaces.
 - Each color shows an **index number**, name, HEX, RGB and its original color space.
 - **Search** by name/HEX/RGB and **sort** by hue, lightness, saturation, or name.
+- **Advanced search** — filter by ranges with `hue:0-60`, `sat:>50`, `light:40-80`, or find near-colors with `similar:#FF0000`.
+
+### ✏️ Edit palette (in-place)
+- **Rename** colors inline (✏️), **delete** (🗑), or **add** new colors — then **save back to .aco**.
+- Full **undo / redo** (up to 60 steps).
+- **Right-click** any swatch for a quick menu (copy / details / rename / export / delete).
 
 ### 📋 Copy
 - Click a swatch to copy its code (**HEX / RGB / HSL** — selectable).
-- **Copy all** as: HEX list, CSS variables, SCSS, JSON, or RGB list.
+- **Copy all** as: HEX list, CSS variables, SCSS, JSON, RGB, **Tailwind config**, or **Styled Components**.
 
 ### 🎨 Mix colors (standalone — no ACO required)
 - Add colors with the **color picker** or **open an ACO file** right in this tab.
@@ -33,29 +46,55 @@ A tool to **view, mix, and export Photoshop (`.aco`) color palettes** — runnin
 - Generate 1–100 random colors for each "member", either fully random or within a chosen color family (red / orange / yellow / green / cyan / blue / purple / pink), with optional no-duplicate mode.
 
 ### 🛠 Design tools
+Split into two tabs — **🧩 Create** and **🔍 Analyze**:
 - **Palette Generator** — complementary / analogous / triadic / split / tetradic.
-- **Gradient Generator** — linear/radial CSS gradient with copy-to-clipboard.
+- **Gradient Generator** — linear / radial / **conic** CSS gradient with copy-to-clipboard.
+- **Image → Palette / Eyedropper** — click an image to pick a color, extract dominant colors, and **export them straight to .aco**.
+- **Presets & Templates** — built-in Material Design, Tailwind, Brand Colors, Pastel and Earth Tones palettes.
 - **Contrast Checker** — WCAG ratio with AA/AAA badges.
+- **Accessibility Audit** — % of the palette passing AA against white/black text.
+- **Palette Statistics** — average saturation/lightness and a hue-distribution chart.
 - **Color Blindness Preview** — protanopia / deuteranopia / tritanopia / grayscale.
-- **Image → Palette / Eyedropper** — click an image to pick a color, or extract dominant colors.
 - **Color detail panel** — HEX / RGB / HSL / HSV / CMYK / Lab, luminance, contrast.
 - **Duplicate detector** and **similar-color finder**.
+
+### 📦 Batch processing
+- Open **multiple .aco files** at once, then **merge** them into one palette (with optional dedup) or **export a merged .aco**.
+
+### 🔗 Share palette
+- Generate a **shareable link** (`?palette=...`) that encodes the current palette — anyone opening the link sees the same colors, no server needed.
+
+### 📐 Gradient (.grd)
+- Open Photoshop **gradient files** (`.grd`, **v3 & v5**) — solid and noise gradients.
+- **Preview** each gradient, then **edit** color stops, transparency stops, midpoint, smoothness, and noise parameters (seed, roughness, min/max).
+- **Add / remove gradients** and stops, then **save back to `.grd`**.
+- Export a gradient as **CSS `linear-gradient`** or **SVG**, and **extract its colors to `.aco`** or straight into the Viewer.
 
 ### ⬇ Export
 - **PNG / SVG / CSS / JSON / TXT** with layout, size, label and background options (including transparent).
 - **ACO export** (v2, with color names) of your selected colors.
 
-### 🌙 UI
-- **Dark / light** theme (dark is the default).
-- **Language switcher: Vietnamese / English**.
+### 🌙 UI — glassmorphism
+- **Glassmorphism** design: frosted-glass panels, soft blur and ambient light — polished like macOS/iOS.
+- **Dark / light / auto** theme (follows your system by default).
+- **6 languages**: Vietnamese, English, 中文 (简体), 한국어, 日本語, Español — switchable in **⚙️ Settings**.
 - Smooth animations and a mobile-first layout (bottom nav, bottom sheets, large touch targets).
+
+### ⚙️ Settings
+- **Appearance** — light, dark or auto theme.
+- **Accent color** — recolor the whole UI (logo, tabs, buttons, glow).
+- **Language** and **font size** (small / medium / large).
+- **Sound effects** — subtle sounds for clicks, copies and notifications (on/off).
+- **Motion effects** on/off, **clear saved data**, and an **About** box.
 
 ### 📲 Install as an app (PWA)
 - Installable on **desktop (Windows/macOS/Linux)** and **mobile (Android/iOS)**.
 - Has its own icon, opens in a standalone window, and works **offline**.
 
-### 🖥 Desktop version (.exe)
-- Packaged as a **Windows installer** using Electron — see the `electron-app/` folder.
+### 🖥 Desktop version (Windows / macOS / Linux)
+- Packaged as a **native desktop app** using Electron — see the `electron-app/` folder.
+- Build installers for every OS: **Windows** (`.exe` installer + portable), **macOS** (`.dmg`) and **Linux** (`.AppImage`).
+- The app logo is **round**, like modern apps.
 
 ---
 
@@ -69,12 +108,25 @@ Just open `index.html` in any browser (double-click it), or visit the deployed U
 2. Click a color to copy it, or tick several colors to export them.
 3. Open the **🎨 Mix colors** tab → add colors → see the mix result instantly.
 4. Click **⬇ Export image & data** to download the palette.
+5. Open the **📐 Gradient** tab → drop a `.grd` file to view and edit Photoshop gradients.
+6. Open the **⚙️ Settings** tab to switch theme, accent color, language and font size.
 
 ---
 
-## 🌐 Language switcher
+## 🌐 Languages (6)
 
-Click the **`EN` / `VI`** button (next to the theme button, top-right) to switch the whole interface between **English** and **Vietnamese**. Your choice is remembered across sessions.
+Open **⚙️ Settings** (the gear button, top-right) and pick a language from the **Language** menu: Vietnamese, English, 中文 (简体), 한국어, 日本語, Español. The whole interface switches instantly and your choice is remembered across sessions.
+
+This repository's **README and User Guide are available in all 6 languages**:
+
+| Language | README | User Guide |
+|----------|--------|------------|
+| 🇬🇧 English | [README.md](README.md) | [USER_GUIDE.md](USER_GUIDE.md) |
+| 🇻🇳 Tiếng Việt | [README.vi.md](README.vi.md) | [USER_GUIDE.vi.md](USER_GUIDE.vi.md) |
+| 🇨🇳 中文 (简体) | [README.zh.md](README.zh.md) | [USER_GUIDE.zh.md](USER_GUIDE.zh.md) |
+| 🇰🇷 한국어 | [README.ko.md](README.ko.md) | [USER_GUIDE.ko.md](USER_GUIDE.ko.md) |
+| 🇯🇵 日本語 | [README.ja.md](README.ja.md) | [USER_GUIDE.ja.md](USER_GUIDE.ja.md) |
+| 🇪🇸 Español | [README.es.md](README.es.md) | [USER_GUIDE.es.md](USER_GUIDE.es.md) |
 
 ---
 
@@ -92,81 +144,22 @@ Once the app is deployed (over HTTPS), you can install it as a real app:
 
 ---
 
-## 🖥 Run locally (no deploy needed)
+## 🌐 Language-switch buttons
 
-```bash
-# Option 1: double-click index.html
-# Option 2: local server (optional)
-python3 -m http.server 8080
-# then open http://localhost:8080 in your browser
+Every `README.<lang>.md` starts with a **language-switch button bar** (the buttons at the top). To add it to a new README, paste this at the very top:
+
+```markdown
+<p align="center">
+  <a href="README.md"><img alt="English" src="https://img.shields.io/badge/English-1a3fd6?style=for-the-badge"></a>&nbsp;
+  <a href="README.vi.md"><img alt="Tiếng Việt" src="https://img.shields.io/badge/Ti%E1%BA%BFng%20Vi%E1%BB%87t-1a3fd6?style=for-the-badge"></a>&nbsp;
+  <a href="README.zh.md"><img alt="中文" src="https://img.shields.io/badge/%E4%B8%AD%E6%96%87-1a3fd6?style=for-the-badge"></a>&nbsp;
+  <a href="README.ko.md"><img alt="한국어" src="https://img.shields.io/badge/%ED%95%9C%EA%B5%AD%EC%96%B4-1a3fd6?style=for-the-badge"></a>&nbsp;
+  <a href="README.ja.md"><img alt="日本語" src="https://img.shields.io/badge/%E6%97%A5%E6%9C%AC%E8%AA%9E-1a3fd6?style=for-the-badge"></a>&nbsp;
+  <a href="README.es.md"><img alt="Español" src="https://img.shields.io/badge/Espa%C3%B1ol-1a3fd6?style=for-the-badge"></a>
+</p>
 ```
 
----
-
-## 🌍 Deploy to GitHub Pages
-
-1. Create a new repository on GitHub (e.g. `aco-color-viewer`).
-2. Upload the contents of the `aco-color-viewer/` folder (including the `icons/` folder).
-3. Go to **Settings → Pages → Source** → **Deploy from a branch** → branch `main`, folder `/ (root)` → **Save**.
-4. Wait 1–2 minutes, then visit: `https://<your-username>.github.io/aco-color-viewer/`
-
-> The app is a **single self-contained HTML file** (no backend, no CDN), so it runs on any static host: GitHub Pages, Netlify, Vercel, Cloudflare Pages…
-
----
-
-## 🌐 Making your GitHub page bilingual (2 languages)
-
-You already have a **language switcher inside the app** (EN/VI button). For the **repository page / README** itself, GitHub does not auto-translate READMEs, so use one of these approaches:
-
-### Method A — Two README files with a language switcher (recommended)
-1. Keep `README.md` in **English** (default shown).
-2. Create `README.vi.md` in **Vietnamese**.
-3. At the top of **both** files, add a small language switcher:
-
-   ```markdown
-   [🇬🇧 English](README.md) · [🇻🇳 Tiếng Việt](README.vi.md)
-   ```
-
-Visitors land on the English README and switch languages with one click.
-
-### Method B — Single file with two stacked sections
-1. Put everything in one `README.md`.
-2. Use a table of contents with anchors:
-
-   ```markdown
-   [English](#english) · [Tiếng Việt](#tiếng-việt)
-
-   ## English
-   ...english content...
-
-   ## Tiếng Việt
-   ...Vietnamese content...
-   ```
-
-### Method C — Full bilingual website (Jekyll)
-GitHub Pages supports Jekyll, which can serve a multilingual static site. This is heavier and only needed if you want more than a README.
-
-> In all cases, the **app itself** is already bilingual via the EN/VI button, so end users always get the right language regardless of the README.
-
----
-
-## 🔄 Updating GitHub and rebuilding the .exe
-
-After you change something (e.g. `index.html`), you need to update both the web version and the desktop `.exe`. Full step-by-step instructions are in **[HUONG_DAN_TUNG_BUOC.md](HUONG_DAN_TUNG_BUOC.md)** (Vietnamese). Quick summary:
-
-### Update the web version (GitHub)
-1. Open your repository on GitHub.
-2. Go to the file you changed → **Edit (pencil)** → paste the new content → **Commit changes**. Or use **Add file → Upload files** to replace a whole file/folder.
-3. GitHub Pages rebuilds automatically — refresh the live URL after 1–2 minutes (hard refresh with **Ctrl+F5**).
-
-### Update the .exe (Windows)
-1. Copy the updated `index.html` into `electron-app/` on your Windows machine (overwrite the old one).
-2. Open a command prompt in `electron-app/` and run:
-   ```bash
-   npm run dist:win
-   ```
-   (run `npm install` first if it's a fresh copy)
-3. The new `.exe` appears in `electron-app/dist/`. Replace the old installer/portable exe with the new one.
+Use a different color (e.g. `22d3ee`) for the **current** language's button.
 
 ---
 
@@ -188,17 +181,10 @@ Open the ACO in the **Mix colors** tab → click to deselect the colors you don'
 
 ## 📚 Guides
 
-- **English user guide:** [USER_GUIDE.md](USER_GUIDE.md)
-- **Vietnamese user guide:** [HUONG_DAN_SU_DUNG.md](HUONG_DAN_SU_DUNG.md)
-- **Step-by-step (deploy + .exe build, Vietnamese):** [HUONG_DAN_TUNG_BUOC.md](HUONG_DAN_TUNG_BUOC.md)
+User guide (all 6 languages):
+- 🇬🇧 [USER_GUIDE.md](USER_GUIDE.md) · 🇻🇳 [USER_GUIDE.vi.md](USER_GUIDE.vi.md) · 🇨🇳 [USER_GUIDE.zh.md](USER_GUIDE.zh.md) · 🇰🇷 [USER_GUIDE.ko.md](USER_GUIDE.ko.md) · 🇯🇵 [USER_GUIDE.ja.md](USER_GUIDE.ja.md) · 🇪🇸 [USER_GUIDE.es.md](USER_GUIDE.es.md)
 
----
-
-## 🛠 Tech stack
-
-- Pure **HTML + CSS + JavaScript** (Vanilla JS) — no framework, no external libraries.
-- Binary ACO parsing with `DataView`; drawing/export with the Canvas API.
-- Fully client-side.
+Deploy & build (step-by-step): [HUONG_DAN_TUNG_BUOC.md](HUONG_DAN_TUNG_BUOC.md)
 
 ---
 

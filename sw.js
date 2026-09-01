@@ -1,8 +1,8 @@
 /* ============================================================
-   ACO Color Viewer Pro — Service Worker (PWA / Offline)
+   Chaereve ColorLab — Service Worker (PWA / Offline)
    Chiến lược: cache-first cho app shell, network fallback.
 ============================================================ */
-const CACHE_NAME = 'aco-color-viewer-v1';
+const CACHE_NAME = 'chaereve-colorlab-v1';
 const ASSETS = [
   './',
   './index.html',

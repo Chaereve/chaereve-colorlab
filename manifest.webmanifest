@@ -1,7 +1,7 @@
 {
-  "name": "ACO Color Viewer Pro",
-  "short_name": "ACO Color",
-  "description": "Xem, trộn và xuất bảng màu Photoshop (.aco) ngay trên trình duyệt — chạy offline.",
+  "name": "Chaereve ColorLab",
+  "short_name": "ColorLab",
+  "description": "Xem, trộn và xuất bảng màu & gradient Photoshop (.aco · .grd) ngay trên trình duyệt — chạy offline.",
   "lang": "vi",
   "dir": "ltr",
   "start_url": "./",
