@@ -1,6 +1,10 @@
 # 🎨 Chaereve ColorLab
 
 <p align="center">
+  <a href="https://github.com/chaereve/chaereve-colorlab/releases"><img alt="Descargar" src="https://img.shields.io/badge/Descargar-2ea043?style=for-the-badge"></a>
+</p>
+
+<p align="center">
   <a href="README.md"><img alt="English" src="https://img.shields.io/badge/English-1a3fd6?style=for-the-badge"></a>&nbsp;
   <a href="README.vi.md"><img alt="Tiếng Việt" src="https://img.shields.io/badge/Ti%E1%BA%BFng%20Vi%E1%BB%87t-1a3fd6?style=for-the-badge"></a>&nbsp;
   <a href="README.zh.md"><img alt="中文" src="https://img.shields.io/badge/%E4%B8%AD%E6%96%87-1a3fd6?style=for-the-badge"></a>&nbsp;
@@ -91,10 +95,10 @@ Divididas en dos pestañas — **🧩 Crear** y **🔍 Analizar**:
 - Instalable en **escritorio (Windows/macOS/Linux)** y **móvil (Android/iOS)**.
 - Tiene su propio icono, se abre en una ventana independiente y funciona **sin conexión**.
 
-### 🖥 Versión de escritorio (Windows / macOS / Linux)
-- Empaquetada como **aplicación de escritorio nativa** con Electron — consulta la carpeta `electron-app/`.
-- Genera instaladores para cada sistema: **Windows** (`.exe` instalador + portable), **macOS** (`.dmg`) y **Linux** (`.AppImage`).
-- El logo de la aplicación es **redondo**, como las apps modernas.
+### 🖥 Versión de escritorio (Windows)
+- Empaquetada como **aplicación de escritorio nativa de Windows** con Electron — consulta la carpeta `electron-app/`.
+- Genera un instalador de **Windows**: `.exe` (instalador + portable).
+- El logo de la aplicación tiene **esquinas redondeadas**, como las apps modernas.
 
 ---
 
@@ -141,25 +145,6 @@ Una vez desplegada (por HTTPS), puedes instalarla como una aplicación real:
 | **iPhone/iPad** (Safari) | Abre la URL → botón **Compartir** → **Añadir a pantalla de inicio** |
 
 > **Importante:** las PWA deben servirse por **HTTPS** (GitHub Pages, Netlify y Vercel lo hacen). No puedes instalar al abrir un `file://` directamente.
-
----
-
-## 🌐 Botones de cambio de idioma
-
-Cada `README.<código>.md` empieza con una **barra de botones de cambio de idioma** (los botones de arriba). Para añadirla a un README nuevo, pega esto al principio:
-
-```markdown
-<p align="center">
-  <a href="README.md"><img alt="English" src="https://img.shields.io/badge/English-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.vi.md"><img alt="Tiếng Việt" src="https://img.shields.io/badge/Ti%E1%BA%BFng%20Vi%E1%BB%87t-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.zh.md"><img alt="中文" src="https://img.shields.io/badge/%E4%B8%AD%E6%96%87-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.ko.md"><img alt="한국어" src="https://img.shields.io/badge/%ED%95%9C%EA%B5%AD%EC%96%B4-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.ja.md"><img alt="日本語" src="https://img.shields.io/badge/%E6%97%A5%E6%9C%AC%E8%AA%9E-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.es.md"><img alt="Español" src="https://img.shields.io/badge/Espa%C3%B1ol-1a3fd6?style=for-the-badge"></a>
-</p>
-```
-
-Usa un color distinto (p. ej. `22d3ee`) para el botón del idioma **actual**.
 
 ---
 

@@ -1,6 +1,10 @@
 # 🎨 Chaereve ColorLab
 
 <p align="center">
+  <a href="https://github.com/chaereve/chaereve-colorlab/releases"><img alt="다운로드" src="https://img.shields.io/badge/%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-2ea043?style=for-the-badge"></a>
+</p>
+
+<p align="center">
   <a href="README.md"><img alt="English" src="https://img.shields.io/badge/English-1a3fd6?style=for-the-badge"></a>&nbsp;
   <a href="README.vi.md"><img alt="Tiếng Việt" src="https://img.shields.io/badge/Ti%E1%BA%BFng%20Vi%E1%BB%87t-1a3fd6?style=for-the-badge"></a>&nbsp;
   <a href="README.zh.md"><img alt="中文" src="https://img.shields.io/badge/%E4%B8%AD%E6%96%87-1a3fd6?style=for-the-badge"></a>&nbsp;
@@ -91,10 +95,10 @@ Photoshop(`.aco`) 색상 팔레트를 **보고, 섞고, 내보내는** 도구로
 - **데스크톱(Windows/macOS/Linux)** 및 **모바일(Android/iOS)**에 설치 가능.
 - 자체 아이콘, 독립 창으로 열리고 **오프라인**으로 작동합니다.
 
-### 🖥 데스크톱 버전 (Windows / macOS / Linux)
-- Electron으로 **네이티브 데스크톱 앱**으로 패키징 — `electron-app/` 폴더 참조.
-- 모든 OS용 설치 프로그램 빌드: **Windows**(`.exe` 설치 프로그램 + 포터블), **macOS**(`.dmg`), **Linux**(`.AppImage`).
-- 앱 로고는 현대 앱처럼 **둥글게** 처리됩니다.
+### 🖥 데스크톱 버전 (Windows)
+- Electron으로 **네이티브 Windows 데스크톱 앱**으로 패키징 — `electron-app/` 폴더 참조.
+- **Windows** 설치 프로그램 빌드: `.exe` (설치 프로그램 + 포터블).
+- 앱 로고는 현대 앱처럼 **둥근 모서리**로 처리됩니다.
 
 ---
 
@@ -141,25 +145,6 @@ Photoshop(`.aco`) 색상 팔레트를 **보고, 섞고, 내보내는** 도구로
 | **iPhone/iPad** (Safari) | URL 열기 → **공유** 버튼 → **홈 화면에 추가** |
 
 > **중요:** PWA는 **HTTPS**로 제공되어야 합니다(GitHub Pages, Netlify, Vercel 모두 지원). `file://`을 직접 열면 설치할 수 없습니다.
-
----
-
-## 🌐 언어 전환 버튼
-
-모든 `README.<코드>.md` 상단에 **언어 전환 버튼 바**가 있습니다. 새 README에 추가하려면 파일 맨 위에 붙여넣으세요:
-
-```markdown
-<p align="center">
-  <a href="README.md"><img alt="English" src="https://img.shields.io/badge/English-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.vi.md"><img alt="Tiếng Việt" src="https://img.shields.io/badge/Ti%E1%BA%BFng%20Vi%E1%BB%87t-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.zh.md"><img alt="中文" src="https://img.shields.io/badge/%E4%B8%AD%E6%96%87-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.ko.md"><img alt="한국어" src="https://img.shields.io/badge/%ED%95%9C%EA%B5%AD%EC%96%B4-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.ja.md"><img alt="日本語" src="https://img.shields.io/badge/%E6%97%A5%E6%9C%AC%E8%AA%9E-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.es.md"><img alt="Español" src="https://img.shields.io/badge/Espa%C3%B1ol-1a3fd6?style=for-the-badge"></a>
-</p>
-```
-
-**현재** 언어의 버튼에는 다른 색(예: `22d3ee`)을 사용하세요.
 
 ---
 

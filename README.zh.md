@@ -1,6 +1,10 @@
 # 🎨 Chaereve ColorLab
 
 <p align="center">
+  <a href="https://github.com/chaereve/chaereve-colorlab/releases"><img alt="下载" src="https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD-2ea043?style=for-the-badge"></a>
+</p>
+
+<p align="center">
   <a href="README.md"><img alt="English" src="https://img.shields.io/badge/English-1a3fd6?style=for-the-badge"></a>&nbsp;
   <a href="README.vi.md"><img alt="Tiếng Việt" src="https://img.shields.io/badge/Ti%E1%BA%BFng%20Vi%E1%BB%87t-1a3fd6?style=for-the-badge"></a>&nbsp;
   <a href="README.zh.md"><img alt="中文" src="https://img.shields.io/badge/%E4%B8%AD%E6%96%87-22d3ee?style=for-the-badge"></a>&nbsp;
@@ -91,10 +95,10 @@
 - 可安装到**桌面（Windows/macOS/Linux）**和**移动端（Android/iOS）**。
 - 拥有独立图标、独立窗口打开，并可**离线**工作。
 
-### 🖥 桌面版（Windows / macOS / Linux）
-- 使用 Electron 打包为**原生桌面应用**——见 `electron-app/` 文件夹。
-- 为各系统构建安装包：**Windows**（`.exe` 安装程序 + 便携版）、**macOS**（`.dmg`）和 **Linux**（`.AppImage`）。
-- 应用 logo 为**圆形**，如同现代应用。
+### 🖥 桌面版（Windows）
+- 使用 Electron 打包为**原生 Windows 桌面应用**——见 `electron-app/` 文件夹。
+- 构建 **Windows** 安装包：`.exe`（安装程序 + 便携版）。
+- 应用 logo 为**圆角方形**，如同现代应用。
 
 ---
 
@@ -141,25 +145,6 @@
 | **iPhone/iPad**（Safari） | 打开网址 → **分享**按钮 → **添加到主屏幕** |
 
 > **重要：** PWA 必须通过 **HTTPS** 提供服务（GitHub Pages、Netlify、Vercel 均可）。直接打开 `file://` 无法安装。
-
----
-
-## 🌐 语言切换按钮
-
-每个 `README.<语言代码>.md` 顶部都有一行**语言切换按钮**。要在新的 README 中使用，请将其粘贴到文件最顶部：
-
-```markdown
-<p align="center">
-  <a href="README.md"><img alt="English" src="https://img.shields.io/badge/English-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.vi.md"><img alt="Tiếng Việt" src="https://img.shields.io/badge/Ti%E1%BA%BFng%20Vi%E1%BB%87t-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.zh.md"><img alt="中文" src="https://img.shields.io/badge/%E4%B8%AD%E6%96%87-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.ko.md"><img alt="한국어" src="https://img.shields.io/badge/%ED%95%9C%EA%B5%AD%EC%96%B4-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.ja.md"><img alt="日本語" src="https://img.shields.io/badge/%E6%97%A5%E6%9C%AC%E8%AA%9E-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.es.md"><img alt="Español" src="https://img.shields.io/badge/Espa%C3%B1ol-1a3fd6?style=for-the-badge"></a>
-</p>
-```
-
-为**当前**语言的按钮使用不同的颜色（例如 `22d3ee`）。
 
 ---
 

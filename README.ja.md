@@ -1,6 +1,10 @@
 # 🎨 Chaereve ColorLab
 
 <p align="center">
+  <a href="https://github.com/chaereve/chaereve-colorlab/releases"><img alt="ダウンロード" src="https://img.shields.io/badge/%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89-2ea043?style=for-the-badge"></a>
+</p>
+
+<p align="center">
   <a href="README.md"><img alt="English" src="https://img.shields.io/badge/English-1a3fd6?style=for-the-badge"></a>&nbsp;
   <a href="README.vi.md"><img alt="Tiếng Việt" src="https://img.shields.io/badge/Ti%E1%BA%BFng%20Vi%E1%BB%87t-1a3fd6?style=for-the-badge"></a>&nbsp;
   <a href="README.zh.md"><img alt="中文" src="https://img.shields.io/badge/%E4%B8%AD%E6%96%87-1a3fd6?style=for-the-badge"></a>&nbsp;
@@ -91,10 +95,10 @@ Photoshop(`.aco`)カラーパレットを**表示・混合・書き出し**す�
 - **デスクトップ（Windows/macOS/Linux）** と**モバイル（Android/iOS）** にインストール可能。
 - 独自アイコン、スタンドアロンウィンドウで開き、**オフライン**で動作。
 
-### 🖥 デスクトップ版（Windows / macOS / Linux）
-- Electronで**ネイティブデスクトップアプリ**としてパッケージ — `electron-app/`フォルダ参照。
-- 各OS向けインストーラーをビルド: **Windows**(`.exe`インストーラー＋ポータブル)、**macOS**(`.dmg`)、**Linux**(`.AppImage`)。
-- アプリのロゴは現代のアプリのように**丸型**です。
+### 🖥 デスクトップ版（Windows）
+- Electronで**ネイティブWindowsデスクトップアプリ**としてパッケージ — `electron-app/`フォルダ参照。
+- **Windows**向けインストーラーをビルド: `.exe`（インストーラー＋ポータブル）。
+- アプリのロゴは現代のアプリのように**角丸**です。
 
 ---
 
@@ -141,25 +145,6 @@ Photoshop(`.aco`)カラーパレットを**表示・混合・書き出し**す�
 | **iPhone/iPad**（Safari） | URLを開く → **共有**ボタン → **ホーム画面に追加** |
 
 > **重要:** PWAは**HTTPS**で配信する必要があります（GitHub Pages、Netlify、Vercelすべて対応）。`file://`を直接開いた場合はインストールできません。
-
----
-
-## 🌐 言語切り替えボタン
-
-各 `README.<コード>.md` の先頭に**言語切り替えボタンバー**があります。新しい README に追加するには、ファイルの先頭に貼り付けてください:
-
-```markdown
-<p align="center">
-  <a href="README.md"><img alt="English" src="https://img.shields.io/badge/English-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.vi.md"><img alt="Tiếng Việt" src="https://img.shields.io/badge/Ti%E1%BA%BFng%20Vi%E1%BB%87t-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.zh.md"><img alt="中文" src="https://img.shields.io/badge/%E4%B8%AD%E6%96%87-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.ko.md"><img alt="한국어" src="https://img.shields.io/badge/%ED%95%9C%EA%B5%AD%EC%96%B4-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.ja.md"><img alt="日本語" src="https://img.shields.io/badge/%E6%97%A5%E6%9C%AC%E8%AA%9E-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.es.md"><img alt="Español" src="https://img.shields.io/badge/Espa%C3%B1ol-1a3fd6?style=for-the-badge"></a>
-</p>
-```
-
-**現在の**言語のボタンには別の色(例: `22d3ee`)を使います。
 
 ---
 

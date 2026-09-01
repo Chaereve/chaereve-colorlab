@@ -1,6 +1,10 @@
 # 🎨 Chaereve ColorLab
 
 <p align="center">
+  <a href="https://github.com/chaereve/chaereve-colorlab/releases"><img alt="Download" src="https://img.shields.io/badge/Download-2ea043?style=for-the-badge"></a>
+</p>
+
+<p align="center">
   <a href="README.md"><img alt="English" src="https://img.shields.io/badge/English-22d3ee?style=for-the-badge"></a>&nbsp;
   <a href="README.vi.md"><img alt="Tiếng Việt" src="https://img.shields.io/badge/Ti%E1%BA%BFng%20Vi%E1%BB%87t-1a3fd6?style=for-the-badge"></a>&nbsp;
   <a href="README.zh.md"><img alt="中文" src="https://img.shields.io/badge/%E4%B8%AD%E6%96%87-1a3fd6?style=for-the-badge"></a>&nbsp;
@@ -91,10 +95,10 @@ Split into two tabs — **🧩 Create** and **🔍 Analyze**:
 - Installable on **desktop (Windows/macOS/Linux)** and **mobile (Android/iOS)**.
 - Has its own icon, opens in a standalone window, and works **offline**.
 
-### 🖥 Desktop version (Windows / macOS / Linux)
-- Packaged as a **native desktop app** using Electron — see the `electron-app/` folder.
-- Build installers for every OS: **Windows** (`.exe` installer + portable), **macOS** (`.dmg`) and **Linux** (`.AppImage`).
-- The app logo is **round**, like modern apps.
+### 🖥 Desktop version (Windows)
+- Packaged as a **native Windows desktop app** using Electron — see the `electron-app/` folder.
+- Build a **Windows** installer: `.exe` (NSIS installer + portable).
+- The app logo has **rounded-square corners**, like modern apps.
 
 ---
 
@@ -141,25 +145,6 @@ Once the app is deployed (over HTTPS), you can install it as a real app:
 | **iPhone/iPad** (Safari) | Open the URL → **Share** button → **Add to Home Screen** |
 
 > **Important:** PWAs must be served over **HTTPS** (GitHub Pages, Netlify and Vercel all do this). You cannot install when opening a `file://` directly.
-
----
-
-## 🌐 Language-switch buttons
-
-Every `README.<lang>.md` starts with a **language-switch button bar** (the buttons at the top). To add it to a new README, paste this at the very top:
-
-```markdown
-<p align="center">
-  <a href="README.md"><img alt="English" src="https://img.shields.io/badge/English-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.vi.md"><img alt="Tiếng Việt" src="https://img.shields.io/badge/Ti%E1%BA%BFng%20Vi%E1%BB%87t-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.zh.md"><img alt="中文" src="https://img.shields.io/badge/%E4%B8%AD%E6%96%87-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.ko.md"><img alt="한국어" src="https://img.shields.io/badge/%ED%95%9C%EA%B5%AD%EC%96%B4-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.ja.md"><img alt="日本語" src="https://img.shields.io/badge/%E6%97%A5%E6%9C%AC%E8%AA%9E-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.es.md"><img alt="Español" src="https://img.shields.io/badge/Espa%C3%B1ol-1a3fd6?style=for-the-badge"></a>
-</p>
-```
-
-Use a different color (e.g. `22d3ee`) for the **current** language's button.
 
 ---
 

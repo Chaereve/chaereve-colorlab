@@ -1,6 +1,10 @@
 # 🎨 Chaereve ColorLab
 
 <p align="center">
+  <a href="https://github.com/chaereve/chaereve-colorlab/releases"><img alt="Tải xuống" src="https://img.shields.io/badge/T%E1%BA%A3i%20xu%E1%BB%91ng-2ea043?style=for-the-badge"></a>
+</p>
+
+<p align="center">
   <a href="README.md"><img alt="English" src="https://img.shields.io/badge/English-1a3fd6?style=for-the-badge"></a>&nbsp;
   <a href="README.vi.md"><img alt="Tiếng Việt" src="https://img.shields.io/badge/Ti%E1%BA%BFng%20Vi%E1%BB%87t-22d3ee?style=for-the-badge"></a>&nbsp;
   <a href="README.zh.md"><img alt="中文" src="https://img.shields.io/badge/%E4%B8%AD%E6%96%87-1a3fd6?style=for-the-badge"></a>&nbsp;
@@ -91,10 +95,10 @@ Tách thành 2 tab — **🧩 Tạo màu** và **🔍 Phân tích**:
 - Cài được trên **máy tính (Windows/macOS/Linux)** và **điện thoại (Android/iOS)**.
 - Có icon riêng, mở cửa sổ độc lập, chạy **offline**.
 
-### 🖥 Bản desktop (Windows / macOS / Linux)
-- Đóng gói thành **ứng dụng desktop** bằng Electron — xem thư mục `electron-app/`.
-- Build bộ cài cho mọi hệ điều hành: **Windows** (`.exe` installer + portable), **macOS** (`.dmg`) và **Linux** (`.AppImage`).
-- Logo ứng dụng được bo **tròn** như các app hiện đại.
+### 🖥 Bản desktop (Windows)
+- Đóng gói thành **ứng dụng desktop Windows** bằng Electron — xem thư mục `electron-app/`.
+- Build bộ cài **Windows**: `.exe` (bộ cài NSIS + bản portable).
+- Logo ứng dụng được bo **góc vuông** như các app hiện đại.
 
 ---
 
@@ -141,25 +145,6 @@ Sau khi app deploy (qua HTTPS), bạn có thể cài thành app thật:
 | **iPhone/iPad** (Safari) | Mở link → nút **Chia sẻ** → **Thêm vào Màn hình chính** |
 
 > **Lưu ý:** PWA cần phục vụ qua **HTTPS** (GitHub Pages, Netlify, Vercel đều có sẵn). Không cài được khi mở `file://` trực tiếp.
-
----
-
-## 🌐 Nút chuyển ngôn ngữ
-
-Mỗi file `README.<mã>.md` đều có **thanh nút chuyển ngôn ngữ** ở đầu trang. Để thêm vào file README mới, dán đoạn này lên đầu file:
-
-```markdown
-<p align="center">
-  <a href="README.md"><img alt="English" src="https://img.shields.io/badge/English-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.vi.md"><img alt="Tiếng Việt" src="https://img.shields.io/badge/Ti%E1%BA%BFng%20Vi%E1%BB%87t-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.zh.md"><img alt="中文" src="https://img.shields.io/badge/%E4%B8%AD%E6%96%87-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.ko.md"><img alt="한국어" src="https://img.shields.io/badge/%ED%95%9C%EA%B5%AD%EC%96%B4-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.ja.md"><img alt="日本語" src="https://img.shields.io/badge/%E6%97%A5%E6%9C%AC%E8%AA%9E-1a3fd6?style=for-the-badge"></a>&nbsp;
-  <a href="README.es.md"><img alt="Español" src="https://img.shields.io/badge/Espa%C3%B1ol-1a3fd6?style=for-the-badge"></a>
-</p>
-```
-
-Dùng màu khác (ví dụ `22d3ee`) cho nút của **ngôn ngữ hiện tại**.
 
 ---
 
