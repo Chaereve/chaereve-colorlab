@@ -169,8 +169,6 @@ Mở ACO ở tab **Trộn màu** → bỏ chọn màu không muốn → bấm **
 Hướng dẫn sử dụng (đủ 6 ngôn ngữ):
 - 🇬🇧 [USER_GUIDE.md](USER_GUIDE.md) · 🇻🇳 [USER_GUIDE.vi.md](USER_GUIDE.vi.md) · 🇨🇳 [USER_GUIDE.zh.md](USER_GUIDE.zh.md) · 🇰🇷 [USER_GUIDE.ko.md](USER_GUIDE.ko.md) · 🇯🇵 [USER_GUIDE.ja.md](USER_GUIDE.ja.md) · 🇪🇸 [USER_GUIDE.es.md](USER_GUIDE.es.md)
 
-Deploy & build (từng bước): [HUONG_DAN_TUNG_BUOC.md](HUONG_DAN_TUNG_BUOC.md)
-
 ---
 
 ## 📄 Giấy phép

@@ -169,8 +169,6 @@ Photoshop(`.aco`)カラーパレットを**表示・混合・書き出し**す�
 ユーザーガイド（6言語）:
 - 🇬🇧 [USER_GUIDE.md](USER_GUIDE.md) · 🇻🇳 [USER_GUIDE.vi.md](USER_GUIDE.vi.md) · 🇨🇳 [USER_GUIDE.zh.md](USER_GUIDE.zh.md) · 🇰🇷 [USER_GUIDE.ko.md](USER_GUIDE.ko.md) · 🇯🇵 [USER_GUIDE.ja.md](USER_GUIDE.ja.md) · 🇪🇸 [USER_GUIDE.es.md](USER_GUIDE.es.md)
 
-デプロイとビルド（手順）: [HUONG_DAN_TUNG_BUOC.md](HUONG_DAN_TUNG_BUOC.md)
-
 ---
 
 ## 📄 ライセンス

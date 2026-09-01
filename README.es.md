@@ -169,8 +169,6 @@ Abre el ACO en la pestaña **Mezclar colores** → haz clic para deseleccionar l
 Guía de usuario (los 6 idiomas):
 - 🇬🇧 [USER_GUIDE.md](USER_GUIDE.md) · 🇻🇳 [USER_GUIDE.vi.md](USER_GUIDE.vi.md) · 🇨🇳 [USER_GUIDE.zh.md](USER_GUIDE.zh.md) · 🇰🇷 [USER_GUIDE.ko.md](USER_GUIDE.ko.md) · 🇯🇵 [USER_GUIDE.ja.md](USER_GUIDE.ja.md) · 🇪🇸 [USER_GUIDE.es.md](USER_GUIDE.es.md)
 
-Despliegue y compilación (paso a paso): [HUONG_DAN_TUNG_BUOC.md](HUONG_DAN_TUNG_BUOC.md)
-
 ---
 
 ## 📄 Licencia

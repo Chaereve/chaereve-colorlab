@@ -169,8 +169,6 @@ Photoshop(`.aco`) 색상 팔레트를 **보고, 섞고, 내보내는** 도구로
 사용자 가이드 (6개 언어):
 - 🇬🇧 [USER_GUIDE.md](USER_GUIDE.md) · 🇻🇳 [USER_GUIDE.vi.md](USER_GUIDE.vi.md) · 🇨🇳 [USER_GUIDE.zh.md](USER_GUIDE.zh.md) · 🇰🇷 [USER_GUIDE.ko.md](USER_GUIDE.ko.md) · 🇯🇵 [USER_GUIDE.ja.md](USER_GUIDE.ja.md) · 🇪🇸 [USER_GUIDE.es.md](USER_GUIDE.es.md)
 
-배포 및 빌드 (단계별): [HUONG_DAN_TUNG_BUOC.md](HUONG_DAN_TUNG_BUOC.md)
-
 ---
 
 ## 📄 라이선스

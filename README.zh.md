@@ -169,8 +169,6 @@
 使用指南（6 种语言）：
 - 🇬🇧 [USER_GUIDE.md](USER_GUIDE.md) · 🇻🇳 [USER_GUIDE.vi.md](USER_GUIDE.vi.md) · 🇨🇳 [USER_GUIDE.zh.md](USER_GUIDE.zh.md) · 🇰🇷 [USER_GUIDE.ko.md](USER_GUIDE.ko.md) · 🇯🇵 [USER_GUIDE.ja.md](USER_GUIDE.ja.md) · 🇪🇸 [USER_GUIDE.es.md](USER_GUIDE.es.md)
 
-部署与构建（分步）：[HUONG_DAN_TUNG_BUOC.md](HUONG_DAN_TUNG_BUOC.md)
-
 ---
 
 ## 📄 许可证
